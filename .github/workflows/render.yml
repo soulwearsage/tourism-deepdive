@@ -31,6 +31,9 @@ jobs:
       - name: 動画を書き出し(厳島神社)
         run: npx remotion render DeepDive-Itsukushima out/itsukushima.mp4
 
+      - name: 動画を書き出し(高屋神社)
+        run: npx remotion render DeepDive-Takaya out/takaya.mp4
+
       - name: 書き出した動画をアップロード
         uses: actions/upload-artifact@v4
         with:

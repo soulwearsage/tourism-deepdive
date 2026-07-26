@@ -24,7 +24,7 @@ export const facts: FactInput[] = [
     body: "Each stone bears a deity name found in no official record — unrecognized beliefs, hiding in plain sight, disguised as Inari worship.",
     photoSrc: "photos/001_fushimi-inari/fact-1.png",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 13,
+    durationSeconds: 17, // ナレーション14.2秒(echoボイス) + 余白
   },
   {
     type: "big-number",
@@ -32,7 +32,7 @@ export const facts: FactInput[] = [
     value: "5",
     label: "kami enshrined as one, led by Ukanomitama — the spirit of rice and food itself",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
-    durationSeconds: 8.0,
+    durationSeconds: 8.5, // ナレーション5.6秒 + 余白
   },
   {
     type: "photo-stat",

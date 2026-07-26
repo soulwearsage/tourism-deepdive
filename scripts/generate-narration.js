@@ -1,24 +1,14 @@
 /**
- * ナレーション音声をまとめて自動生成するスクリプト。
+ * 伏見稲荷のナレーション音声をElevenLabs(Milo)でまとめて生成する。
  *
  * 使い方:
- *   1. OpenAIのAPIキーを環境変数にセット
- *        export OPENAI_API_KEY="sk-..."
- *   2. プロジェクトのルートで実行
- *        node scripts/generate-narration.js
- *   3. public/audio/001_fushimi-inari/ に9個のmp3が自動で生成される
- *
- * 声を変えたい場合は VOICE の値を変更してください。
- * 選べる声: alloy, echo, fable, onyx, nova, shimmer
- * (onyxが一番低め・落ち着いた男性声)
+ *   export OPENAI_API_KEY="sk-..."
+ *   node scripts/generate-narration.js
  */
-
-const fs = require("fs");
 const path = require("path");
+const { generateAll } = require("./_openai-common");
 
 const OUTPUT_DIR = path.join(__dirname, "..", "public", "audio", "001_fushimi-inari");
-const VOICE = "onyx";
-const MODEL = "tts-1-hd"; // 高音質版。速度優先なら "tts-1"
 
 const LINES = [
   { file: "title.mp3", text: "Kyoto, Japan." },
@@ -47,66 +37,4 @@ const LINES = [
   { file: "outro.mp3", text: "Worth the visit? Absolutely." },
 ];
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function generateOne(line, attempt = 1) {
-  const res = await fetch("https://api.openai.com/v1/audio/speech", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      voice: VOICE,
-      input: line.text,
-    }),
-  });
-
-  if (res.status === 429 && attempt <= 3) {
-    console.log(`  … ${line.file} がレート制限。25秒待って再試行します(${attempt}/3回目)`);
-    await sleep(25000);
-    return generateOne(line, attempt + 1);
-  }
-
-  if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`${line.file}: ${res.status} ${errText}`);
-  }
-
-  const buffer = Buffer.from(await res.arrayBuffer());
-  const outPath = path.join(OUTPUT_DIR, line.file);
-  fs.writeFileSync(outPath, buffer);
-  console.log(`✓ ${line.file} (${buffer.length} bytes)`);
-}
-
-async function main() {
-  if (!process.env.OPENAI_API_KEY) {
-    console.error("OPENAI_API_KEY が設定されてません。先に export OPENAI_API_KEY=... してください。");
-    process.exit(1);
-  }
-
-  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-
-  console.log(`${LINES.length}個のナレーションを生成します(声: ${VOICE})...`);
-  console.log(`レート制限(1分3回まで)に収まるよう間隔を空けるので、全体で3〜4分ほどかかります。`);
-
-  for (let i = 0; i < LINES.length; i++) {
-    const line = LINES[i];
-    try {
-      await generateOne(line);
-    } catch (e) {
-      console.error(`✗ ${line.file} 失敗:`, e.message);
-    }
-    // 1分あたり3回までの制限に収まるよう、次のリクエストまで間隔を空ける
-    if (i < LINES.length - 1) {
-      await sleep(21000);
-    }
-  }
-
-  console.log("完了しました。public/audio/001_fushimi-inari/ を確認してください。");
-}
-
-main();
+generateAll(OUTPUT_DIR, LINES);

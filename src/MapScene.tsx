@@ -56,26 +56,40 @@ export const MapScene: React.FC<MapProps> = ({ prefectureId, regionLabel, spotLa
 
   return (
     <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="MAP" narrationSrc={narrationSrc}>
-      <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center" }}>
-        <svg
-          width={WIDTH}
-          height={HEIGHT}
-          viewBox={"0 0 " + WIDTH + " " + HEIGHT}
-          style={{ transform: `scale(${zoom})`, transformOrigin: `${centroid[0]}px ${centroid[1]}px` }}
-        >
-          <g style={{ opacity: outlineOpacity }}>
-            {prefPaths.map((p, i) => (
-              <path key={i} d={p.d} fill="none" stroke="#8a8478" strokeWidth={0.8} />
-            ))}
-          </g>
-          {targetPath && <path d={targetPath} fill={accentColor} fillOpacity={fillOpacity} stroke="none" />}
-          <g style={{ opacity: pinOpacity, transform: `translateY(${interpolate(pinDrop, [0, 1], [-60, 0])}px)` }}>
-            <circle cx={centroid[0]} cy={centroid[1]} r={5 + pulse * 12} fill={accentColor} opacity={0.3 * (1 - pulse) + 0.05} />
-            <circle cx={centroid[0]} cy={centroid[1]} r={6} fill={accentColor} />
-            <circle cx={centroid[0]} cy={centroid[1]} r={6} fill="none" stroke="#060606" strokeWidth={1.2} />
-          </g>
-        </svg>
-      </div>
+      {(() => {
+        // ズームをCSSの拡大(transform: scale)ではなく、SVG自体の実サイズを
+        // 毎フレーム変えることで実現する。CSS拡大だとブラウザが先に軽量な
+        // ビットマップとして描画してから引き伸ばすことがあり、ぼやける原因になる。
+        // SVGの実サイズ自体を変えれば、常にベクターとしてシャープに再描画される。
+        const baseLeft = (1080 - WIDTH) / 2;
+        const baseTop = (1920 - HEIGHT) / 2;
+        const svgWidth = WIDTH * zoom;
+        const svgHeight = HEIGHT * zoom;
+        // ズームの中心(都道府県の重心)が画面上で同じ位置に留まるよう、左上位置を補正する
+        const left = baseLeft + centroid[0] * (1 - zoom);
+        const top = baseTop + centroid[1] * (1 - zoom);
+
+        return (
+          <svg
+            width={svgWidth}
+            height={svgHeight}
+            viewBox={"0 0 " + WIDTH + " " + HEIGHT}
+            style={{ position: "absolute", left, top }}
+          >
+            <g style={{ opacity: outlineOpacity }}>
+              {prefPaths.map((p, i) => (
+                <path key={i} d={p.d} fill="none" stroke="#8a8478" strokeWidth={0.8} />
+              ))}
+            </g>
+            {targetPath && <path d={targetPath} fill={accentColor} fillOpacity={fillOpacity} stroke="none" />}
+            <g style={{ opacity: pinOpacity, transform: `translateY(${interpolate(pinDrop, [0, 1], [-60, 0])}px)` }}>
+              <circle cx={centroid[0]} cy={centroid[1]} r={5 + pulse * 12} fill={accentColor} opacity={0.3 * (1 - pulse) + 0.05} />
+              <circle cx={centroid[0]} cy={centroid[1]} r={6} fill={accentColor} />
+              <circle cx={centroid[0]} cy={centroid[1]} r={6} fill="none" stroke="#060606" strokeWidth={1.2} />
+            </g>
+          </svg>
+        );
+      })()}
 
       <div style={{ position: "absolute", bottom: 260, left: 0, right: 0, textAlign: "center", opacity: labelOpacity }}>
         <div style={{ color: accentColor, fontFamily: "'Liberation Serif', serif", fontStyle: "italic", fontSize: 26, letterSpacing: 6 }}>

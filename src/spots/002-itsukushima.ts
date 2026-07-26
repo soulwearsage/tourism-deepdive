@@ -5,7 +5,7 @@ const AUDIO_DIR = "audio/002_itsukushima";
 
 // 実測したナレーションの長さ(秒)+2.5秒の余白
 export const sceneDurations = {
-  title: 4.0,  // ナレーション1.2秒 + 余白
+  title: 4.5, // ナレーション1.8秒(神社名を追加) + 余白
   map: 5.0,    // ナレーション1.2秒 + 余白(ズーム演出の尺を確保するため多めに)
   hook: 9.0,   // ナレーション6.6秒 + 余白
   twist: 15.0, // ナレーション12.6秒 + 余白
@@ -48,7 +48,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/002_itsukushima/fact-4.png",
     verticalText: "市杵島姫命",
     narrationSrc: `${AUDIO_DIR}/fact-4.mp3`,
-    durationSeconds: 11.5, // ナレーション9.0秒 + 余白
+    durationSeconds: 12.0, // ナレーション9.5秒 + 余白
   },
 ];
 

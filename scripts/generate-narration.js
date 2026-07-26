@@ -11,7 +11,7 @@ const { generateAll } = require("./_openai-common");
 const OUTPUT_DIR = path.join(__dirname, "..", "public", "audio", "001_fushimi-inari");
 
 const LINES = [
-  { file: "title.mp3", text: "Kyoto, Japan." },
+  { file: "title.mp3", text: "Fushimi Inari Taisha, Kyoto." },
   { file: "map.mp3", text: "Fushimi Inari Taisha." },
   { file: "hook.mp3", text: "Nine out of ten visitors never learn who they're actually praying to." },
   {

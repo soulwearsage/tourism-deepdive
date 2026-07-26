@@ -5,6 +5,9 @@ on:
   push:
     branches: [main]
   # GitHubの画面から手動でも実行できるようにする
+on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 jobs:

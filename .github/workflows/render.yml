@@ -25,11 +25,14 @@ jobs:
       - name: 日本語フォントをインストール
         run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk
 
-      - name: 動画を書き出し
-        run: npx remotion render DeepDive out/video.mp4
+      - name: 動画を書き出し(伏見稲荷)
+        run: npx remotion render DeepDive-FushimiInari out/fushimi-inari.mp4
+
+      - name: 動画を書き出し(厳島神社)
+        run: npx remotion render DeepDive-Itsukushima out/itsukushima.mp4
 
       - name: 書き出した動画をアップロード
         uses: actions/upload-artifact@v4
         with:
-          name: deepdive-video
-          path: out/video.mp4
+          name: deepdive-videos
+          path: out/*.mp4

@@ -1,0 +1,30 @@
+name: Render Deep Dive Video
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: リポジトリを取得
+        uses: actions/checkout@v4
+
+      - name: Node.jsをセットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 依存パッケージをインストール
+        run: npm install
+
+      - name: 動画を書き出し
+        run: npx remotion render DeepDive out/video.mp4
+
+      - name: 書き出した動画をアップロード
+        uses: actions/upload-artifact@v4
+        with:
+          name: deepdive-video
+          path: out/video.mp4

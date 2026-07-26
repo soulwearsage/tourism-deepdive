@@ -30,15 +30,6 @@ const facts: FactInput[] = [
     durationSeconds: 12.5, // ナレーション10.1秒 + 余白
   },
   {
-    type: "quote",
-    quote: "There's a fringe theory: that \"Inari\" hides an echo of \"INRI\" — the words on Christ's cross, smuggled here by the shrine's founding clan. Historians call it wordplay. The legend refuses to die.",
-    caption: "FRINGE THEORY — NOT HISTORY",
-    kanji: "十",
-    visual: "cross",
-    narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
-    durationSeconds: 15, // ナレーション11.8秒 + 十字架の演出分(約1.3秒) + 余白
-  },
-  {
     type: "big-number",
     kanji: "宇",
     value: "5",
@@ -57,6 +48,15 @@ const facts: FactInput[] = [
     headingFont: specialGothicExpandedFont,
     narrationSrc: `${AUDIO_DIR}/fact-4.mp3`,
     durationSeconds: 11.0, // ナレーション8.6秒 + 余白
+  },
+  {
+    type: "quote",
+    quote: "There's a fringe theory: that \"Inari\" hides an echo of \"INRI\" — the words on Christ's cross, smuggled here by the shrine's founding clan. Historians call it wordplay. The legend refuses to die.",
+    caption: "FRINGE THEORY — NOT HISTORY",
+    kanji: "十",
+    visual: "cross",
+    narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
+    durationSeconds: 15, // ナレーション11.8秒 + 十字架の演出分(約1.3秒) + 余白
   },
 ];
 

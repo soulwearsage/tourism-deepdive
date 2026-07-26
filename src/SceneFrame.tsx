@@ -24,7 +24,7 @@ export const SceneFrame: React.FC<SceneFrameProps> = ({
   footerLeft,
   footerRight,
   kanji,
-  kanjiOpacity = 0.05,
+  kanjiOpacity = 0.08,
   narrationSrc,
   children,
 }) => {

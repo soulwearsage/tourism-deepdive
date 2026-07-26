@@ -188,7 +188,7 @@ const OutroScene: React.FC<Props> = ({ spotName, accentColor, kanjiMotif, narrat
   const { fps } = useVideoConfig();
   const scale = spring({ frame, fps, config: { damping: 14 } });
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.outro} kanji={kanjiMotif} kanjiOpacity={0.16}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.outro}>
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center" }}>
         <div style={{ transform: `scale(${scale})`, textAlign: "center" }}>
           <div style={{ color: "#f5f2eb", fontSize: 40, fontWeight: 700, fontFamily: specialGothicExpandedFont }}>

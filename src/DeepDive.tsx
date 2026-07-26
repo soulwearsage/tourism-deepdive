@@ -3,6 +3,7 @@ import { AbsoluteFill, Audio, staticFile, Sequence, useCurrentFrame, useVideoCon
 import { GradedPhoto } from "./GradedPhoto";
 import { SceneFrame } from "./SceneFrame";
 import { TextHeroScene } from "./TextHeroScene";
+import { StaggeredText } from "./StaggeredText";
 import { FactScene, FactProps } from "./FactScene";
 import { BigNumberScene, BigNumberProps } from "./BigNumberScene";
 import { QuoteScene, QuoteProps } from "./QuoteScene";
@@ -88,17 +89,20 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
   const titleY = interpolate(frame, [15, 35], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const titleOpacity = interpolate(frame, [15, 35], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const vjpOpacity = interpolate(frame, [20, 38], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const kenBurnsScale = interpolate(frame, [0, 200], [1, 1.07], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   const jaChars = spotNameJa.split("");
 
   return (
     <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="deepdive.jp" kanji={kanjiMotif} narrationSrc={narration?.title}>
-      <div style={{ position: "absolute", top: PANEL_TOP, left: PANEL_LEFT, width: PANEL_SIZE, height: PANEL_SIZE, opacity: panelOpacity, display: "flex", gap: GAP }}>
-        {[0, 1, 2].map((i) => (
-          <div key={i} style={{ width: PANEL_W, height: PANEL_SIZE, overflow: "hidden", position: "relative" }}>
-            <GradedPhoto src={heroPhotoSrc} style={{ width: PANEL_SIZE, height: PANEL_SIZE, position: "absolute", left: -i * (PANEL_W + GAP) }} />
-          </div>
-        ))}
+      <div style={{ position: "absolute", top: PANEL_TOP, left: PANEL_LEFT, width: PANEL_SIZE, height: PANEL_SIZE, opacity: panelOpacity, overflow: "hidden" }}>
+        <div style={{ display: "flex", gap: GAP, width: "100%", height: "100%", transform: `scale(${kenBurnsScale})`, transformOrigin: "center center" }}>
+          {[0, 1, 2].map((i) => (
+            <div key={i} style={{ width: PANEL_W, height: PANEL_SIZE, overflow: "hidden", position: "relative" }}>
+              <GradedPhoto src={heroPhotoSrc} style={{ width: PANEL_SIZE, height: PANEL_SIZE, position: "absolute", left: -i * (PANEL_W + GAP) }} />
+            </div>
+          ))}
+        </div>
       </div>
 
       <div
@@ -126,7 +130,7 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
           Deep Dive
         </div>
         <div style={{ color: "#f5f2eb", fontSize: 96, fontWeight: 900, lineHeight: 0.98, fontFamily: "'DejaVu Sans', sans-serif" }}>
-          {spotName}
+          <StaggeredText text={spotName} frame={frame} startFrame={15} staggerFrames={4} />
         </div>
         <div style={{ width: 90, height: 1, background: "#6b6255", margin: "40px 0" }} />
         <div style={{ color: accentColor, fontSize: 22, letterSpacing: 6, fontFamily: "'Liberation Serif', serif", fontStyle: "italic" }}>
@@ -140,7 +144,7 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
 // --- Scene: フック ---
 const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narration }) => {
   const frame = useCurrentFrame();
-  const opacity = interpolate(frame, [0, 20], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const opacity = interpolate(frame, [0, 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
     <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="HOOK" narrationSrc={narration?.hook} kanji={kanjiMotif}>
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center", padding: "0 100px" }}>
@@ -150,7 +154,7 @@ const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narrati
           </div>
           <div style={{ width: 60, height: 1, background: "#4a453d", margin: "0 auto 28px" }} />
           <div style={{ color: "#f5f2eb", fontSize: 48, fontWeight: 900, lineHeight: 1.3, fontFamily: "'DejaVu Sans', sans-serif" }}>
-            {hookText}
+            <StaggeredText text={hookText} frame={frame} startFrame={10} />
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { useCurrentFrame, interpolate } from "remotion";
+import { StaggeredText } from "./StaggeredText";
 
 export type TextHeroProps = {
   eyebrow: string;        // 例: "Deep Dive — 01" や "Fact 02"
@@ -43,7 +44,7 @@ export const TextHeroScene: React.FC<TextHeroProps> = ({ eyebrow, heading, subhe
         <div style={{ color: "#f5f2eb", fontSize: 88, fontWeight: 900, lineHeight: 1.02, fontFamily: "'DejaVu Sans', sans-serif" }}>
           {headingLines.map((line, i) => (
             <React.Fragment key={i}>
-              {line}
+              <StaggeredText text={line} frame={frame} startFrame={10 + i * 8} />
               {i < headingLines.length - 1 && <br />}
             </React.Fragment>
           ))}

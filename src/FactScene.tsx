@@ -2,6 +2,7 @@ import React from "react";
 import { useCurrentFrame, useVideoConfig, interpolate, spring, Easing } from "remotion";
 import { GradedPhoto } from "./GradedPhoto";
 import { SceneFrame } from "./SceneFrame";
+import { StaggeredText } from "./StaggeredText";
 
 export type FactProps = {
   factNumber: number;
@@ -51,6 +52,11 @@ export const FactScene: React.FC<FactProps> = ({
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
   });
+  // ケンバーンズ:シーンが続く間、写真をごくゆっくりズームさせて静止画に生きた質感を出す
+  const kenBurnsScale = interpolate(frame, [0, 400], [1, 1.09], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
   const headingY = interpolate(frame, [15, 35], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const headingOpacity = interpolate(frame, [15, 35], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
@@ -70,7 +76,7 @@ export const FactScene: React.FC<FactProps> = ({
       footerRight={`${String(factNumber).padStart(2, "0")} / ${String(totalFacts).padStart(2, "0")}`}
       kanji={kanji}
     >
-      {/* 写真ブロック(3分割パネル) */}
+      {/* 写真ブロック(3分割パネル+ケンバーンズのゆっくりズーム) */}
       <div
         style={{
           position: "absolute",
@@ -79,19 +85,29 @@ export const FactScene: React.FC<FactProps> = ({
           width: PANEL_SIZE,
           height: PANEL_SIZE,
           opacity: panelOpacity,
-          display: "flex",
-          gap: GAP,
+          overflow: "hidden",
         }}
       >
-        {[0, 1, 2].map((i) => (
-          <div key={i} style={{ width: PANEL_W, height: PANEL_SIZE, overflow: "hidden", position: "relative" }}>
-            <GradedPhoto
-              src={photoSrc}
-              intensity={photoGradeIntensity}
-              style={{ width: PANEL_SIZE, height: PANEL_SIZE, position: "absolute", left: -i * (PANEL_W + GAP) }}
-            />
-          </div>
-        ))}
+        <div
+          style={{
+            display: "flex",
+            gap: GAP,
+            width: "100%",
+            height: "100%",
+            transform: `scale(${kenBurnsScale})`,
+            transformOrigin: "center center",
+          }}
+        >
+          {[0, 1, 2].map((i) => (
+            <div key={i} style={{ width: PANEL_W, height: PANEL_SIZE, overflow: "hidden", position: "relative" }}>
+              <GradedPhoto
+                src={photoSrc}
+                intensity={photoGradeIntensity}
+                style={{ width: PANEL_SIZE, height: PANEL_SIZE, position: "absolute", left: -i * (PANEL_W + GAP) }}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* 縦書きテキスト(祭神名など。写真の上端を跨ぐ位置に中心を合わせる) */}
@@ -128,7 +144,7 @@ export const FactScene: React.FC<FactProps> = ({
         }}
       >
         <div style={{ fontFamily: "'DejaVu Sans', sans-serif", fontWeight: 900, fontSize: 68, color: "#f5f2eb", lineHeight: 1.05 }}>
-          {heading}
+          <StaggeredText text={heading} frame={frame} startFrame={12} />
         </div>
 
         {displayStat && (

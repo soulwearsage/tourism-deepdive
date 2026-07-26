@@ -9,8 +9,8 @@ const AUDIO_DIR = "audio/001_fushimi-inari";
 export const sceneDurations = {
   title: 3.5,
   map: 4.5,
-  hook: 7.0,
-  twist: 13.0,
+  hook: 6.0, // ナレーション4.4秒 + 余白を詰めた
+  twist: 12.0, // ナレーション10.7秒 + 余白を詰めた
   outro: 4.5,
 };
 
@@ -18,13 +18,13 @@ export const facts: FactInput[] = [
   {
     type: "photo-stat",
     kanji: "塚",
-    heading: "Thousands of shrines that shouldn't exist",
+    heading: "10,000 secret shrines are hiding here",
     statValue: "~10,000",
     statLabel: "private shrines carved into this mountain since the 1870s",
     body: "Each stone bears a deity name found in no official record — unrecognized beliefs, hiding in plain sight, disguised as Inari worship.",
     photoSrc: "photos/001_fushimi-inari/fact-1.png",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 17, // ナレーション14.2秒(echoボイス) + 余白
+    durationSeconds: 15.5, // ナレーション14.2秒 + 余白を詰めた
   },
   {
     type: "big-number",
@@ -32,19 +32,19 @@ export const facts: FactInput[] = [
     value: "5",
     label: "kami enshrined as one, led by Ukanomitama — the spirit of rice and food itself",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
-    durationSeconds: 8.5, // ナレーション5.6秒 + 余白
+    durationSeconds: 7.0, // ナレーション5.6秒 + 余白を詰めた
   },
   {
     type: "photo-stat",
     kanji: "狐",
-    heading: "The foxes aren't the gods",
+    heading: "The foxes were never gods",
     body: "They're messengers. Look closely — each one carries something different in its mouth: a rice sheaf, a key, a jewel, or a scroll.",
     photoSrc: "photos/001_fushimi-inari/fact-4.png",
     photoGradeIntensity: 0.35,
     verticalText: "宇迦之御魂大神",
     headingFont: specialGothicExpandedFont,
     narrationSrc: `${AUDIO_DIR}/fact-4.mp3`,
-    durationSeconds: 11.0,
+    durationSeconds: 9.5, // ナレーション8.5秒 + 余白を詰めた
   },
   {
     type: "quote",
@@ -53,7 +53,7 @@ export const facts: FactInput[] = [
     kanji: "十",
     visual: "cross",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
-    durationSeconds: 15,
+    durationSeconds: 14, // ナレーション11.8秒 + 十字架の演出分 + 余白を詰めた
   },
 ];
 
@@ -78,6 +78,6 @@ export const defaultProps = {
     outro: `${AUDIO_DIR}/outro.mp3`,
   },
   sceneDurations,
-  bgmSrc: "bgm/bgm001.wav",
+  bgmSrc: "bgm/bgm002.wav",
   bgmVolume: 0.12,
 };

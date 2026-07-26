@@ -73,6 +73,6 @@ export const defaultProps = {
     outro: `${AUDIO_DIR}/outro.mp3`,
   },
   sceneDurations,
-  bgmSrc: "bgm/bgm001.wav",
+  bgmSrc: "bgm/bgm002.wav",
   bgmVolume: 0.12,
 };

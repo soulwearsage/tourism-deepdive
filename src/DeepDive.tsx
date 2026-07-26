@@ -187,6 +187,7 @@ const OutroScene: React.FC<Props> = ({ spotName, accentColor, kanjiMotif, narrat
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const scale = spring({ frame, fps, config: { damping: 14 } });
+  const taglineOpacity = interpolate(frame, [65, 85], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
     <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.outro}>
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -200,6 +201,9 @@ const OutroScene: React.FC<Props> = ({ spotName, accentColor, kanjiMotif, narrat
           <div style={{ width: 60, height: 1, background: "#4a453d", margin: "28px auto" }} />
           <div style={{ color: "#9a9285", fontSize: 22, fontFamily: "'Liberation Serif', serif", fontStyle: "italic" }}>
             {spotName} — Deep Dive series
+          </div>
+          <div style={{ color: accentColor, fontSize: 20, fontWeight: 700, letterSpacing: 3, marginTop: 34, opacity: taglineOpacity, fontFamily: specialGothicExpandedFont }}>
+            Follow for hidden Japan.
           </div>
         </div>
       </div>

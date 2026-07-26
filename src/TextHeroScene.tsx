@@ -50,7 +50,7 @@ export const TextHeroScene: React.FC<TextHeroProps> = ({ eyebrow, heading, subhe
         </div>
 
         {subheading && (
-          <div style={{ color: "#8a8478", fontSize: 30, marginTop: 22, letterSpacing: 4, fontFamily: "'Noto Serif JP', serif" }}>
+          <div style={{ color: "#8a8478", fontSize: 30, marginTop: 22, letterSpacing: 4, fontFamily: "'Noto Serif CJK JP', 'Noto Serif JP', serif" }}>
             {subheading}
           </div>
         )}

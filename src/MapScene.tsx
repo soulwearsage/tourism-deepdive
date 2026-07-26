@@ -47,7 +47,7 @@ export const MapScene: React.FC<MapProps> = ({ prefectureId, regionLabel, spotLa
   const pinOpacity = interpolate(frame, [55, 68], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const pulse = interpolate(frame % 40, [0, 20, 40], [0, 1, 0]);
   const labelOpacity = interpolate(frame, [70, 88], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const zoom = interpolate(frame, [75, 110], [1, 3.2], {
+  const zoom = interpolate(frame, [75, 110], [1, 6], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.inOut(Easing.cubic),

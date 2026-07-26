@@ -105,7 +105,7 @@ export const FactScene: React.FC<FactProps> = ({
             flexDirection: "column",
             alignItems: "center",
             color: "#d8d2c4",
-            fontFamily: "'Noto Serif JP', serif",
+            fontFamily: "'Noto Serif CJK JP', 'Noto Serif JP', serif",
             fontSize: 30,
             lineHeight: 1.5,
           }}

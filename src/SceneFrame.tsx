@@ -45,7 +45,7 @@ export const SceneFrame: React.FC<SceneFrameProps> = ({
             top: "48%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            fontFamily: "'Noto Serif JP', serif",
+            fontFamily: "'Noto Serif CJK JP', 'Noto Serif JP', serif",
             fontWeight: 700,
             fontSize: 1300,
             color: "#ffffff",

@@ -19,14 +19,14 @@ const sceneDurations = {
 const facts: FactInput[] = [
   {
     type: "photo-stat",
-    kanji: "朱",
-    heading: "Why vermilion, not red?",
-    statValue: "10,000+",
-    statLabel: "gates donated since the Edo period",
-    body: "The color is called shu — believed to ward off evil and symbolize vitality, not chosen for looks.",
+    kanji: "塚",
+    heading: "Thousands of shrines that shouldn't exist",
+    statValue: "~10,000",
+    statLabel: "private shrines carved into this mountain since the 1870s",
+    body: "Each stone bears a deity name found in no official record — unrecognized beliefs, hiding in plain sight, disguised as Inari worship.",
     photoSrc: "photos/001_fushimi-inari/fact-1.png",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 12.5, // ナレーション10.1秒 + 余白
+    durationSeconds: 13, // 仮。ナレーション作り直し後にmeasure-narration.jsで再計測すること
   },
   {
     type: "big-number",

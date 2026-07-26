@@ -26,7 +26,7 @@ const LINES = [
   { file: "hook.mp3", text: "Nine out of ten visitors never learn who they're actually praying to." },
   {
     file: "fact-1.mp3",
-    text: "This color isn't just red. It's called shu — believed to ward off evil, donated one gate at a time since the Edo period. Over ten thousand of them line this mountain.",
+    text: "Scattered across this mountain are nearly ten thousand private shrines, called otsuka. Each one carved by an individual believer, with a deity name that appears in no official record. Unrecognized beliefs, hiding in plain sight.",
   },
   {
     file: "fact-2.mp3",

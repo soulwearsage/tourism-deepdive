@@ -89,7 +89,7 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
   const titleY = interpolate(frame, [15, 35], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const titleOpacity = interpolate(frame, [15, 35], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const vjpOpacity = interpolate(frame, [20, 38], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const kenBurnsScale = interpolate(frame, [0, 200], [1, 1.07], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const kenBurnsScale = interpolate(frame, [0, 200], [1, 1.15], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   const jaChars = spotNameJa.split("");
 

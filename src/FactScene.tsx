@@ -53,7 +53,7 @@ export const FactScene: React.FC<FactProps> = ({
     easing: Easing.out(Easing.cubic),
   });
   // ケンバーンズ:シーンが続く間、写真をごくゆっくりズームさせて静止画に生きた質感を出す
-  const kenBurnsScale = interpolate(frame, [0, 400], [1, 1.09], {
+  const kenBurnsScale = interpolate(frame, [0, 400], [1, 1.18], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });

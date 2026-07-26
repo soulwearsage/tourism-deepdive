@@ -18,7 +18,7 @@ export const StaggeredText: React.FC<StaggeredTextProps> = ({
   text,
   frame,
   startFrame = 0,
-  staggerFrames = 3,
+  staggerFrames = 8,
   style,
 }) => {
   const words = text.split(" ");
@@ -27,11 +27,11 @@ export const StaggeredText: React.FC<StaggeredTextProps> = ({
     <span style={{ display: "inline" }}>
       {words.map((word, i) => {
         const localFrame = frame - startFrame - i * staggerFrames;
-        const opacity = interpolate(localFrame, [0, 12], [0, 1], {
+        const opacity = interpolate(localFrame, [0, 18], [0, 1], {
           extrapolateLeft: "clamp",
           extrapolateRight: "clamp",
         });
-        const y = interpolate(localFrame, [0, 12], [14, 0], {
+        const y = interpolate(localFrame, [0, 18], [26, 0], {
           extrapolateLeft: "clamp",
           extrapolateRight: "clamp",
           easing: Easing.out(Easing.cubic),

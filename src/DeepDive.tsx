@@ -4,6 +4,7 @@ import { GradedPhoto } from "./GradedPhoto";
 import { SceneFrame } from "./SceneFrame";
 import { TextHeroScene } from "./TextHeroScene";
 import { StaggeredText } from "./StaggeredText";
+import { parkinsansFont } from "./fonts";
 import { FactScene, FactProps } from "./FactScene";
 import { BigNumberScene, BigNumberProps } from "./BigNumberScene";
 import { QuoteScene, QuoteProps } from "./QuoteScene";
@@ -129,7 +130,7 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
         <div style={{ color: accentColor, fontSize: 24, letterSpacing: 10, marginBottom: 20, fontFamily: "'Liberation Serif', serif", fontStyle: "italic" }}>
           Deep Dive
         </div>
-        <div style={{ color: "#f5f2eb", fontSize: 96, fontWeight: 900, lineHeight: 0.98, fontFamily: "'DejaVu Sans', sans-serif" }}>
+        <div style={{ color: "#f5f2eb", fontSize: 96, fontWeight: 700, lineHeight: 0.98, fontFamily: parkinsansFont }}>
           <StaggeredText text={spotName} frame={frame} startFrame={15} staggerFrames={4} />
         </div>
         <div style={{ width: 90, height: 1, background: "#6b6255", margin: "40px 0" }} />

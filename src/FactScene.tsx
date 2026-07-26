@@ -15,6 +15,7 @@ export type FactProps = {
   photoSrc: string;
   photoGradeIntensity?: number;
   verticalText?: string; // タイトルと同じ位置に出す縦書き(例: 祭神名)
+  headingFont?: string; // 見出しのフォント名(未指定ならDejaVu Sans)
   narrationSrc?: string;
   accentColor?: string;
 };
@@ -40,6 +41,7 @@ export const FactScene: React.FC<FactProps> = ({
   photoSrc,
   photoGradeIntensity = 1,
   verticalText,
+  headingFont,
   narrationSrc,
   accentColor = AC_DEFAULT,
 }) => {
@@ -143,7 +145,7 @@ export const FactScene: React.FC<FactProps> = ({
           opacity: headingOpacity,
         }}
       >
-        <div style={{ fontFamily: "'DejaVu Sans', sans-serif", fontWeight: 900, fontSize: 68, color: "#f5f2eb", lineHeight: 1.05 }}>
+        <div style={{ fontFamily: headingFont ?? "'DejaVu Sans', sans-serif", fontWeight: 900, fontSize: 68, color: "#f5f2eb", lineHeight: 1.05 }}>
           <StaggeredText text={heading} frame={frame} startFrame={12} />
         </div>
 

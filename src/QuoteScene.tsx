@@ -85,6 +85,7 @@ export const QuoteScene: React.FC<QuoteProps> = ({
       footerRight={`${String(factNumber).padStart(2, "0")} / ${String(totalFacts).padStart(2, "0")}`}
       narrationSrc={narrationSrc}
       kanji={kanji}
+      kanjiOpacity={0.09}
     >
       <div
         style={{

@@ -147,7 +147,7 @@ const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narrati
   const frame = useCurrentFrame();
   const opacity = interpolate(frame, [0, 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="HOOK" narrationSrc={narration?.hook} kanji={kanjiMotif}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="HOOK" narrationSrc={narration?.hook} kanji={kanjiMotif} kanjiOpacity={0.09}>
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center", padding: "0 100px" }}>
         <div style={{ textAlign: "center", opacity }}>
           <div style={{ color: accentColor, fontSize: 20, letterSpacing: 8, marginBottom: 24, fontFamily: "'Liberation Serif', serif", fontStyle: "italic" }}>
@@ -166,7 +166,7 @@ const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narrati
 // --- Scene: どんでん返し(写真無し、漢字の透かし付きのテキストヒーロー型) ---
 const TwistScene: React.FC<Props> = ({ twistHeading, twistBody, accentColor, kanjiMotif, narration }) => {
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="THE TWIST" footerLeft="Japan Deep Dive" footerRight="TWIST" kanji={kanjiMotif} narrationSrc={narration?.twist}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="THE TWIST" footerLeft="Japan Deep Dive" footerRight="TWIST" kanji={kanjiMotif} kanjiOpacity={0.09} narrationSrc={narration?.twist}>
       <TextHeroScene
         eyebrow="Here's the twist"
         heading={twistHeading}
@@ -188,7 +188,7 @@ const OutroScene: React.FC<Props> = ({ spotName, accentColor, kanjiMotif, narrat
   const { fps } = useVideoConfig();
   const scale = spring({ frame, fps, config: { damping: 14 } });
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.outro} kanji={kanjiMotif}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.outro} kanji={kanjiMotif} kanjiOpacity={0.09}>
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center" }}>
         <div style={{ transform: `scale(${scale})`, textAlign: "center" }}>
           <div style={{ color: "#f5f2eb", fontSize: 40, fontWeight: 700, fontFamily: "'DejaVu Sans', sans-serif" }}>

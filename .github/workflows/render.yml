@@ -1,10 +1,5 @@
 name: Render Deep Dive Video
 
-# mainブランチにpushされたら自動で実行される
-on:
-  push:
-    branches: [main]
-  # GitHubの画面から手動でも実行できるようにする
 on:
   push:
     branches: [main]

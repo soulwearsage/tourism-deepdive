@@ -66,4 +66,5 @@ export const defaultProps = {
   sceneDurations,
   bgmSrc: "bgm/bgm002.wav",
   bgmVolume: 0.12,
+  episodeNumber: 4,
 };

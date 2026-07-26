@@ -13,12 +13,13 @@ export type MapProps = {
   spotLabel: string;
   narrationSrc?: string;
   accentColor: string;
+  episodeNumber: number;
 };
 
 const WIDTH = 800;
 const HEIGHT = 900;
 
-export const MapScene: React.FC<MapProps> = ({ prefectureId, regionLabel, spotLabel, narrationSrc, accentColor }) => {
+export const MapScene: React.FC<MapProps> = ({ prefectureId, regionLabel, spotLabel, narrationSrc, accentColor, episodeNumber }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -55,7 +56,7 @@ export const MapScene: React.FC<MapProps> = ({ prefectureId, regionLabel, spotLa
   });
 
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="MAP" narrationSrc={narrationSrc}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="MAP" narrationSrc={narrationSrc}>
       {(() => {
         // ズームをCSSの拡大(transform: scale)ではなく、SVG自体の実サイズを
         // 毎フレーム変えることで実現する。CSS拡大だとブラウザが先に軽量な

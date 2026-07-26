@@ -59,6 +59,7 @@ type Props = {
   sceneDurations?: SceneDurations; // ナレーションの実測秒数に合わせた尺の上書き(秒単位)。無ければ既定値
   bgmSrc?: string;  // 動画全体に流すBGM(public/からの相対パス)。無ければ無音
   bgmVolume?: number; // BGMの音量(0〜1)。デフォルト0.12(ナレーションの邪魔をしない程度に控えめ)
+  episodeNumber: number; // シリーズの何本目か(左上の"NO. 00X"表示に使う)
 };
 
 const FPS = 30;
@@ -84,7 +85,7 @@ const PANEL_W = (PANEL_SIZE - GAP * 2) / 3;
 const PANEL_BOTTOM = PANEL_TOP + PANEL_SIZE;
 
 // --- Scene: タイトルカード ---
-const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentColor, heroPhotoSrc, kanjiMotif, narration }) => {
+const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentColor, heroPhotoSrc, kanjiMotif, narration, episodeNumber }) => {
   const frame = useCurrentFrame();
   const panelOpacity = interpolate(frame, [0, 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const titleY = interpolate(frame, [15, 35], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
@@ -95,7 +96,7 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
   const jaChars = spotNameJa.split("");
 
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="deepdive.jp" narrationSrc={narration?.title}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="deepdive.jp" narrationSrc={narration?.title}>
       <div style={{ position: "absolute", top: PANEL_TOP, left: PANEL_LEFT, width: PANEL_SIZE, height: PANEL_SIZE, opacity: panelOpacity, overflow: "hidden" }}>
         <div style={{ display: "flex", gap: GAP, width: "100%", height: "100%", transform: `scale(${kenBurnsScale})`, transformOrigin: "center center" }}>
           {[0, 1, 2].map((i) => (
@@ -143,11 +144,11 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
 };
 
 // --- Scene: フック ---
-const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narration }) => {
+const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narration, episodeNumber }) => {
   const frame = useCurrentFrame();
   const opacity = interpolate(frame, [0, 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="HOOK" narrationSrc={narration?.hook} kanji={kanjiMotif} kanjiOpacity={0.16}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="HOOK" narrationSrc={narration?.hook} kanji={kanjiMotif} kanjiOpacity={0.16}>
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center", padding: "0 100px" }}>
         <div style={{ textAlign: "center", opacity }}>
           <div style={{ color: accentColor, fontSize: 20, letterSpacing: 8, marginBottom: 24, fontFamily: "'Liberation Serif', serif", fontStyle: "italic" }}>
@@ -183,13 +184,13 @@ const TwistScene: React.FC<Props> = ({ twistHeading, twistBody, accentColor, kan
 };
 
 // --- Scene: 締め ---
-const OutroScene: React.FC<Props> = ({ spotName, accentColor, kanjiMotif, narration }) => {
+const OutroScene: React.FC<Props> = ({ spotName, accentColor, kanjiMotif, narration, episodeNumber }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const scale = spring({ frame, fps, config: { damping: 14 } });
   const taglineOpacity = interpolate(frame, [65, 85], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.outro}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.outro}>
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center" }}>
         <div style={{ transform: `scale(${scale})`, textAlign: "center" }}>
           <div style={{ color: "#f5f2eb", fontSize: 40, fontWeight: 700, fontFamily: specialGothicExpandedFont }}>
@@ -303,7 +304,7 @@ export const DeepDive: React.FC<Props> = (props) => {
         <TitleScene {...props} />
       </Sequence>
       <Sequence from={mapFrom} durationInFrames={MAP_DUR}>
-        <MapScene prefectureId={prefectureId} regionLabel={mapRegionLabel} spotLabel={spotName} accentColor={accentColor} narrationSrc={props.narration?.map} />
+        <MapScene prefectureId={prefectureId} regionLabel={mapRegionLabel} spotLabel={spotName} accentColor={accentColor} narrationSrc={props.narration?.map} episodeNumber={props.episodeNumber} />
       </Sequence>
       <Sequence from={hookFrom} durationInFrames={HOOK_DUR}>
         <HookScene {...props} />

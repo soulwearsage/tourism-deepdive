@@ -31,6 +31,7 @@ const facts: FactInput[] = [
     type: "quote",
     quote: "\"Inari\" isn't one god. It's five — worshipped together as a single deity called Inari Ōkami.",
     caption: "FIVE KAMI, ONE NAME",
+    kanji: "神",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
     durationSeconds: 8.0, // ナレーション5.7秒 + 余白
   },
@@ -86,6 +87,8 @@ export const Root: React.FC = () => {
             outro: `${AUDIO_DIR}/outro.mp3`,
           },
           sceneDurations,
+          bgmSrc: "bgm/bgm001.wav",
+          bgmVolume: 0.12,
         }}
       />
     </>

@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig, interpolate, spring } from "remotion";
+import { AbsoluteFill, Audio, staticFile, Sequence, useCurrentFrame, useVideoConfig, interpolate, spring } from "remotion";
 import { GradedPhoto } from "./GradedPhoto";
 import { SceneFrame } from "./SceneFrame";
 import { TextHeroScene } from "./TextHeroScene";
@@ -55,10 +55,26 @@ type Props = {
   twistBody: string;
   narration?: NarrationMap; // 各シーンのナレーション音声(public/からの相対パス)。無ければ無音
   sceneDurations?: SceneDurations; // ナレーションの実測秒数に合わせた尺の上書き(秒単位)。無ければ既定値
+  bgmSrc?: string;  // 動画全体に流すBGM(public/からの相対パス)。無ければ無音
+  bgmVolume?: number; // BGMの音量(0〜1)。デフォルト0.12(ナレーションの邪魔をしない程度に控えめ)
 };
 
 const FPS = 30;
 const PANEL_TOP = 260;
+
+// BGMを動画全体に流す。冒頭1秒・末尾1秒でフェードイン/アウトする
+const BgmTrack: React.FC<{ src: string; baseVolume: number }> = ({ src, baseVolume }) => {
+  const frame = useCurrentFrame();
+  const { durationInFrames, fps } = useVideoConfig();
+  const fadeFrames = fps; // 1秒
+  const volume = interpolate(
+    frame,
+    [0, fadeFrames, durationInFrames - fadeFrames, durationInFrames],
+    [0, baseVolume, baseVolume, 0],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+  );
+  return <Audio src={staticFile(src)} volume={volume} />;
+};
 const PANEL_LEFT = 90;
 const PANEL_SIZE = 900;
 const GAP = 6;
@@ -94,7 +110,7 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
           flexDirection: "column",
           alignItems: "center",
           color: "#d8d2c4",
-          fontFamily: "'Noto Serif JP', serif",
+          fontFamily: "'Noto Serif CJK JP', 'Noto Serif JP', serif",
           fontSize: 30,
           lineHeight: 1.5,
           opacity: vjpOpacity,
@@ -122,16 +138,17 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
 };
 
 // --- Scene: フック ---
-const HookScene: React.FC<Props> = ({ hookText, accentColor, narration }) => {
+const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narration }) => {
   const frame = useCurrentFrame();
   const opacity = interpolate(frame, [0, 20], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="HOOK" narrationSrc={narration?.hook}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="HOOK" narrationSrc={narration?.hook} kanji={kanjiMotif}>
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center", padding: "0 100px" }}>
         <div style={{ textAlign: "center", opacity }}>
           <div style={{ color: accentColor, fontSize: 20, letterSpacing: 8, marginBottom: 24, fontFamily: "'Liberation Serif', serif", fontStyle: "italic" }}>
             MOST VISITORS MISS THIS
           </div>
+          <div style={{ width: 60, height: 1, background: "#4a453d", margin: "0 auto 28px" }} />
           <div style={{ color: "#f5f2eb", fontSize: 48, fontWeight: 900, lineHeight: 1.3, fontFamily: "'DejaVu Sans', sans-serif" }}>
             {hookText}
           </div>
@@ -161,12 +178,12 @@ const TwistScene: React.FC<Props> = ({ twistHeading, twistBody, accentColor, kan
 };
 
 // --- Scene: 締め ---
-const OutroScene: React.FC<Props> = ({ spotName, accentColor, narration }) => {
+const OutroScene: React.FC<Props> = ({ spotName, accentColor, kanjiMotif, narration }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const scale = spring({ frame, fps, config: { damping: 14 } });
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.outro}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.outro} kanji={kanjiMotif}>
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center" }}>
         <div style={{ transform: `scale(${scale})`, textAlign: "center" }}>
           <div style={{ color: "#f5f2eb", fontSize: 40, fontWeight: 700, fontFamily: "'DejaVu Sans', sans-serif" }}>
@@ -175,7 +192,8 @@ const OutroScene: React.FC<Props> = ({ spotName, accentColor, narration }) => {
           <div style={{ color: accentColor, fontSize: 40, fontWeight: 700, fontFamily: "'DejaVu Sans', sans-serif" }}>
             Absolutely.
           </div>
-          <div style={{ color: "#9a9285", fontSize: 22, marginTop: 24, fontFamily: "'Liberation Serif', serif", fontStyle: "italic" }}>
+          <div style={{ width: 60, height: 1, background: "#4a453d", margin: "28px auto" }} />
+          <div style={{ color: "#9a9285", fontSize: 22, fontFamily: "'Liberation Serif', serif", fontStyle: "italic" }}>
             {spotName} — Deep Dive series
           </div>
         </div>
@@ -230,7 +248,7 @@ const renderFact = (fact: FactInput, index: number, total: number, accentColor: 
 };
 
 export const DeepDive: React.FC<Props> = (props) => {
-  const { facts, accentColor, spotName, mapRegionLabel, prefectureId, sceneDurations } = props;
+  const { facts, accentColor, spotName, mapRegionLabel, prefectureId, sceneDurations, bgmSrc, bgmVolume = 0.12 } = props;
 
   // ナレーションの実測秒数(sceneDurations)があればそれを優先し、無ければ既定値を使う
   const TITLE_DUR = Math.round((sceneDurations?.title ?? 6) * FPS);
@@ -271,6 +289,7 @@ export const DeepDive: React.FC<Props> = (props) => {
 
   return (
     <AbsoluteFill>
+      {bgmSrc && <BgmTrack src={bgmSrc} baseVolume={bgmVolume} />}
       <Sequence from={titleFrom} durationInFrames={TITLE_DUR}>
         <TitleScene {...props} />
       </Sequence>

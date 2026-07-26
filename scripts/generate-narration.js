@@ -30,7 +30,7 @@ const LINES = [
   },
   {
     file: "fact-2.mp3",
-    text: `"Inari" isn't one god. It's five — worshipped together as a single deity called Inari Ōkami.`,
+    text: `There's a fringe theory: that "Inari" hides an echo of "INRI" — the words on Christ's cross, smuggled here by the shrine's founding clan. Historians call it wordplay. The legend refuses to die.`,
   },
   {
     file: "fact-3.mp3",

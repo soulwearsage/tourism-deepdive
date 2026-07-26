@@ -29,11 +29,12 @@ const facts: FactInput[] = [
   },
   {
     type: "quote",
-    quote: "\"Inari\" isn't one god. It's five — worshipped together as a single deity called Inari Ōkami.",
-    caption: "FIVE KAMI, ONE NAME",
-    kanji: "神",
+    quote: "There's a fringe theory: that \"Inari\" hides an echo of \"INRI\" — the words on Christ's cross, smuggled here by the shrine's founding clan. Historians call it wordplay. The legend refuses to die.",
+    caption: "FRINGE THEORY — NOT HISTORY",
+    kanji: "十",
+    visual: "cross",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
-    durationSeconds: 8.0, // ナレーション5.7秒 + 余白
+    durationSeconds: 15, // ナレーション11.8秒 + 十字架の演出分(約1.3秒) + 余白
   },
   {
     type: "big-number",

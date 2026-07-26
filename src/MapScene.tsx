@@ -5,6 +5,7 @@ import * as topojson from "topojson-client";
 // @ts-ignore
 import japan from "jpn-atlas/japan/japan.json";
 import { SceneFrame } from "./SceneFrame";
+import { specialGothicExpandedFont } from "./fonts";
 
 export type MapProps = {
   prefectureId: string;
@@ -80,7 +81,7 @@ export const MapScene: React.FC<MapProps> = ({ prefectureId, regionLabel, spotLa
         <div style={{ color: accentColor, fontFamily: "'Liberation Serif', serif", fontStyle: "italic", fontSize: 26, letterSpacing: 6 }}>
           {regionLabel}
         </div>
-        <div style={{ color: "#f5f2eb", fontFamily: "'DejaVu Sans', sans-serif", fontWeight: 900, fontSize: 40, marginTop: 10 }}>
+        <div style={{ color: "#f5f2eb", fontFamily: specialGothicExpandedFont, fontWeight: 900, fontSize: 40, marginTop: 10 }}>
           {spotLabel}
         </div>
       </div>

@@ -3,6 +3,7 @@ import { useCurrentFrame, useVideoConfig, interpolate, spring, Easing } from "re
 import { GradedPhoto } from "./GradedPhoto";
 import { SceneFrame } from "./SceneFrame";
 import { StaggeredText } from "./StaggeredText";
+import { specialGothicExpandedFont } from "./fonts";
 
 export type FactProps = {
   factNumber: number;
@@ -76,7 +77,6 @@ export const FactScene: React.FC<FactProps> = ({
       cornerLabel={`FACT ${String(factNumber).padStart(2, "0")}`}
       footerLeft="Japan Deep Dive"
       footerRight={`${String(factNumber).padStart(2, "0")} / ${String(totalFacts).padStart(2, "0")}`}
-      kanji={kanji}
     >
       {/* 写真ブロック(3分割パネル+ケンバーンズのゆっくりズーム) */}
       <div
@@ -145,13 +145,13 @@ export const FactScene: React.FC<FactProps> = ({
           opacity: headingOpacity,
         }}
       >
-        <div style={{ fontFamily: headingFont ?? "'DejaVu Sans', sans-serif", fontWeight: 900, fontSize: 68, color: "#f5f2eb", lineHeight: 1.05 }}>
+        <div style={{ fontFamily: headingFont ?? specialGothicExpandedFont, fontWeight: 900, fontSize: 68, color: "#f5f2eb", lineHeight: 1.05 }}>
           <StaggeredText text={heading} frame={frame} startFrame={12} />
         </div>
 
         {displayStat && (
           <div style={{ marginTop: 32 }}>
-            <div style={{ fontFamily: "'DejaVu Sans', sans-serif", fontWeight: 900, fontSize: 60, color: accentColor }}>
+            <div style={{ fontFamily: specialGothicExpandedFont, fontWeight: 900, fontSize: 60, color: accentColor }}>
               {displayStat}
             </div>
             {statLabel && (

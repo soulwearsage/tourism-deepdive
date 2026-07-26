@@ -4,7 +4,7 @@ import { GradedPhoto } from "./GradedPhoto";
 import { SceneFrame } from "./SceneFrame";
 import { TextHeroScene } from "./TextHeroScene";
 import { StaggeredText } from "./StaggeredText";
-import { parkinsansFont } from "./fonts";
+import { specialGothicExpandedFont } from "./fonts";
 import { FactScene, FactProps } from "./FactScene";
 import { BigNumberScene, BigNumberProps } from "./BigNumberScene";
 import { QuoteScene, QuoteProps } from "./QuoteScene";
@@ -95,7 +95,7 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
   const jaChars = spotNameJa.split("");
 
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="deepdive.jp" kanji={kanjiMotif} narrationSrc={narration?.title}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="deepdive.jp" narrationSrc={narration?.title}>
       <div style={{ position: "absolute", top: PANEL_TOP, left: PANEL_LEFT, width: PANEL_SIZE, height: PANEL_SIZE, opacity: panelOpacity, overflow: "hidden" }}>
         <div style={{ display: "flex", gap: GAP, width: "100%", height: "100%", transform: `scale(${kenBurnsScale})`, transformOrigin: "center center" }}>
           {[0, 1, 2].map((i) => (
@@ -130,7 +130,7 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
         <div style={{ color: accentColor, fontSize: 24, letterSpacing: 10, marginBottom: 20, fontFamily: "'Liberation Serif', serif", fontStyle: "italic" }}>
           Deep Dive
         </div>
-        <div style={{ color: "#f5f2eb", fontSize: 96, fontWeight: 700, lineHeight: 0.98, fontFamily: parkinsansFont }}>
+        <div style={{ color: "#f5f2eb", fontSize: 96, fontWeight: 700, lineHeight: 0.98, fontFamily: specialGothicExpandedFont }}>
           <StaggeredText text={spotName} frame={frame} startFrame={15} staggerFrames={4} />
         </div>
         <div style={{ width: 90, height: 1, background: "#6b6255", margin: "40px 0" }} />
@@ -154,7 +154,7 @@ const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narrati
             MOST VISITORS MISS THIS
           </div>
           <div style={{ width: 60, height: 1, background: "#4a453d", margin: "0 auto 28px" }} />
-          <div style={{ color: "#f5f2eb", fontSize: 48, fontWeight: 900, lineHeight: 1.3, fontFamily: "'DejaVu Sans', sans-serif" }}>
+          <div style={{ color: "#f5f2eb", fontSize: 48, fontWeight: 900, lineHeight: 1.3, fontFamily: specialGothicExpandedFont }}>
             <StaggeredText text={hookText} frame={frame} startFrame={10} />
           </div>
         </div>
@@ -191,10 +191,10 @@ const OutroScene: React.FC<Props> = ({ spotName, accentColor, kanjiMotif, narrat
     <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="NO. 001" footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.outro} kanji={kanjiMotif} kanjiOpacity={0.16}>
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center" }}>
         <div style={{ transform: `scale(${scale})`, textAlign: "center" }}>
-          <div style={{ color: "#f5f2eb", fontSize: 40, fontWeight: 700, fontFamily: "'DejaVu Sans', sans-serif" }}>
+          <div style={{ color: "#f5f2eb", fontSize: 40, fontWeight: 700, fontFamily: specialGothicExpandedFont }}>
             Worth the visit?
           </div>
-          <div style={{ color: accentColor, fontSize: 40, fontWeight: 700, fontFamily: "'DejaVu Sans', sans-serif" }}>
+          <div style={{ color: accentColor, fontSize: 40, fontWeight: 700, fontFamily: specialGothicExpandedFont }}>
             Absolutely.
           </div>
           <div style={{ width: 60, height: 1, background: "#4a453d", margin: "28px auto" }} />

@@ -1,7 +1,7 @@
 import React from "react";
 import { Composition } from "remotion";
 import { DeepDive, getTotalDuration, FactInput } from "./DeepDive";
-import { parkinsansFont, specialGothicExpandedFont } from "./fonts";
+import { specialGothicExpandedFont } from "./fonts";
 
 const HERO_PHOTO = "photos/001_fushimi-inari/hero.png";
 const AUDIO_DIR = "audio/001_fushimi-inari";
@@ -25,7 +25,6 @@ const facts: FactInput[] = [
     statLabel: "gates donated since the Edo period",
     body: "The color is called shu — believed to ward off evil and symbolize vitality, not chosen for looks.",
     photoSrc: "photos/001_fushimi-inari/fact-1.png",
-    headingFont: parkinsansFont,
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
     durationSeconds: 12.5, // ナレーション10.1秒 + 余白
   },

@@ -1,6 +1,7 @@
 import React from "react";
 import { useCurrentFrame, useVideoConfig, interpolate, spring, Easing } from "remotion";
 import { SceneFrame } from "./SceneFrame";
+import { specialGothicExpandedFont } from "./fonts";
 
 export type BigNumberProps = {
   factNumber: number;
@@ -93,7 +94,7 @@ export const BigNumberScene: React.FC<BigNumberProps> = ({
           <div style={{ transform: `scale(${numberScale})`, textAlign: "center" }}>
             <div
               style={{
-                fontFamily: "'DejaVu Sans', sans-serif",
+                fontFamily: specialGothicExpandedFont,
                 fontWeight: 900,
                 fontSize: 160,
                 color: accentColor,
@@ -149,7 +150,7 @@ export const BigNumberScene: React.FC<BigNumberProps> = ({
         <div style={{ textAlign: "center", transform: `scale(${scale})` }}>
           <div
             style={{
-              fontFamily: "'DejaVu Sans', sans-serif",
+              fontFamily: specialGothicExpandedFont,
               fontWeight: 900,
               fontSize: 128,
               color: accentColor,

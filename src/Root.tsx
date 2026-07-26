@@ -4,6 +4,7 @@ import { DeepDive, getTotalDuration } from "./DeepDive";
 import * as fushimiInari from "./spots/001-fushimi-inari";
 import * as itsukushima from "./spots/002-itsukushima";
 import * as takaya from "./spots/003-takaya";
+import * as ise from "./spots/004-ise";
 
 export const Root: React.FC = () => {
   return (
@@ -34,6 +35,15 @@ export const Root: React.FC = () => {
         width={1080}
         height={1920}
         defaultProps={takaya.defaultProps}
+      />
+      <Composition
+        id="DeepDive-Ise"
+        component={DeepDive}
+        durationInFrames={getTotalDuration(ise.facts, ise.sceneDurations)}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={ise.defaultProps}
       />
     </>
   );

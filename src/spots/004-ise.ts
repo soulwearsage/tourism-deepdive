@@ -33,10 +33,11 @@ export const facts: FactInput[] = [
     durationSeconds: 12.5, // ナレーション11.2秒 + 余白
   },
   {
-    type: "quote",
-    quote: "Some scholars believe the sun goddess enshrined here didn't start out as a goddess at all. Ancient records suggest the deity was originally male — until a reigning empress may have remade the sun in her own image.",
-    caption: "A THEORY, NOT CONFIRMED HISTORY",
+    type: "photo-stat",
     kanji: "陽",
+    heading: "She might not have started as a goddess",
+    body: "Ancient records suggest this sun deity was originally male — a theory, not confirmed history — until a reigning empress may have remade the sun in her own image.",
+    photoSrc: "photos/004_ise/fact-3.png",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
     durationSeconds: 15.0, // ナレーション13.5秒 + 余白
   },

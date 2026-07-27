@@ -7,18 +7,10 @@ on:
   workflow_dispatch:
     inputs:
       spot:
-        description: "書き出すスポットを選択(未指定なら全部)"
+        description: "書き出すスポット(未指定/latestなら最新の1本だけ、allなら全部)"
         required: false
-        default: "all"
-        type: choice
-        options:
-          - all
-          - fushimi
-          - itsukushima
-          - takaya
-          - ise
-          - kumano
-          - izumo
+        default: "latest"
+        type: string
 
 jobs:
   render:
@@ -38,38 +30,45 @@ jobs:
       - name: 日本語フォントをインストール
         run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk
 
-      # 各ステップは、選択したスポットに一致する場合だけ実行される。
-      # pushで自動実行された場合(spot未指定)は全部実行される。
-      # continue-on-error: どれか1本が失敗しても、他のスポットの書き出しは止まらない
-      - name: 動画を書き出し(伏見稲荷)
-        if: github.event.inputs.spot == 'fushimi' || github.event.inputs.spot == 'all' || github.event.inputs.spot == ''
-        continue-on-error: true
-        run: npx remotion render DeepDive-FushimiInari out/fushimi-inari.mp4
+      # push(通常のgit push)の場合はspot未指定→"latest"扱いになり、一番新しいスポットだけ書き出す。
+      # 手動実行で"all"を選んだ時だけ全部書き出す。特定の名前(例: "izumo")を指定すればそれだけ書き出す。
+      - name: 書き出すスポットを決定
+        id: pick
+        run: |
+          SPOT_INPUT="${{ github.event.inputs.spot }}"
+          if [ -z "$SPOT_INPUT" ]; then
+            SPOT_INPUT="latest"
+          fi
+          echo "spot=$SPOT_INPUT" >> "$GITHUB_OUTPUT"
 
-      - name: 動画を書き出し(厳島神社)
-        if: github.event.inputs.spot == 'itsukushima' || github.event.inputs.spot == 'all' || github.event.inputs.spot == ''
-        continue-on-error: true
-        run: npx remotion render DeepDive-Itsukushima out/itsukushima.mp4
+      - name: 動画を書き出し
+        run: |
+          SPOT="${{ steps.pick.outputs.spot }}"
+          mkdir -p out
+          if [ "$SPOT" = "all" ]; then
+            node scripts/list-spots.js | node -e "
+              const spots = JSON.parse(require('fs').readFileSync(0, 'utf8'));
+              spots.forEach(s => console.log(s.shortId));
+            " > /tmp/targets.txt
+          elif [ "$SPOT" = "latest" ]; then
+            node scripts/list-spots.js --latest > /tmp/targets.txt
+          else
+            echo "$SPOT" > /tmp/targets.txt
+          fi
 
-      - name: 動画を書き出し(高屋神社)
-        if: github.event.inputs.spot == 'takaya' || github.event.inputs.spot == 'all' || github.event.inputs.spot == ''
-        continue-on-error: true
-        run: npx remotion render DeepDive-Takaya out/takaya.mp4
-
-      - name: 動画を書き出し(伊勢神宮)
-        if: github.event.inputs.spot == 'ise' || github.event.inputs.spot == 'all' || github.event.inputs.spot == ''
-        continue-on-error: true
-        run: npx remotion render DeepDive-Ise out/ise.mp4
-
-      - name: 動画を書き出し(熊野本宮大社)
-        if: github.event.inputs.spot == 'kumano' || github.event.inputs.spot == 'all' || github.event.inputs.spot == ''
-        continue-on-error: true
-        run: npx remotion render DeepDive-Kumano out/kumano.mp4
-
-      - name: 動画を書き出し(出雲大社)
-        if: github.event.inputs.spot == 'izumo' || github.event.inputs.spot == 'all' || github.event.inputs.spot == ''
-        continue-on-error: true
-        run: npx remotion render DeepDive-Izumo out/izumo.mp4
+          while read -r ID; do
+            [ -z "$ID" ] && continue
+            COMPOSITION=$(node scripts/list-spots.js | node -e "
+              const spots = JSON.parse(require('fs').readFileSync(0, 'utf8'));
+              const s = spots.find(x => x.shortId === '$ID');
+              if (!s) { console.error('spot not found: $ID'); process.exit(1); }
+              console.log(s.compositionId + '|' + s.outputFile);
+            ")
+            COMP_ID="${COMPOSITION%%|*}"
+            OUT_FILE="${COMPOSITION##*|}"
+            echo "=== 書き出し中: $ID ($COMP_ID → $OUT_FILE) ==="
+            npx remotion render "$COMP_ID" "out/$OUT_FILE" || echo "!!! $ID の書き出しに失敗しました(他は続行します) !!!"
+          done < /tmp/targets.txt
 
       - name: 書き出した動画をアップロード
         uses: actions/upload-artifact@v4

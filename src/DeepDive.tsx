@@ -114,7 +114,7 @@ const PANEL_W = (PANEL_SIZE - GAP * 2) / 3;
 const PANEL_BOTTOM = PANEL_TOP + PANEL_SIZE;
 
 // --- Scene: タイトルカード ---
-const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentColor, heroPhotoSrc, kanjiMotif, narration, episodeNumber }) => {
+const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentColor, heroPhotoSrc, kanjiMotif, narration, episodeNumber, introSfx }) => {
   const frame = useCurrentFrame();
   const panelOpacity = interpolate(frame, [0, 18], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const titleY = interpolate(frame, [15, 35], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
@@ -132,6 +132,7 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
 
   return (
     <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="deepdive.jp" narrationSrc={narration?.title}>
+      {introSfx && <Audio src={staticFile(introSfx)} />}
       <div style={{ position: "absolute", top: PANEL_TOP, left: PANEL_LEFT, width: PANEL_SIZE, height: PANEL_SIZE, opacity: panelOpacity, overflow: "hidden" }}>
         <div style={{ display: "flex", gap: GAP, width: "100%", height: "100%", transform: `scale(${kenBurnsScale})`, transformOrigin: "center center" }}>
           {[0, 1, 2].map((i) => (
@@ -179,12 +180,12 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
 };
 
 // --- Scene: フック ---
-const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narration, episodeNumber, introSfx }) => {
+const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narration, episodeNumber }) => {
   const frame = useCurrentFrame();
   const opacity = interpolate(frame, [0, 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
     <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="HOOK" narrationSrc={narration?.hook} kanji={kanjiMotif} kanjiOpacity={0.16}>
-      {introSfx && <Audio src={staticFile(introSfx)} />}
+      {/* イントロ音はTitleSceneの方で鳴らす(写真が出る瞬間に合わせるため) */}
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center", padding: "0 100px" }}>
         <div style={{ textAlign: "center", opacity }}>
           <div style={{ color: accentColor, fontSize: 20, letterSpacing: 8, marginBottom: 24, fontFamily: "'Liberation Serif', serif", fontStyle: "italic" }}>
@@ -318,10 +319,13 @@ export const DeepDive: React.FC<Props> = (props) => {
     }
   };
 
+  // introSfxが設定されてるスポットだけ、フックを「コールドオープン」として先頭に持ってくる。
+  // 設定してないスポット(既存の伏見稲荷など)は、今まで通りタイトル→地図→フックの順のまま
+  // 常に「タイトル(写真)→地図→フック」の元の並び順に統一
   let cursor = 0;
-  const hookFrom = cursor; cursor += HOOK_DUR; // コールドオープンとして一番最初に配置
   const titleFrom = cursor; cursor += TITLE_DUR;
   const mapFrom = cursor; cursor += MAP_DUR;
+  const hookFrom = cursor; cursor += HOOK_DUR;
   const factFroms: number[] = [];
   const factDurs: number[] = [];
   facts.forEach((fact) => {

@@ -70,14 +70,15 @@ const FPS = 30;
 const PANEL_TOP = 260;
 
 // BGMを動画全体に流す。冒頭1秒・末尾1秒でフェードイン/アウトする
-const BgmTrack: React.FC<{ src: string; baseVolume: number; duckAtFrame?: number }> = ({ src, baseVolume, duckAtFrame }) => {
+const BgmTrack: React.FC<{ src: string; baseVolume: number; duckAtFrame?: number; fadeInAtFrame?: number }> = ({ src, baseVolume, duckAtFrame, fadeInAtFrame }) => {
   const frame = useCurrentFrame();
   const { durationInFrames, fps } = useVideoConfig();
   const fadeFrames = fps; // 1秒
   const duckFrames = fps; // ダッキングも1秒かけて
+  const fadeInStart = fadeInAtFrame ?? 0;
   let volume = interpolate(
     frame,
-    [0, fadeFrames, durationInFrames - fadeFrames, durationInFrames],
+    [fadeInStart, fadeInStart + fadeFrames, durationInFrames - fadeFrames, durationInFrames],
     [0, baseVolume, baseVolume, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
@@ -182,17 +183,41 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
 
 // --- Scene: フック ---
 // --- Scene: キャッチコピー(イントロ音が鳴ってる間だけ出る、一番最初のガツンとした一言) ---
-const CatchCopyScene: React.FC<Props> = ({ accentColor, kanjiMotif, episodeNumber, catchCopy, introSfx }) => {
+const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy, introSfx }) => {
   const frame = useCurrentFrame();
-  const opacity = interpolate(frame, [0, 12, 100, 130], [0, 1, 1, 0], {
+  // 実際の音源を解析して測った「低音がドーンと入るタイミング」(秒)。音源ごとに微妙に違う
+  const bassHitSeconds = introSfx?.includes("light") ? 1.7 : 1.2;
+  const bassFrame = Math.round(bassHitSeconds * 30);
+
+  const baseOpacity = interpolate(frame, [0, 8, 100, 130], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
+  // 低音が鳴る瞬間だけ、キャッチコピーが一瞬フッと消えて、すぐ戻ってくるフラッシュ演出
+  const bassFlash = interpolate(
+    frame,
+    [bassFrame - 2, bassFrame, bassFrame + 2, bassFrame + 8],
+    [1, 0.05, 0.05, 1],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+  );
+  const opacity = baseOpacity * bassFlash;
   const scale = interpolate(frame, [0, 12], [1.12, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
   });
+  // クロマティックアベレーション(赤/水色のズレ)が、出た瞬間だけ大きくズレてて、
+  // 一瞬でピタッと収束するグリッチ演出。3Dメガネのアナグリフのような見た目になる
+  const glitchOffset = interpolate(frame, [0, 3, 6, 9, 14], [18, 10, 14, 4, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const textStyle: React.CSSProperties = {
+    fontSize: 60,
+    fontWeight: 900,
+    lineHeight: 1.15,
+    fontFamily: specialGothicExpandedFont,
+  };
   return (
     <SceneFrame
       accentColor={accentColor}
@@ -200,15 +225,38 @@ const CatchCopyScene: React.FC<Props> = ({ accentColor, kanjiMotif, episodeNumbe
       cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`}
       footerLeft="Japan Deep Dive"
       footerRight="INTRO"
-      kanji={kanjiMotif}
-      kanjiOpacity={0.16}
     >
       {introSfx && <Audio src={staticFile(introSfx)} volume={0.18} />}
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center", padding: "0 100px" }}>
-        <div style={{ textAlign: "center", opacity, transform: `scale(${scale})` }}>
-          <div style={{ color: "#f5f2eb", fontSize: 60, fontWeight: 900, lineHeight: 1.15, fontFamily: specialGothicExpandedFont }}>
+        <div style={{ textAlign: "center", opacity, transform: `scale(${scale})`, position: "relative" }}>
+          {/* 赤/マゼンタ側にズレたレイヤー */}
+          <div
+            style={{
+              ...textStyle,
+              position: "absolute",
+              inset: 0,
+              color: "#ff3b5c",
+              mixBlendMode: "screen",
+              transform: `translateX(${-glitchOffset}px)`,
+            }}
+          >
             {catchCopy}
           </div>
+          {/* 水色側にズレたレイヤー */}
+          <div
+            style={{
+              ...textStyle,
+              position: "absolute",
+              inset: 0,
+              color: "#3bdcff",
+              mixBlendMode: "screen",
+              transform: `translateX(${glitchOffset}px)`,
+            }}
+          >
+            {catchCopy}
+          </div>
+          {/* 本体(白) */}
+          <div style={{ ...textStyle, position: "relative", color: "#f5f2eb" }}>{catchCopy}</div>
         </div>
       </div>
     </SceneFrame>
@@ -372,7 +420,18 @@ export const DeepDive: React.FC<Props> = (props) => {
 
   return (
     <AbsoluteFill>
-      {bgmSrc && <BgmTrack src={bgmSrc} baseVolume={bgmVolume} duckAtFrame={outroFrom + 65} />}
+      {bgmSrc && (
+        <BgmTrack
+          src={bgmSrc}
+          baseVolume={bgmVolume}
+          duckAtFrame={outroFrom + 65}
+          fadeInAtFrame={
+            props.catchCopy
+              ? catchFrom + Math.round((props.introSfx?.includes("light") ? 1.7 : 1.2) * 30)
+              : undefined
+          }
+        />
+      )}
       {outroBgmSrc && (
         <Sequence from={outroFrom + 65}>
           <OutroBgmTrack src={outroBgmSrc} />

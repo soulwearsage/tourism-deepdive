@@ -5,8 +5,8 @@ const AUDIO_DIR = "audio/002_itsukushima";
 
 // 実測したナレーションの長さ(秒)+2.5秒の余白
 export const sceneDurations = {
-  title: 4.5, // ナレーション1.8秒(神社名を追加) + 余白
-  map: 5.0,    // ナレーション1.2秒 + 余白(ズーム演出の尺を確保するため多めに)
+  title: 3.5, // ナレーション1.8秒(神社名を追加) + 余白を詰めた
+  map: 4.5,    // ナレーション1.2秒 + 余白(ズーム演出の尺を確保するため多めに)
   hook: 9.0,   // ナレーション6.6秒 + 余白
   twist: 15.0, // ナレーション12.6秒 + 余白
   outro: 4.5,  // ナレーション1.7秒 + 余白
@@ -37,7 +37,7 @@ export const facts: FactInput[] = [
     type: "big-number",
     kanji: "宗",
     value: "3",
-    label: "sister goddesses enshrined here since 593 AD — the Munakata deities",
+    label: "sister goddesses enshrined here since 593 AD — the MUNAKATA deities",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
     durationSeconds: 8.5, // ナレーション5.9秒 + 余白
   },
@@ -67,7 +67,7 @@ export const defaultProps = {
   hookText: "For over a thousand years, no one has been born on this island — and no one is allowed to die here either.",
   facts,
   twistHeading: "A flame that never went out.",
-  twistBody: "High on Mount Misen, a fire lit in the year 806 has burned without stopping for over 1,200 years. In 1945, it lit the Peace Flame in Hiroshima — thirty kilometers away.",
+  twistBody: "High on MOUNT MISEN, a fire lit in the year 806 has burned without stopping for over 1,200 years. In 1945, it lit the PEACE FLAME in HIROSHIMA — thirty kilometers away.",
   narration: {
     title: `${AUDIO_DIR}/title.mp3`,
     map: `${AUDIO_DIR}/map.mp3`,

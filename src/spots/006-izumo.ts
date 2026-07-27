@@ -5,8 +5,8 @@ const AUDIO_DIR = "audio/006_izumo";
 
 // ※秒数は暫定値。ナレーション生成後にmeasure-narration-izumo.jsで実測し、正確な値に差し替えること
 export const sceneDurations = {
-  title: 4.0,
-  map: 5.0,
+  title: 3.2,
+  map: 4.5,
   hook: 7.0,
   twist: 22.0, // ナレーション20.4秒 + 余白
   outro: 4.5,
@@ -19,7 +19,7 @@ export const facts: FactInput[] = [
     heading: "A shrine built for a defeated god",
     statValue: "48m",
     statLabel: "tall — proven by three massive pillars, bound as one, found in a 2000 excavation",
-    body: "Ōkuninushi once ruled Japan, until the myth of \"kuniyuzuri\" forced him to hand the land to the gods who came before the emperors. This shrine — once nearly half the height of the Great Pyramid — was his reward for stepping aside.",
+    body: "ŌKUNINUSHI once ruled Japan, until the myth of \"kuniyuzuri\" forced him to hand the land to the gods who came before the emperors. This shrine — once nearly half the height of the Great Pyramid — was his reward for stepping aside.",
     photoSrc: HERO_PHOTO,
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,

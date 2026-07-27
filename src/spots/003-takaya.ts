@@ -5,8 +5,8 @@ const AUDIO_DIR = "audio/003_takaya";
 
 // ※秒数は暫定値。ナレーション生成後にmeasure-narration.jsで実測し、正確な値に差し替えること
 export const sceneDurations = {
-  title: 4.0,
-  map: 5.0,
+  title: 3.2,
+  map: 4.5,
   hook: 8.5, // ナレーション5.6秒 + 余白
   twist: 17.0, // ナレーション14.5秒 + 余白
   outro: 4.5,

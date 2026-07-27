@@ -5,8 +5,8 @@ const AUDIO_DIR = "audio/005_kumano";
 
 // ※秒数は暫定値。ナレーション生成後にmeasure-narration-kumano.jsで実測し、正確な値に差し替えること
 export const sceneDurations = {
-  title: 4.0,
-  map: 5.0,
+  title: 3.2,
+  map: 4.5,
   hook: 7.0,
   twist: 24.5, // ナレーション23秒 + 余白
   outro: 4.5,
@@ -28,7 +28,7 @@ export const facts: FactInput[] = [
     type: "big-number",
     kanji: "総",
     value: "4,700+",
-    label: "shrines across Japan trace back to this single site — making it the head shrine of all Kumano worship",
+    label: "shrines across Japan trace back to this single site — making it the head shrine of all KUMANO worship",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
     durationSeconds: 10.5,
   },
@@ -56,7 +56,7 @@ export const defaultProps = {
   hookText: "At one of Japan's holiest shrines, nobody is certain who they're actually praying to.",
   facts,
   twistHeading: "No one is certain who they're worshipping.",
-  twistBody: "This region is called Kii — \"Land of Trees\" — after a myth of the god Susanoo scattering tree seeds here. The word \"Kumano\" itself means \"the hidden place,\" where the spirits of the dead were once believed to gather. Sun god. Water god. Tree god. After a thousand years, historians still don't agree on who's really enshrined here.",
+  twistBody: "This region is called KII — \"Land of Trees\" — after a myth of the god SUSANOO scattering tree seeds here. The word \"KUMANO\" itself means \"the hidden place,\" where the spirits of the dead were once believed to gather. Sun god. Water god. Tree god. After a thousand years, historians still don't agree on who's really enshrined here.",
   narration: {
     title: `${AUDIO_DIR}/title.mp3`,
     map: `${AUDIO_DIR}/map.mp3`,

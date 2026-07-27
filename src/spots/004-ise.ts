@@ -5,8 +5,8 @@ const AUDIO_DIR = "audio/004_ise";
 
 // ※秒数は暫定値。ナレーション生成後にmeasure-narration-ise.jsで実測し、正確な値に差し替えること
 export const sceneDurations = {
-  title: 4.0,
-  map: 5.0,
+  title: 3.2,
+  map: 4.5,
   hook: 6.5, // ナレーション4.6秒 + 余白
   twist: 19.5, // ナレーション17.9秒 + 余白
   outro: 4.5,
@@ -19,7 +19,7 @@ export const facts: FactInput[] = [
     heading: "One name, 125 shrines",
     statValue: "2,000+",
     statLabel: "years of history behind the inner and outer shrines at the heart of it all",
-    body: "The inner shrine honors the sun goddess Amaterasu. The outer shrine honors Toyouke, goddess of food. Together with 123 more, they're simply called Jingu.",
+    body: "The inner shrine honors the sun goddess AMATERASU. The outer shrine honors TOYOUKE, goddess of food. Together with 123 more, they're simply called Jingu.",
     photoSrc: HERO_PHOTO,
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
     durationSeconds: 16.0, // ナレーション14.5秒 + 余白

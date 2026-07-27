@@ -7,8 +7,8 @@ const AUDIO_DIR = "audio/001_fushimi-inari";
 // 実測したナレーションの長さ(秒)+2.5秒の余白。
 // 60秒の広告収益化ラインを維持しつつ、ナレーションの実際の長さに尺を合わせている
 export const sceneDurations = {
-  title: 3.5,
-  map: 4.5,
+  title: 2.8,
+  map: 4.2,
   hook: 6.0, // ナレーション4.4秒 + 余白を詰めた
   twist: 12.0, // ナレーション10.7秒 + 余白を詰めた
   outro: 4.5,
@@ -21,7 +21,7 @@ export const facts: FactInput[] = [
     heading: "10,000 secret shrines are hiding here",
     statValue: "~10,000",
     statLabel: "private shrines carved into this mountain since the 1870s",
-    body: "Each stone bears a deity name found in no official record — unrecognized beliefs, hiding in plain sight, disguised as Inari worship.",
+    body: "Each stone bears a deity name found in no official record — unrecognized beliefs, hiding in plain sight, disguised as INARI worship.",
     photoSrc: "photos/001_fushimi-inari/fact-1.png",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
     durationSeconds: 15.5, // ナレーション14.2秒 + 余白を詰めた
@@ -30,7 +30,7 @@ export const facts: FactInput[] = [
     type: "big-number",
     kanji: "宇",
     value: "5",
-    label: "kami enshrined as one, led by Ukanomitama — the spirit of rice and food itself",
+    label: "kami enshrined as one, led by UKANOMITAMA — the spirit of rice and food itself",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
     durationSeconds: 7.0, // ナレーション5.6秒 + 余白を詰めた
   },
@@ -48,7 +48,7 @@ export const facts: FactInput[] = [
   },
   {
     type: "quote",
-    quote: "There's a fringe theory: that \"Inari\" hides an echo of \"INRI\" — the words on Christ's cross, smuggled here by the shrine's founding clan. Historians call it wordplay. The legend refuses to die.",
+    quote: "There's a fringe theory: that \"INARI\" hides an echo of \"INRI\" — the words on CHRIST's cross, smuggled here by the shrine's founding clan. Historians call it wordplay. The legend refuses to die.",
     caption: "FRINGE THEORY — NOT HISTORY",
     kanji: "十",
     visual: "cross",
@@ -70,7 +70,7 @@ export const defaultProps = {
   hookText: "9 out of 10 visitors never learn who they're actually praying to.",
   facts,
   twistHeading: "The real shrine has no walls.",
-  twistBody: "The sacred object isn't inside any building — it's Mt. Inari itself. The torii don't lead to the shrine. They ARE the shrine.",
+  twistBody: "The sacred object isn't inside any building — it's Mt. INARI itself. The torii don't lead to the shrine. They ARE the shrine.",
   narration: {
     title: `${AUDIO_DIR}/title.mp3`,
     map: `${AUDIO_DIR}/map.mp3`,

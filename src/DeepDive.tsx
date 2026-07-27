@@ -308,17 +308,17 @@ const OutroScene: React.FC<Props> = ({ spotName, accentColor, kanjiMotif, narrat
     <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.outro}>
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center" }}>
         <div style={{ transform: `scale(${scale})`, textAlign: "center" }}>
-          <div style={{ color: "#f5f2eb", fontSize: 40, fontWeight: 700, fontFamily: specialGothicExpandedFont }}>
+          <div style={{ color: "#f5f2eb", fontSize: 56, fontWeight: 700, fontFamily: specialGothicExpandedFont }}>
             Worth the visit?
           </div>
-          <div style={{ color: accentColor, fontSize: 40, fontWeight: 700, fontFamily: specialGothicExpandedFont }}>
+          <div style={{ color: accentColor, fontSize: 56, fontWeight: 700, fontFamily: specialGothicExpandedFont }}>
             Absolutely.
           </div>
-          <div style={{ width: 60, height: 1, background: "#4a453d", margin: "28px auto" }} />
-          <div style={{ color: "#9a9285", fontSize: 22, fontFamily: "'Liberation Serif', serif", fontStyle: "italic" }}>
+          <div style={{ width: 60, height: 1, background: "#4a453d", margin: "32px auto" }} />
+          <div style={{ color: "#9a9285", fontSize: 28, fontFamily: "'Liberation Serif', serif", fontStyle: "italic" }}>
             {spotName} — Deep Dive series
           </div>
-          <div style={{ color: accentColor, fontSize: 20, fontWeight: 700, letterSpacing: 3, marginTop: 34, opacity: taglineOpacity, fontFamily: specialGothicExpandedFont }}>
+          <div style={{ color: accentColor, fontSize: 26, fontWeight: 700, letterSpacing: 3, marginTop: 38, opacity: taglineOpacity, fontFamily: specialGothicExpandedFont }}>
             Follow for hidden Japan.
           </div>
         </div>

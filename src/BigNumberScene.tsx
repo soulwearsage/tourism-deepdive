@@ -68,8 +68,8 @@ export const BigNumberScene: React.FC<BigNumberProps> = ({
         narrationSrc={narrationSrc}
       >
         <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "0 90px" }}>
-          {/* 積み上がるドット */}
-          <div style={{ display: "flex", gap: 22, marginBottom: 56, opacity: dotsOpacityOut }}>
+          {/* 積み上がる柱(神様は「一柱、二柱」と柱で数えるため、丸ではなく柱の形にしてる) */}
+          <div style={{ display: "flex", gap: 20, marginBottom: 56, alignItems: "flex-end", opacity: dotsOpacityOut }}>
             {dots.map((i) => {
               const dotFrame = frame - (dotStart + i * dotDelay);
               const dotScale = spring({ frame: dotFrame, fps, config: { damping: 9, mass: 0.5 } });
@@ -78,14 +78,20 @@ export const BigNumberScene: React.FC<BigNumberProps> = ({
                 <div
                   key={i}
                   style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: "50%",
-                    background: accentColor,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                     transform: `translateY(${dotY}px) scale(${dotScale})`,
                     opacity: dotScale,
                   }}
-                />
+                >
+                  {/* 柱頭 */}
+                  <div style={{ width: 24, height: 4, background: accentColor, borderRadius: 1 }} />
+                  {/* 柱身 */}
+                  <div style={{ width: 10, height: 26, background: accentColor, opacity: 0.85 }} />
+                  {/* 柱礎 */}
+                  <div style={{ width: 24, height: 4, background: accentColor, borderRadius: 1 }} />
+                </div>
               );
             })}
           </div>

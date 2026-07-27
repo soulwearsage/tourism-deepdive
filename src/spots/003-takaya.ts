@@ -18,6 +18,7 @@ export const facts: FactInput[] = [
     kanji: "空",
     heading: "The gate that touches the sky",
     statValue: "404m",
+    verticalText: "邇邇芸命",
     statLabel: "above the Seto Inland Sea, with nothing but clouds beyond the gate",
     body: "Climb high enough, and the torii seems to open directly into the sky — which is exactly why everyone calls it that.",
     photoSrc: HERO_PHOTO,

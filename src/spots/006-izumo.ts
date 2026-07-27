@@ -38,6 +38,7 @@ export const facts: FactInput[] = [
     type: "photo-stat",
     kanji: "西",
     heading: "The god who won't face his own worshippers",
+    verticalText: "大国主大神",
     body: "His sacred seat points sideways, to the west — so a separate entrance was built just so visitors could pray to him face to face. Some say it was designed that way on purpose.",
     photoSrc: "photos/006_izumo/fact-3.png",
     photoSfx: "bgm/camera.mp3",

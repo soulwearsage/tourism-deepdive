@@ -18,6 +18,7 @@ export const facts: FactInput[] = [
     kanji: "斎",
     heading: "Japan's largest torii marks a shrine that's gone",
     statValue: "34m",
+    verticalText: "家都美御子大神",
     statLabel: "tall — standing where the original shrine complex once stood, before a flood destroyed most of it in 1889",
     body: "Only four of the original twelve shrine buildings survived. They were moved to where the shrine stands today.",
     photoSrc: HERO_PHOTO,

@@ -20,7 +20,7 @@ export const facts: FactInput[] = [
     statValue: "48m",
     statLabel: "tall — proven by three massive pillars, bound as one, found in a 2000 excavation",
     body: "ŌKUNINUSHI once ruled Japan, until the myth of \"kuniyuzuri\" forced him to hand the land to the gods who came before the emperors. This shrine — once nearly half the height of the Great Pyramid — was his reward for stepping aside.",
-    photoSrc: HERO_PHOTO,
+    photoSrc: "photos/006_izumo/fact-2.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
     durationSeconds: 25.0, // ナレーション23.6秒 + 余白

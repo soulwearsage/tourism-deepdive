@@ -10,7 +10,75 @@ export type QuoteProps = {
   kanji?: string;
   narrationSrc?: string;
   accentColor: string;
-  visual?: "cross"; // 任意のビジュアル演出(現在は十字架のみ対応)
+  visual?: "cross" | "pyramid"; // 任意のビジュアル演出
+};
+
+// 線が少しずつ描かれるピラミッド+内部の通路・玄室のSVG
+const PyramidVisual: React.FC<{ frame: number; accentColor: string }> = ({ frame, accentColor }) => {
+  const baseProgress = interpolate(frame, [0, 20], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.out(Easing.cubic),
+  });
+  const leftProgress = interpolate(frame, [8, 26], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.out(Easing.cubic),
+  });
+  const rightProgress = interpolate(frame, [8, 26], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.out(Easing.cubic),
+  });
+  // 内部の通路・玄室は、外形が描き終わってから、じわっと浮かび上がる
+  const innerOpacity = interpolate(frame, [30, 50], [0, 0.9], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const glow = interpolate(frame % 90, [0, 45, 90], [0.1, 0.28, 0.1]);
+
+  const apex = { x: 90, y: 0 };
+  const baseL = { x: 0, y: 150 };
+  const baseR = { x: 180, y: 150 };
+
+  return (
+    <svg width="180" height="150" viewBox="0 0 180 150" style={{ overflow: "visible" }}>
+      <polygon points={`${apex.x},${apex.y} ${baseL.x},${baseL.y} ${baseR.x},${baseR.y}`} fill={accentColor} opacity={glow * 0.15} />
+
+      <g opacity={innerOpacity}>
+        <line x1={70} y1={150} x2={95} y2={70} stroke={accentColor} strokeWidth="1.4" strokeDasharray="4 3" />
+        <rect x={82} y={55} width={20} height={16} fill="none" stroke={accentColor} strokeWidth="1.6" />
+      </g>
+
+      <line
+        x1={baseL.x}
+        y1={baseL.y}
+        x2={baseL.x + (baseR.x - baseL.x) * baseProgress}
+        y2={baseL.y}
+        stroke={accentColor}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1={apex.x}
+        y1={apex.y}
+        x2={apex.x - (apex.x - baseL.x) * leftProgress}
+        y2={apex.y + (baseL.y - apex.y) * leftProgress}
+        stroke={accentColor}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1={apex.x}
+        y1={apex.y}
+        x2={apex.x + (baseR.x - apex.x) * rightProgress}
+        y2={apex.y + (baseR.y - apex.y) * rightProgress}
+        stroke={accentColor}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
 };
 
 // 線が少しずつ描かれる十字架のSVG
@@ -72,7 +140,7 @@ export const QuoteScene: React.FC<QuoteProps> = ({
   visual,
 }) => {
   const frame = useCurrentFrame();
-  const textStart = visual === "cross" ? 38 : 0; // ビジュアルがある場合は少し遅らせて出す
+  const textStart = visual ? 38 : 0; // ビジュアルがある場合は少し遅らせて出す
   const opacity = interpolate(frame, [textStart, textStart + 25], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const y = interpolate(frame, [textStart, textStart + 25], [16, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const captionOpacity = interpolate(frame, [textStart + 20, textStart + 40], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
@@ -101,6 +169,11 @@ export const QuoteScene: React.FC<QuoteProps> = ({
         {visual === "cross" && (
           <div style={{ marginBottom: 44 }}>
             <CrossVisual frame={frame} accentColor={accentColor} />
+          </div>
+        )}
+        {visual === "pyramid" && (
+          <div style={{ marginBottom: 44 }}>
+            <PyramidVisual frame={frame} accentColor={accentColor} />
           </div>
         )}
 

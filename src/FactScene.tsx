@@ -1,5 +1,5 @@
 import React from "react";
-import { useCurrentFrame, useVideoConfig, interpolate, spring, Easing } from "remotion";
+import { useCurrentFrame, useVideoConfig, interpolate, spring, Easing, Audio, staticFile } from "remotion";
 import { GradedPhoto } from "./GradedPhoto";
 import { SceneFrame } from "./SceneFrame";
 import { StaggeredText } from "./StaggeredText";
@@ -17,6 +17,7 @@ export type FactProps = {
   photoGradeIntensity?: number;
   verticalText?: string; // タイトルと同じ位置に出す縦書き(例: 祭神名)
   headingFont?: string; // 見出しのフォント名(未指定ならDejaVu Sans)
+  photoSfx?: string; // 写真が出る瞬間に鳴らすシャッター音(public/からの相対パス)
   narrationSrc?: string;
   accentColor?: string;
 };
@@ -43,6 +44,7 @@ export const FactScene: React.FC<FactProps> = ({
   photoGradeIntensity = 1,
   verticalText,
   headingFont,
+  photoSfx,
   narrationSrc,
   accentColor = AC_DEFAULT,
 }) => {
@@ -62,10 +64,14 @@ export const FactScene: React.FC<FactProps> = ({
   });
   const headingY = interpolate(frame, [15, 35], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const headingOpacity = interpolate(frame, [15, 35], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  // 本文ブロック(統計・罫線・本文)は、見出しが読み終わる頃に少し遅れて出す。
+  // 見出しと同時に出すと、視聴者の視線が迷子になりやすいため、時間差をつけて視線を誘導する
+  const bodyY = interpolate(frame, [38, 58], [16, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const bodyOpacity = interpolate(frame, [38, 58], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   const numericMatch = statValue?.match(/[\d,]+/);
   const numericTarget = numericMatch ? parseInt(numericMatch[0].replace(/,/g, ""), 10) : null;
-  const countProgress = spring({ frame: frame - 25, fps, config: { damping: 200 }, durationInFrames: 40 });
+  const countProgress = spring({ frame: frame - 40, fps, config: { damping: 200 }, durationInFrames: 40 });
   const countValue = numericTarget ? Math.floor(interpolate(countProgress, [0, 1], [0, numericTarget])) : null;
   const displayStat =
     numericTarget && statValue ? statValue.replace(/[\d,]+/, countValue!.toLocaleString()) : statValue;
@@ -78,6 +84,7 @@ export const FactScene: React.FC<FactProps> = ({
       footerLeft="Japan Deep Dive"
       footerRight={`${String(factNumber).padStart(2, "0")} / ${String(totalFacts).padStart(2, "0")}`}
     >
+      {photoSfx && <Audio src={staticFile(photoSfx)} />
       {/* 写真ブロック(3分割パネル+ケンバーンズのゆっくりズーム) */}
       <div
         style={{
@@ -141,31 +148,33 @@ export const FactScene: React.FC<FactProps> = ({
           top: PANEL_BOTTOM - 100,
           left: 90,
           right: 90,
-          transform: `translateY(${headingY}px)`,
-          opacity: headingOpacity,
         }}
       >
-        <div style={{ fontFamily: headingFont ?? specialGothicExpandedFont, fontWeight: 900, fontSize: 68, color: "#f5f2eb", lineHeight: 1.05 }}>
-          <StaggeredText text={heading} frame={frame} startFrame={12} />
+        <div style={{ transform: `translateY(${headingY}px)`, opacity: headingOpacity }}>
+          <div style={{ fontFamily: headingFont ?? specialGothicExpandedFont, fontWeight: 900, fontSize: 68, color: "#f5f2eb", lineHeight: 1.05 }}>
+            <StaggeredText text={heading} frame={frame} startFrame={12} />
+          </div>
         </div>
 
-        {displayStat && (
-          <div style={{ marginTop: 32 }}>
-            <div style={{ fontFamily: specialGothicExpandedFont, fontWeight: 900, fontSize: 60, color: accentColor }}>
-              {displayStat}
-            </div>
-            {statLabel && (
-              <div style={{ fontFamily: "'Liberation Serif', serif", fontStyle: "italic", fontSize: 23, color: "#9a9285", marginTop: 6, maxWidth: 750 }}>
-                {statLabel}
+        <div style={{ transform: `translateY(${bodyY}px)`, opacity: bodyOpacity }}>
+          {displayStat && (
+            <div style={{ marginTop: 32 }}>
+              <div style={{ fontFamily: specialGothicExpandedFont, fontWeight: 900, fontSize: 60, color: accentColor }}>
+                {displayStat}
               </div>
-            )}
+              {statLabel && (
+                <div style={{ fontFamily: "'Liberation Serif', serif", fontStyle: "italic", fontSize: 23, color: "#9a9285", marginTop: 6, maxWidth: 750 }}>
+                  {statLabel}
+                </div>
+              )}
+            </div>
+          )}
+
+          <div style={{ width: "100%", height: 1, background: "#4a453d", marginTop: 44, marginBottom: 30 }} />
+
+          <div style={{ fontFamily: "'Liberation Serif', serif", fontStyle: "italic", fontSize: 25, color: "#8a8478", lineHeight: 1.75, maxWidth: 820 }}>
+            {body}
           </div>
-        )}
-
-        <div style={{ width: "100%", height: 1, background: "#4a453d", marginTop: 44, marginBottom: 30 }} />
-
-        <div style={{ fontFamily: "'Liberation Serif', serif", fontStyle: "italic", fontSize: 25, color: "#8a8478", lineHeight: 1.75, maxWidth: 820 }}>
-          {body}
         </div>
       </div>
     </SceneFrame>

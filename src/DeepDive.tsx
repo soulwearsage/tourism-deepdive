@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, Audio, staticFile, Sequence, useCurrentFrame, useVideoConfig, interpolate, spring } from "remotion";
+import { AbsoluteFill, Audio, staticFile, Sequence, useCurrentFrame, useVideoConfig, interpolate, spring, Easing } from "remotion";
 import { GradedPhoto } from "./GradedPhoto";
 import { SceneFrame } from "./SceneFrame";
 import { TextHeroScene } from "./TextHeroScene";
@@ -60,6 +60,8 @@ type Props = {
   sceneDurations?: SceneDurations; // ナレーションの実測秒数に合わせた尺の上書き(秒単位)。無ければ既定値
   bgmSrc?: string;  // 動画全体に流すBGM(public/からの相対パス)。無ければ無音
   bgmVolume?: number; // BGMの音量(0〜1)。デフォルト0.12(ナレーションの邪魔をしない程度に控えめ)
+  introSfx?: string; // コールドオープンで鳴らすイントロ音(light_intro/dark_introなど)
+  outroBgmSrc?: string; // アウトロのタグラインに合わせて鳴らす専用BGM
   episodeNumber: number; // シリーズの何本目か(左上の"NO. 00X"表示に使う)
 };
 
@@ -67,14 +69,40 @@ const FPS = 30;
 const PANEL_TOP = 260;
 
 // BGMを動画全体に流す。冒頭1秒・末尾1秒でフェードイン/アウトする
-const BgmTrack: React.FC<{ src: string; baseVolume: number }> = ({ src, baseVolume }) => {
+const BgmTrack: React.FC<{ src: string; baseVolume: number; duckAtFrame?: number }> = ({ src, baseVolume, duckAtFrame }) => {
   const frame = useCurrentFrame();
   const { durationInFrames, fps } = useVideoConfig();
   const fadeFrames = fps; // 1秒
-  const volume = interpolate(
+  const duckFrames = fps; // ダッキングも1秒かけて
+  let volume = interpolate(
     frame,
     [0, fadeFrames, durationInFrames - fadeFrames, durationInFrames],
     [0, baseVolume, baseVolume, 0],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+  );
+  // Outro BGMが鳴り始めるタイミング(duckAtFrame)に合わせて、メインBGMをフェードダウンさせる
+  if (duckAtFrame !== undefined) {
+    const duck = interpolate(frame, [duckAtFrame - duckFrames, duckAtFrame], [1, 0.15], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    });
+    volume = volume * duck;
+  }
+  return <Audio src={staticFile(src)} volume={volume} />;
+};
+
+// "Follow for hidden Japan."が出るタイミングに合わせて鳴らすOutro専用BGM。
+// <Sequence from={startFrame}>でラップして使うことで、音声ファイル自体もその瞬間から
+// 再生が始まる(先頭から鳴る)ようにする
+const OutroBgmTrack: React.FC<{ src: string }> = ({ src }) => {
+  const frame = useCurrentFrame(); // Sequence内なので、このシーケンスが始まってからの相対フレーム
+  const { durationInFrames } = useVideoConfig();
+  const fadeInFrames = 10;
+  const fadeOutFrames = 30;
+  const volume = interpolate(
+    frame,
+    [0, fadeInFrames, durationInFrames - fadeOutFrames, durationInFrames],
+    [0, 0.5, 0.5, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
   return <Audio src={staticFile(src)} volume={volume} />;
@@ -88,11 +116,17 @@ const PANEL_BOTTOM = PANEL_TOP + PANEL_SIZE;
 // --- Scene: タイトルカード ---
 const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentColor, heroPhotoSrc, kanjiMotif, narration, episodeNumber }) => {
   const frame = useCurrentFrame();
-  const panelOpacity = interpolate(frame, [0, 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const panelOpacity = interpolate(frame, [0, 18], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const titleY = interpolate(frame, [15, 35], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const titleOpacity = interpolate(frame, [15, 35], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const vjpOpacity = interpolate(frame, [20, 38], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const kenBurnsScale = interpolate(frame, [0, 200], [1, 1.15], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  // 冒頭は少しズームインした状態から、1秒かけてスッとズームアウトしながら現れる。
+  // そのあとは通常のケンバーンズ(ゆっくり奥にズームインし続ける)に移行する
+  const kenBurnsScale = interpolate(frame, [0, 30, 200], [1.28, 1, 1.15], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.out(Easing.cubic),
+  });
 
   const jaChars = spotNameJa.split("");
 
@@ -145,11 +179,12 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
 };
 
 // --- Scene: フック ---
-const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narration, episodeNumber }) => {
+const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narration, episodeNumber, introSfx }) => {
   const frame = useCurrentFrame();
   const opacity = interpolate(frame, [0, 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
     <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="HOOK" narrationSrc={narration?.hook} kanji={kanjiMotif} kanjiOpacity={0.16}>
+      {introSfx && <Audio src={staticFile(introSfx)} />}
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center", padding: "0 100px" }}>
         <div style={{ textAlign: "center", opacity }}>
           <div style={{ color: accentColor, fontSize: 20, letterSpacing: 8, marginBottom: 24, fontFamily: "'Liberation Serif', serif", fontStyle: "italic" }}>
@@ -259,7 +294,7 @@ const renderFact = (fact: FactInput, index: number, total: number, accentColor: 
 };
 
 export const DeepDive: React.FC<Props> = (props) => {
-  const { facts, accentColor, spotName, mapRegionLabel, prefectureId, municipalityId, sceneDurations, bgmSrc, bgmVolume = 0.12 } = props;
+  const { facts, accentColor, spotName, mapRegionLabel, prefectureId, municipalityId, sceneDurations, bgmSrc, bgmVolume = 0.12, outroBgmSrc } = props;
 
   // ナレーションの実測秒数(sceneDurations)があればそれを優先し、無ければ既定値を使う
   const TITLE_DUR = Math.round((sceneDurations?.title ?? 6) * FPS);
@@ -284,9 +319,9 @@ export const DeepDive: React.FC<Props> = (props) => {
   };
 
   let cursor = 0;
+  const hookFrom = cursor; cursor += HOOK_DUR; // コールドオープンとして一番最初に配置
   const titleFrom = cursor; cursor += TITLE_DUR;
   const mapFrom = cursor; cursor += MAP_DUR;
-  const hookFrom = cursor; cursor += HOOK_DUR;
   const factFroms: number[] = [];
   const factDurs: number[] = [];
   facts.forEach((fact) => {
@@ -300,15 +335,20 @@ export const DeepDive: React.FC<Props> = (props) => {
 
   return (
     <AbsoluteFill>
-      {bgmSrc && <BgmTrack src={bgmSrc} baseVolume={bgmVolume} />}
+      {bgmSrc && <BgmTrack src={bgmSrc} baseVolume={bgmVolume} duckAtFrame={outroFrom + 65} />}
+      {outroBgmSrc && (
+        <Sequence from={outroFrom + 65}>
+          <OutroBgmTrack src={outroBgmSrc} />
+        </Sequence>
+      )}
+      <Sequence from={hookFrom} durationInFrames={HOOK_DUR}>
+        <HookScene {...props} />
+      </Sequence>
       <Sequence from={titleFrom} durationInFrames={TITLE_DUR}>
         <TitleScene {...props} />
       </Sequence>
       <Sequence from={mapFrom} durationInFrames={MAP_DUR}>
         <MapScene prefectureId={prefectureId} municipalityId={municipalityId} regionLabel={mapRegionLabel} spotLabel={spotName} accentColor={accentColor} narrationSrc={props.narration?.map} episodeNumber={props.episodeNumber} />
-      </Sequence>
-      <Sequence from={hookFrom} durationInFrames={HOOK_DUR}>
-        <HookScene {...props} />
       </Sequence>
       {facts.map((fact, i) => (
         <Sequence key={i} from={factFroms[i]} durationInFrames={factDurs[i]}>

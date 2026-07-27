@@ -6,6 +6,7 @@ import * as itsukushima from "./spots/002-itsukushima";
 import * as takaya from "./spots/003-takaya";
 import * as ise from "./spots/004-ise";
 import * as kumano from "./spots/005-kumano";
+import * as izumo from "./spots/006-izumo";
 
 export const Root: React.FC = () => {
   return (
@@ -54,6 +55,15 @@ export const Root: React.FC = () => {
         width={1080}
         height={1920}
         defaultProps={kumano.defaultProps}
+      />
+      <Composition
+        id="DeepDive-Izumo"
+        component={DeepDive}
+        durationInFrames={getTotalDuration(izumo.facts, izumo.sceneDurations)}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={izumo.defaultProps}
       />
     </>
   );

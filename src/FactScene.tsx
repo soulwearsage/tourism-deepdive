@@ -84,7 +84,7 @@ export const FactScene: React.FC<FactProps> = ({
       footerLeft="Japan Deep Dive"
       footerRight={`${String(factNumber).padStart(2, "0")} / ${String(totalFacts).padStart(2, "0")}`}
     >
-      {photoSfx && <Audio src={staticFile(photoSfx)} />
+      {photoSfx && <Audio src={staticFile(photoSfx)} />}
       {/* 写真ブロック(3分割パネル+ケンバーンズのゆっくりズーム) */}
       <div
         style={{

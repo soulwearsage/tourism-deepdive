@@ -18,6 +18,7 @@ on:
           - takaya
           - ise
           - kumano
+          - izumo
 
 jobs:
   render:
@@ -64,6 +65,11 @@ jobs:
         if: github.event.inputs.spot == 'kumano' || github.event.inputs.spot == 'all' || github.event.inputs.spot == ''
         continue-on-error: true
         run: npx remotion render DeepDive-Kumano out/kumano.mp4
+
+      - name: 動画を書き出し(出雲大社)
+        if: github.event.inputs.spot == 'izumo' || github.event.inputs.spot == 'all' || github.event.inputs.spot == ''
+        continue-on-error: true
+        run: npx remotion render DeepDive-Izumo out/izumo.mp4
 
       - name: 書き出した動画をアップロード
         uses: actions/upload-artifact@v4

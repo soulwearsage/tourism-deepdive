@@ -8,7 +8,7 @@ export const sceneDurations = {
   title: 4.0,
   map: 5.0,
   hook: 7.0,
-  twist: 18.0,
+  twist: 22.0, // ナレーション20.4秒 + 余白
   outro: 4.5,
 };
 
@@ -23,7 +23,7 @@ export const facts: FactInput[] = [
     photoSrc: HERO_PHOTO,
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 16.5,
+    durationSeconds: 25.0, // ナレーション23.6秒 + 余白
   },
   {
     type: "quote",
@@ -42,7 +42,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/006_izumo/fact-3.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
-    durationSeconds: 13.0,
+    durationSeconds: 17.0, // ナレーション15.2秒 + 余白
   },
 ];
 

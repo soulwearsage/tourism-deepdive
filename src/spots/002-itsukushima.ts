@@ -21,6 +21,7 @@ export const facts: FactInput[] = [
     statLabel: "the torii's own weight — nothing bolts it to the seabed",
     body: "It isn't anchored at all. It simply stands in the tide, held upright by its own mass alone.",
     photoSrc: "photos/002_itsukushima/hero.png",
+    photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
     durationSeconds: 11.0, // ナレーション8.5秒 + 余白
   },
@@ -46,6 +47,7 @@ export const facts: FactInput[] = [
     heading: "The deer aren't wildlife",
     body: "They're considered messengers of the gods, free to wander the shrine grounds exactly as they have for over a thousand years.",
     photoSrc: "photos/002_itsukushima/fact-4.png",
+    photoSfx: "bgm/camera.mp3",
     verticalText: "市杵島姫命",
     narrationSrc: `${AUDIO_DIR}/fact-4.mp3`,
     durationSeconds: 12.0, // ナレーション9.5秒 + 余白
@@ -76,5 +78,7 @@ export const defaultProps = {
   sceneDurations,
   bgmSrc: "bgm/bgm002.wav",
   bgmVolume: 0.12,
+  introSfx: "bgm/light_intro.mp3",
+  outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 2,
 };

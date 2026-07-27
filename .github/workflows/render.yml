@@ -53,7 +53,8 @@ jobs:
           elif [ "$SPOT" = "latest" ]; then
             node scripts/list-spots.js --latest > /tmp/targets.txt
           else
-            echo "$SPOT" > /tmp/targets.txt
+            # カンマ区切りで複数指定(例: "izumo,itsukushima")にも対応
+            echo "$SPOT" | tr ',' '\n' | sed 's/^ *//;s/ *$//' > /tmp/targets.txt
           fi
 
           while read -r ID; do

@@ -102,7 +102,7 @@ const OutroBgmTrack: React.FC<{ src: string }> = ({ src }) => {
   const volume = interpolate(
     frame,
     [0, fadeInFrames, durationInFrames - fadeOutFrames, durationInFrames],
-    [0, 0.5, 0.5, 0],
+    [0, 0.25, 0.25, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
   return <Audio src={staticFile(src)} volume={volume} />;
@@ -132,7 +132,7 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
 
   return (
     <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="deepdive.jp" narrationSrc={narration?.title}>
-      {introSfx && <Audio src={staticFile(introSfx)} />}
+      {introSfx && <Audio src={staticFile(introSfx)} volume={0.4} />}
       <div style={{ position: "absolute", top: PANEL_TOP, left: PANEL_LEFT, width: PANEL_SIZE, height: PANEL_SIZE, opacity: panelOpacity, overflow: "hidden" }}>
         <div style={{ display: "flex", gap: GAP, width: "100%", height: "100%", transform: `scale(${kenBurnsScale})`, transformOrigin: "center center" }}>
           {[0, 1, 2].map((i) => (

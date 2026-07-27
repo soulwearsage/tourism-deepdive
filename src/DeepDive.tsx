@@ -193,11 +193,11 @@ const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  // 低音が鳴る瞬間だけ、キャッチコピーが一瞬フッと消えて、すぐ戻ってくるフラッシュ演出
+  // 低音が鳴り始めた瞬間から、ゆっくりフェードアウトして、また戻ってくる演出
   const bassFlash = interpolate(
     frame,
-    [bassFrame - 2, bassFrame, bassFrame + 2, bassFrame + 8],
-    [1, 0.05, 0.05, 1],
+    [bassFrame, bassFrame + 18, bassFrame + 26, bassFrame + 48],
+    [1, 0.25, 0.25, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
   const opacity = baseOpacity * bassFlash;

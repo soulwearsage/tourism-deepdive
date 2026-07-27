@@ -122,9 +122,9 @@ export const MapScene: React.FC<MapProps> = ({
             </g>
             {targetMuniPath && <path d={targetMuniPath} fill={accentColor} fillOpacity={fillOpacity} stroke="none" />}
             <g style={{ opacity: pinOpacity, transform: `translateY(${interpolate(pinDrop, [0, 1], [-60, 0])}px)` }}>
-              <circle cx={centroid[0]} cy={centroid[1]} r={(2.5 + pulse * 6) / Math.max(zoom, 1)} fill={accentColor} opacity={0.3 * (1 - pulse) + 0.05} />
-              <circle cx={centroid[0]} cy={centroid[1]} r={3 / Math.max(zoom, 1)} fill={accentColor} />
-              <circle cx={centroid[0]} cy={centroid[1]} r={3 / Math.max(zoom, 1)} fill="none" stroke="#060606" strokeWidth={0.8 / Math.max(zoom, 1)} />
+              <circle cx={centroid[0]} cy={centroid[1]} r={(7 + pulse * 22) / Math.max(zoom, 1)} fill={accentColor} opacity={0.35 * (1 - pulse)} />
+              <circle cx={centroid[0]} cy={centroid[1]} r={7 / Math.max(zoom, 1)} fill={accentColor} />
+              <circle cx={centroid[0]} cy={centroid[1]} r={7 / Math.max(zoom, 1)} fill="none" stroke="#060606" strokeWidth={1.5 / Math.max(zoom, 1)} />
             </g>
           </svg>
         );

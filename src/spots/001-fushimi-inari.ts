@@ -66,6 +66,7 @@ export const defaultProps = {
   kanjiMotif: "祈",
   mapRegionLabel: "KYOTO, JAPAN",
   prefectureId: "26", // 京都府
+  municipalityId: "26100", // 京都市
   hookText: "9 out of 10 visitors never learn who they're actually praying to.",
   facts,
   twistHeading: "The real shrine has no walls.",

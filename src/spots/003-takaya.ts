@@ -52,6 +52,7 @@ export const defaultProps = {
   kanjiMotif: "天",
   mapRegionLabel: "KAGAWA, JAPAN",
   prefectureId: "37", // 香川県
+  municipalityId: "37205", // 観音寺市
   hookText: "Most visitors never learn why this shrine sits on top of such an inconvenient mountain.",
   facts,
   twistHeading: "They moved it. Then moved it back.",

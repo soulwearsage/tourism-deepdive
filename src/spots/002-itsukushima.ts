@@ -61,6 +61,7 @@ export const defaultProps = {
   kanjiMotif: "厳",
   mapRegionLabel: "MIYAJIMA, JAPAN",
   prefectureId: "34", // 広島県
+  municipalityId: "34213", // 廿日市市
   hookText: "For over a thousand years, no one has been born on this island — and no one is allowed to die here either.",
   facts,
   twistHeading: "A flame that never went out.",

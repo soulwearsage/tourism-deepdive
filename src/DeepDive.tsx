@@ -51,6 +51,7 @@ type Props = {
   kanjiMotif: string;
   mapRegionLabel: string;
   prefectureId: string;
+  municipalityId: string; // 5桁の市区町村コード(地図のピンポイントズーム先)
   hookText: string;
   facts: FactInput[];
   twistHeading: string;
@@ -258,7 +259,7 @@ const renderFact = (fact: FactInput, index: number, total: number, accentColor: 
 };
 
 export const DeepDive: React.FC<Props> = (props) => {
-  const { facts, accentColor, spotName, mapRegionLabel, prefectureId, sceneDurations, bgmSrc, bgmVolume = 0.12 } = props;
+  const { facts, accentColor, spotName, mapRegionLabel, prefectureId, municipalityId, sceneDurations, bgmSrc, bgmVolume = 0.12 } = props;
 
   // ナレーションの実測秒数(sceneDurations)があればそれを優先し、無ければ既定値を使う
   const TITLE_DUR = Math.round((sceneDurations?.title ?? 6) * FPS);
@@ -304,7 +305,7 @@ export const DeepDive: React.FC<Props> = (props) => {
         <TitleScene {...props} />
       </Sequence>
       <Sequence from={mapFrom} durationInFrames={MAP_DUR}>
-        <MapScene prefectureId={prefectureId} regionLabel={mapRegionLabel} spotLabel={spotName} accentColor={accentColor} narrationSrc={props.narration?.map} episodeNumber={props.episodeNumber} />
+        <MapScene prefectureId={prefectureId} municipalityId={municipalityId} regionLabel={mapRegionLabel} spotLabel={spotName} accentColor={accentColor} narrationSrc={props.narration?.map} episodeNumber={props.episodeNumber} />
       </Sequence>
       <Sequence from={hookFrom} durationInFrames={HOOK_DUR}>
         <HookScene {...props} />

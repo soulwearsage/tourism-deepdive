@@ -52,6 +52,7 @@ export const defaultProps = {
   kanjiMotif: "宮",
   mapRegionLabel: "MIE, JAPAN",
   prefectureId: "24", // 三重県
+  municipalityId: "24203", // 伊勢市
   hookText: "The goddess enshrined here might not have started out as a goddess at all.",
   facts,
   twistHeading: "For 1,200 years, the emperors stayed away.",

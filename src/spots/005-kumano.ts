@@ -52,6 +52,7 @@ export const defaultProps = {
   kanjiMotif: "烏",
   mapRegionLabel: "WAKAYAMA, JAPAN",
   prefectureId: "30", // 和歌山県
+  municipalityId: "30206", // 田辺市
   hookText: "At one of Japan's holiest shrines, nobody is certain who they're actually praying to.",
   facts,
   twistHeading: "No one is certain who they're worshipping.",

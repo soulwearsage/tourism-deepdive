@@ -7,6 +7,8 @@ import * as takaya from "./spots/003-takaya";
 import * as ise from "./spots/004-ise";
 import * as kumano from "./spots/005-kumano";
 import * as izumo from "./spots/006-izumo";
+import * as gassan from "./spots/007-gassan";
+import * as minashi from "./spots/008-minashi";
 
 export const Root: React.FC = () => {
   return (
@@ -64,6 +66,24 @@ export const Root: React.FC = () => {
         width={1080}
         height={1920}
         defaultProps={izumo.defaultProps}
+      />
+      <Composition
+        id="DeepDive-Gassan"
+        component={DeepDive}
+        durationInFrames={getTotalDuration(gassan.facts, gassan.sceneDurations, gassan.defaultProps)}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={gassan.defaultProps}
+      />
+      <Composition
+        id="DeepDive-Minashi"
+        component={DeepDive}
+        durationInFrames={getTotalDuration(minashi.facts, minashi.sceneDurations, minashi.defaultProps)}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={minashi.defaultProps}
       />
     </>
   );

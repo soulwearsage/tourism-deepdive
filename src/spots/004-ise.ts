@@ -21,6 +21,7 @@ export const facts: FactInput[] = [
     statLabel: "years of history behind the inner and outer shrines at the heart of it all",
     body: "The inner shrine honors the sun goddess AMATERASU. The outer shrine honors TOYOUKE, goddess of food. Together with 123 more, they're simply called Jingu.",
     photoSrc: HERO_PHOTO,
+    photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
     durationSeconds: 16.0, // ナレーション14.5秒 + 余白
   },
@@ -38,6 +39,7 @@ export const facts: FactInput[] = [
     heading: "She might not have started as a goddess",
     body: "Ancient records suggest this sun deity was originally male — a theory, not confirmed history — until a reigning empress may have remade the sun in her own image.",
     photoSrc: "photos/004_ise/fact-3.png",
+    photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
     durationSeconds: 15.0, // ナレーション13.5秒 + 余白
   },
@@ -65,7 +67,10 @@ export const defaultProps = {
     outro: `${AUDIO_DIR}/outro.mp3`,
   },
   sceneDurations,
-  bgmSrc: "bgm/bgm002.wav",
+  bgmSrc: "bgm/bgm003.mp3",
   bgmVolume: 0.12,
+  introSfx: "bgm/dark_intro.mp3",
+  catchCopy: "REBUILT 62 TIMES.",
+  outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 4,
 };

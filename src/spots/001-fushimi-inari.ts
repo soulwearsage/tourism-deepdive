@@ -23,6 +23,7 @@ export const facts: FactInput[] = [
     statLabel: "private shrines carved into this mountain since the 1870s",
     body: "Each stone bears a deity name found in no official record — unrecognized beliefs, hiding in plain sight, disguised as INARI worship.",
     photoSrc: "photos/001_fushimi-inari/fact-1.png",
+    photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
     durationSeconds: 15.5, // ナレーション14.2秒 + 余白を詰めた
   },
@@ -40,6 +41,7 @@ export const facts: FactInput[] = [
     heading: "The foxes were never gods",
     body: "They're messengers. Look closely — each one carries something different in its mouth: a rice sheaf, a key, a jewel, or a scroll.",
     photoSrc: "photos/001_fushimi-inari/fact-4.png",
+    photoSfx: "bgm/camera.mp3",
     photoGradeIntensity: 0.35,
     verticalText: "宇迦之御魂大神",
     headingFont: specialGothicExpandedFont,
@@ -79,7 +81,10 @@ export const defaultProps = {
     outro: `${AUDIO_DIR}/outro.mp3`,
   },
   sceneDurations,
-  bgmSrc: "bgm/bgm002.wav",
+  bgmSrc: "bgm/bgm003.mp3",
   bgmVolume: 0.12,
+  introSfx: "bgm/dark_intro.mp3",
+  catchCopy: "10,000 UNKNOWN GODS.",
+  outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 1,
 };

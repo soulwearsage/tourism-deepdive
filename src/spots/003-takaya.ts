@@ -21,6 +21,7 @@ export const facts: FactInput[] = [
     statLabel: "above the Seto Inland Sea, with nothing but clouds beyond the gate",
     body: "Climb high enough, and the torii seems to open directly into the sky — which is exactly why everyone calls it that.",
     photoSrc: HERO_PHOTO,
+    photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
     durationSeconds: 14.0, // ナレーション11.1秒 + 余白
   },
@@ -38,6 +39,7 @@ export const facts: FactInput[] = [
     heading: "A boulder that shouldn't stay still",
     body: "Press it with a single finger, and it rocks. It has never once fallen.",
     photoSrc: "photos/003_takaya/fact-3.png",
+    photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
     durationSeconds: 10.0,
   },
@@ -67,5 +69,8 @@ export const defaultProps = {
   sceneDurations,
   bgmSrc: "bgm/bgm002.wav",
   bgmVolume: 0.12,
+  introSfx: "bgm/light_intro.mp3",
+  catchCopy: "JAPAN'S GATE TO THE SKY.",
+  outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 3,
 };

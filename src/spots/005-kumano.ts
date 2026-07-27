@@ -21,6 +21,7 @@ export const facts: FactInput[] = [
     statLabel: "tall — standing where the original shrine complex once stood, before a flood destroyed most of it in 1889",
     body: "Only four of the original twelve shrine buildings survived. They were moved to where the shrine stands today.",
     photoSrc: HERO_PHOTO,
+    photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
     durationSeconds: 17.5, // ナレーション16.1秒 + 余白
   },
@@ -38,6 +39,7 @@ export const facts: FactInput[] = [
     heading: "A three-legged crow guided Japan's first emperor",
     body: "Its three legs are said to represent heaven, earth, and humanity. Today, that same crow is the emblem of Japan's national football team.",
     photoSrc: "photos/005_kumano/fact-3.png",
+    photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
     durationSeconds: 13.0, // ナレーション11.3秒 + 余白
   },
@@ -65,7 +67,10 @@ export const defaultProps = {
     outro: `${AUDIO_DIR}/outro.mp3`,
   },
   sceneDurations,
-  bgmSrc: "bgm/bgm002.wav",
+  bgmSrc: "bgm/bgm003.mp3",
   bgmVolume: 0.12,
+  introSfx: "bgm/dark_intro.mp3",
+  catchCopy: "NO ONE KNOWS WHO THIS GOD IS.",
+  outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 5,
 };

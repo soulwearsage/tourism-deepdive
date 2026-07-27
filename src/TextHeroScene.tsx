@@ -8,6 +8,7 @@ export type TextHeroProps = {
   heading: string;        // 太いゴシックの主見出し(複数行は\nで改行)
   subheading?: string;    // 日本語の小見出し(例: "伏見稲荷大社 / KYOTO")
   tagline?: string;       // 罫線の下に置く一言(例: "THE VERMILION PATH")
+  body?: string;          // 見出しの下に続く本文(罫線付き。見出しの行数に関わらず自然に下に続く)
   accentColor: string;
 };
 
@@ -16,13 +17,14 @@ export type TextHeroProps = {
  * SceneFrameの中でchildrenとして使う想定(漢字の透かし・コーナーラベル・
  * フッターはSceneFrame側が担当するので、ここでは中央のタイポグラフィだけを描く)
  */
-export const TextHeroScene: React.FC<TextHeroProps> = ({ eyebrow, heading, subheading, tagline, accentColor }) => {
+export const TextHeroScene: React.FC<TextHeroProps> = ({ eyebrow, heading, subheading, tagline, body, accentColor }) => {
   const frame = useCurrentFrame();
 
   const headingOpacity = interpolate(frame, [10, 30], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const headingY = interpolate(frame, [10, 30], [16, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const eyebrowOpacity = interpolate(frame, [0, 18], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const taglineOpacity = interpolate(frame, [30, 48], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const bodyOpacity = interpolate(frame, [34, 54], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   const headingLines = heading.split("\n");
 
@@ -62,6 +64,15 @@ export const TextHeroScene: React.FC<TextHeroProps> = ({ eyebrow, heading, subhe
             <div style={{ width: 90, height: 1, background: "#4a453d", margin: "36px 0" }} />
             <div style={{ color: accentColor, fontSize: 22, letterSpacing: 4, fontFamily: "'DejaVu Sans', sans-serif", fontWeight: 700, opacity: taglineOpacity }}>
               {tagline}
+            </div>
+          </>
+        )}
+
+        {body && (
+          <>
+            <div style={{ width: 90, height: 1, background: "#4a453d", margin: "34px 0 26px" }} />
+            <div style={{ color: "#9a9285", fontSize: 24, lineHeight: 1.7, fontFamily: "'Liberation Serif', serif", fontStyle: "italic", maxWidth: 820, opacity: bodyOpacity }}>
+              {body}
             </div>
           </>
         )}

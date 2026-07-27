@@ -71,6 +71,7 @@ export const defaultProps = {
   bgmSrc: "bgm/bgm003.mp3",
   bgmVolume: 0.12,
   introSfx: "bgm/dark_intro.mp3",
+  catchCopy: "THE GOD NO ONE KNOWS.",
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 6,
 };

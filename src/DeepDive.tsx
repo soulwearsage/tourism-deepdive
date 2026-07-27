@@ -60,7 +60,8 @@ type Props = {
   sceneDurations?: SceneDurations; // ナレーションの実測秒数に合わせた尺の上書き(秒単位)。無ければ既定値
   bgmSrc?: string;  // 動画全体に流すBGM(public/からの相対パス)。無ければ無音
   bgmVolume?: number; // BGMの音量(0〜1)。デフォルト0.12(ナレーションの邪魔をしない程度に控えめ)
-  introSfx?: string; // コールドオープンで鳴らすイントロ音(light_intro/dark_introなど)
+  introSfx?: string; // イントロ音(light_intro/dark_introなど)
+  catchCopy?: string; // イントロ音が鳴ってる間だけ出る、一番最初のパンチの効いた一言
   outroBgmSrc?: string; // アウトロのタグラインに合わせて鳴らす専用BGM
   episodeNumber: number; // シリーズの何本目か(左上の"NO. 00X"表示に使う)
 };
@@ -114,7 +115,7 @@ const PANEL_W = (PANEL_SIZE - GAP * 2) / 3;
 const PANEL_BOTTOM = PANEL_TOP + PANEL_SIZE;
 
 // --- Scene: タイトルカード ---
-const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentColor, heroPhotoSrc, kanjiMotif, narration, episodeNumber, introSfx }) => {
+const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentColor, heroPhotoSrc, kanjiMotif, narration, episodeNumber, introSfx, catchCopy }) => {
   const frame = useCurrentFrame();
   const panelOpacity = interpolate(frame, [0, 18], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const titleY = interpolate(frame, [15, 35], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
@@ -131,8 +132,8 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
   const jaChars = spotNameJa.split("");
 
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="deepdive.jp" narrationSrc={narration?.title} narrationDelayFrames={introSfx ? 140 : 0}>
-      {introSfx && <Audio src={staticFile(introSfx)} volume={0.18} />}
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="deepdive.jp" narrationSrc={narration?.title} narrationDelayFrames={introSfx && !catchCopy ? 140 : 0}>
+      {introSfx && !catchCopy && <Audio src={staticFile(introSfx)} volume={0.18} />}
       <div style={{ position: "absolute", top: PANEL_TOP, left: PANEL_LEFT, width: PANEL_SIZE, height: PANEL_SIZE, opacity: panelOpacity, overflow: "hidden" }}>
         <div style={{ display: "flex", gap: GAP, width: "100%", height: "100%", transform: `scale(${kenBurnsScale})`, transformOrigin: "center center" }}>
           {[0, 1, 2].map((i) => (
@@ -180,6 +181,40 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
 };
 
 // --- Scene: フック ---
+// --- Scene: キャッチコピー(イントロ音が鳴ってる間だけ出る、一番最初のガツンとした一言) ---
+const CatchCopyScene: React.FC<Props> = ({ accentColor, kanjiMotif, episodeNumber, catchCopy, introSfx }) => {
+  const frame = useCurrentFrame();
+  const opacity = interpolate(frame, [0, 12, 100, 130], [0, 1, 1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const scale = interpolate(frame, [0, 12], [1.12, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.out(Easing.cubic),
+  });
+  return (
+    <SceneFrame
+      accentColor={accentColor}
+      cornerLabel="DEEP DIVE"
+      cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`}
+      footerLeft="Japan Deep Dive"
+      footerRight="INTRO"
+      kanji={kanjiMotif}
+      kanjiOpacity={0.16}
+    >
+      {introSfx && <Audio src={staticFile(introSfx)} volume={0.18} />}
+      <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center", padding: "0 100px" }}>
+        <div style={{ textAlign: "center", opacity, transform: `scale(${scale})` }}>
+          <div style={{ color: "#f5f2eb", fontSize: 60, fontWeight: 900, lineHeight: 1.15, fontFamily: specialGothicExpandedFont }}>
+            {catchCopy}
+          </div>
+        </div>
+      </div>
+    </SceneFrame>
+  );
+};
+
 const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narration, episodeNumber }) => {
   const frame = useCurrentFrame();
   const opacity = interpolate(frame, [0, 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
@@ -208,14 +243,9 @@ const TwistScene: React.FC<Props> = ({ twistHeading, twistBody, accentColor, kan
       <TextHeroScene
         eyebrow="Here's the twist"
         heading={twistHeading}
-        tagline={undefined}
+        body={twistBody}
         accentColor={accentColor}
       />
-      <div style={{ position: "absolute", top: "58%", left: 90, right: 90 }}>
-        <div style={{ color: "#9a9285", fontSize: 24, lineHeight: 1.7, fontFamily: "'Liberation Serif', serif", fontStyle: "italic", maxWidth: 820 }}>
-          {twistBody}
-        </div>
-      </div>
     </SceneFrame>
   );
 };
@@ -299,8 +329,10 @@ export const DeepDive: React.FC<Props> = (props) => {
 
   // ナレーションの実測秒数(sceneDurations)があればそれを優先し、無ければ既定値を使う
   // イントロ音がある場合、その音が鳴りきるまでの余裕を持たせてタイトルの尺を伸ばす
-  const introTailFrames = props.introSfx ? 6 * FPS : 0; // イントロ音を最長7秒程度と見て、余裕を持って6秒分確保
+  // (catchCopyがある場合はキャッチコピー用の別シーンでイントロ音を鳴らすので、ここでは伸ばさない)
+  const introTailFrames = props.introSfx && !props.catchCopy ? 6 * FPS : 0;
   const TITLE_DUR = Math.round((sceneDurations?.title ?? 6) * FPS) + introTailFrames;
+  const CATCH_DUR = props.catchCopy ? 5 * FPS : 0; // キャッチコピー用シーン(イントロ音+一言、約5秒)
   const MAP_DUR = Math.round((sceneDurations?.map ?? 6) * FPS);
   const HOOK_DUR = Math.round((sceneDurations?.hook ?? 5) * FPS);
   const TWIST_DUR = Math.round((sceneDurations?.twist ?? 8) * FPS);
@@ -323,6 +355,7 @@ export const DeepDive: React.FC<Props> = (props) => {
 
   // タイトル(写真)→地図→フックの並び順(固定)
   let cursor = 0;
+  const catchFrom = cursor; cursor += CATCH_DUR;
   const titleFrom = cursor; cursor += TITLE_DUR;
   const mapFrom = cursor; cursor += MAP_DUR;
   const hookFrom = cursor; cursor += HOOK_DUR;
@@ -348,6 +381,11 @@ export const DeepDive: React.FC<Props> = (props) => {
       <Sequence from={hookFrom} durationInFrames={HOOK_DUR}>
         <HookScene {...props} />
       </Sequence>
+      {props.catchCopy && (
+        <Sequence from={catchFrom} durationInFrames={CATCH_DUR}>
+          <CatchCopyScene {...props} />
+        </Sequence>
+      )}
       <Sequence from={titleFrom} durationInFrames={TITLE_DUR}>
         <TitleScene {...props} />
       </Sequence>

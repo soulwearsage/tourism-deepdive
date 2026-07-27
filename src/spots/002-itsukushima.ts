@@ -79,6 +79,7 @@ export const defaultProps = {
   bgmSrc: "bgm/bgm002.wav",
   bgmVolume: 0.12,
   introSfx: "bgm/light_intro.mp3",
+  catchCopy: "A FLAME THAT NEVER WENT OUT.",
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 2,
 };

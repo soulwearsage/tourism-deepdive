@@ -131,7 +131,7 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
   const jaChars = spotNameJa.split("");
 
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="deepdive.jp" narrationSrc={narration?.title}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="deepdive.jp" narrationSrc={narration?.title} narrationDelayFrames={introSfx ? 140 : 0}>
       {introSfx && <Audio src={staticFile(introSfx)} volume={0.18} />}
       <div style={{ position: "absolute", top: PANEL_TOP, left: PANEL_LEFT, width: PANEL_SIZE, height: PANEL_SIZE, opacity: panelOpacity, overflow: "hidden" }}>
         <div style={{ display: "flex", gap: GAP, width: "100%", height: "100%", transform: `scale(${kenBurnsScale})`, transformOrigin: "center center" }}>
@@ -298,7 +298,9 @@ export const DeepDive: React.FC<Props> = (props) => {
   const { facts, accentColor, spotName, mapRegionLabel, prefectureId, municipalityId, sceneDurations, bgmSrc, bgmVolume = 0.12, outroBgmSrc } = props;
 
   // ナレーションの実測秒数(sceneDurations)があればそれを優先し、無ければ既定値を使う
-  const TITLE_DUR = Math.round((sceneDurations?.title ?? 6) * FPS);
+  // イントロ音がある場合、その音が鳴りきるまでの余裕を持たせてタイトルの尺を伸ばす
+  const introTailFrames = props.introSfx ? 6 * FPS : 0; // イントロ音を最長7秒程度と見て、余裕を持って6秒分確保
+  const TITLE_DUR = Math.round((sceneDurations?.title ?? 6) * FPS) + introTailFrames;
   const MAP_DUR = Math.round((sceneDurations?.map ?? 6) * FPS);
   const HOOK_DUR = Math.round((sceneDurations?.hook ?? 5) * FPS);
   const TWIST_DUR = Math.round((sceneDurations?.twist ?? 8) * FPS);
@@ -319,9 +321,7 @@ export const DeepDive: React.FC<Props> = (props) => {
     }
   };
 
-  // introSfxが設定されてるスポットだけ、フックを「コールドオープン」として先頭に持ってくる。
-  // 設定してないスポット(既存の伏見稲荷など)は、今まで通りタイトル→地図→フックの順のまま
-  // 常に「タイトル(写真)→地図→フック」の元の並び順に統一
+  // タイトル(写真)→地図→フックの並び順(固定)
   let cursor = 0;
   const titleFrom = cursor; cursor += TITLE_DUR;
   const mapFrom = cursor; cursor += MAP_DUR;

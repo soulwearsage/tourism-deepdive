@@ -72,9 +72,6 @@ export const MapScene: React.FC<MapProps> = ({
     extrapolateRight: "clamp",
   });
   const fillOpacity = interpolate(frame, [60, 82], [0, 0.85], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const pinDrop = spring({ frame: frame - 78, fps, config: { damping: 10 } });
-  const pinOpacity = interpolate(frame, [78, 90], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const pulse = interpolate(frame % 40, [0, 20, 40], [0, 1, 0]);
   const labelOpacity = interpolate(frame, [92, 108], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   // 「日本全体」から「市区町村」まで、一気にピンポイントへズームする
   const zoom = interpolate(frame, [35, 95], [1, 34], {
@@ -121,11 +118,6 @@ export const MapScene: React.FC<MapProps> = ({
               ))}
             </g>
             {targetMuniPath && <path d={targetMuniPath} fill={accentColor} fillOpacity={fillOpacity} stroke="none" />}
-            <g style={{ opacity: pinOpacity, transform: `translateY(${interpolate(pinDrop, [0, 1], [-60, 0])}px)` }}>
-              <circle cx={centroid[0]} cy={centroid[1]} r={(5 + pulse * 12) / Math.max(zoom / 6, 1)} fill={accentColor} opacity={0.3 * (1 - pulse) + 0.05} />
-              <circle cx={centroid[0]} cy={centroid[1]} r={6 / Math.max(zoom / 6, 1)} fill={accentColor} />
-              <circle cx={centroid[0]} cy={centroid[1]} r={6 / Math.max(zoom / 6, 1)} fill="none" stroke="#060606" strokeWidth={1.2 / Math.max(zoom / 6, 1)} />
-            </g>
           </svg>
         );
       })()}

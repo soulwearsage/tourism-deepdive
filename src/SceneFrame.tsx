@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, Audio, staticFile, useCurrentFrame, interpolate } from "remotion";
+import { AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame, interpolate } from "remotion";
 
 export type SceneFrameProps = {
   accentColor: string;
@@ -10,6 +10,7 @@ export type SceneFrameProps = {
   kanji?: string;
   kanjiOpacity?: number;
   narrationSrc?: string; // public/からの相対パス(例: "audio/001_fushimi-inari/title.mp3")。無ければ無音
+  narrationDelayFrames?: number; // ナレーションの開始を遅らせるフレーム数(イントロ音と被らせないため)
   children: React.ReactNode;
 };
 
@@ -26,6 +27,7 @@ export const SceneFrame: React.FC<SceneFrameProps> = ({
   kanji,
   kanjiOpacity = 0.08,
   narrationSrc,
+  narrationDelayFrames = 0,
   children,
 }) => {
   const frame = useCurrentFrame();
@@ -36,7 +38,11 @@ export const SceneFrame: React.FC<SceneFrameProps> = ({
 
   return (
     <AbsoluteFill style={{ background: "#060606" }}>
-      {narrationSrc && <Audio src={staticFile(narrationSrc)} />}
+      {narrationSrc && (
+        <Sequence from={narrationDelayFrames}>
+          <Audio src={staticFile(narrationSrc)} />
+        </Sequence>
+      )}
 
       {kanji && (
         <div

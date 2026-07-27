@@ -21,7 +21,7 @@ export const facts: FactInput[] = [
     verticalText: "天照大御神",
     statLabel: "years of history behind the inner and outer shrines at the heart of it all",
     body: "The inner shrine honors the sun goddess AMATERASU. The outer shrine honors TOYOUKE, goddess of food. Together with 123 more, they're simply called Jingu.",
-    photoSrc: HERO_PHOTO,
+    photoSrc: "photos/004_ise/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
     durationSeconds: 16.0, // ナレーション14.5秒 + 余白

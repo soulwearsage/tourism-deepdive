@@ -21,7 +21,7 @@ export const facts: FactInput[] = [
     verticalText: "家都美御子大神",
     statLabel: "tall — standing where the original shrine complex once stood, before a flood destroyed most of it in 1889",
     body: "Only four of the original twelve shrine buildings survived. They were moved to where the shrine stands today.",
-    photoSrc: HERO_PHOTO,
+    photoSrc: "photos/005_kumano/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
     durationSeconds: 17.5, // ナレーション16.1秒 + 余白

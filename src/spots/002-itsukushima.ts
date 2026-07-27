@@ -20,7 +20,7 @@ export const facts: FactInput[] = [
     statValue: "~60t",
     statLabel: "the torii's own weight — nothing bolts it to the seabed",
     body: "It isn't anchored at all. It simply stands in the tide, held upright by its own mass alone.",
-    photoSrc: "photos/002_itsukushima/hero.png",
+    photoSrc: "photos/002_itsukushima/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
     durationSeconds: 11.0, // ナレーション8.5秒 + 余白

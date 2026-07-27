@@ -9,6 +9,7 @@ import * as kumano from "./spots/005-kumano";
 import * as izumo from "./spots/006-izumo";
 import * as gassan from "./spots/007-gassan";
 import * as minashi from "./spots/008-minashi";
+import * as hasedera from "./spots/009-hasedera";
 
 export const Root: React.FC = () => {
   return (
@@ -84,6 +85,15 @@ export const Root: React.FC = () => {
         width={1080}
         height={1920}
         defaultProps={minashi.defaultProps}
+      />
+      <Composition
+        id="DeepDive-Hasedera"
+        component={DeepDive}
+        durationInFrames={getTotalDuration(hasedera.facts, hasedera.sceneDurations, hasedera.defaultProps)}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={hasedera.defaultProps}
       />
     </>
   );

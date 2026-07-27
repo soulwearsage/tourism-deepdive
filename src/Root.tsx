@@ -14,7 +14,7 @@ export const Root: React.FC = () => {
       <Composition
         id="DeepDive-FushimiInari"
         component={DeepDive}
-        durationInFrames={getTotalDuration(fushimiInari.facts, fushimiInari.sceneDurations)}
+        durationInFrames={getTotalDuration(fushimiInari.facts, fushimiInari.sceneDurations, fushimiInari.defaultProps)}
         fps={30}
         width={1080}
         height={1920}
@@ -23,7 +23,7 @@ export const Root: React.FC = () => {
       <Composition
         id="DeepDive-Itsukushima"
         component={DeepDive}
-        durationInFrames={getTotalDuration(itsukushima.facts, itsukushima.sceneDurations)}
+        durationInFrames={getTotalDuration(itsukushima.facts, itsukushima.sceneDurations, itsukushima.defaultProps)}
         fps={30}
         width={1080}
         height={1920}
@@ -32,7 +32,7 @@ export const Root: React.FC = () => {
       <Composition
         id="DeepDive-Takaya"
         component={DeepDive}
-        durationInFrames={getTotalDuration(takaya.facts, takaya.sceneDurations)}
+        durationInFrames={getTotalDuration(takaya.facts, takaya.sceneDurations, takaya.defaultProps)}
         fps={30}
         width={1080}
         height={1920}
@@ -41,7 +41,7 @@ export const Root: React.FC = () => {
       <Composition
         id="DeepDive-Ise"
         component={DeepDive}
-        durationInFrames={getTotalDuration(ise.facts, ise.sceneDurations)}
+        durationInFrames={getTotalDuration(ise.facts, ise.sceneDurations, ise.defaultProps)}
         fps={30}
         width={1080}
         height={1920}
@@ -50,7 +50,7 @@ export const Root: React.FC = () => {
       <Composition
         id="DeepDive-Kumano"
         component={DeepDive}
-        durationInFrames={getTotalDuration(kumano.facts, kumano.sceneDurations)}
+        durationInFrames={getTotalDuration(kumano.facts, kumano.sceneDurations, kumano.defaultProps)}
         fps={30}
         width={1080}
         height={1920}
@@ -59,7 +59,7 @@ export const Root: React.FC = () => {
       <Composition
         id="DeepDive-Izumo"
         component={DeepDive}
-        durationInFrames={getTotalDuration(izumo.facts, izumo.sceneDurations)}
+        durationInFrames={getTotalDuration(izumo.facts, izumo.sceneDurations, izumo.defaultProps)}
         fps={30}
         width={1080}
         height={1920}

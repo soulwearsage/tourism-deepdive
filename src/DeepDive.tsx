@@ -407,7 +407,11 @@ export const DeepDive: React.FC<Props> = (props) => {
   );
 };
 
-export const getTotalDuration = (facts: FactInput[], sceneDurations?: SceneDurations) => {
+export const getTotalDuration = (
+  facts: FactInput[],
+  sceneDurations?: SceneDurations,
+  options?: { introSfx?: string; catchCopy?: string }
+) => {
   const factTotal = facts.reduce((sum, fact) => {
     if (fact.durationSeconds) return sum + Math.round(fact.durationSeconds * FPS);
     switch (fact.type) {
@@ -421,10 +425,13 @@ export const getTotalDuration = (facts: FactInput[], sceneDurations?: SceneDurat
         return sum + 8 * FPS;
     }
   }, 0);
-  const title = Math.round((sceneDurations?.title ?? 6) * FPS);
+  // キャッチコピーシーン、およびイントロ音の分の尺の伸びを、実際のシーン側のロジックと必ず一致させる
+  const catchDur = options?.catchCopy ? 5 * FPS : 0;
+  const introTail = options?.introSfx && !options?.catchCopy ? 6 * FPS : 0;
+  const title = Math.round((sceneDurations?.title ?? 6) * FPS) + introTail;
   const map = Math.round((sceneDurations?.map ?? 6) * FPS);
   const hook = Math.round((sceneDurations?.hook ?? 5) * FPS);
   const twist = Math.round((sceneDurations?.twist ?? 8) * FPS);
   const outro = Math.round((sceneDurations?.outro ?? 6) * FPS);
-  return title + map + hook + factTotal + twist + outro;
+  return catchDur + title + map + hook + factTotal + twist + outro;
 };

@@ -4,7 +4,7 @@ import { GradedPhoto } from "./GradedPhoto";
 import { SceneFrame } from "./SceneFrame";
 import { TextHeroScene } from "./TextHeroScene";
 import { StaggeredText } from "./StaggeredText";
-import { specialGothicExpandedFont } from "./fonts";
+import { specialGothicExpandedFont, gasoekOneFont } from "./fonts";
 import { FactScene, FactProps } from "./FactScene";
 import { BigNumberScene, BigNumberProps } from "./BigNumberScene";
 import { QuoteScene, QuoteProps } from "./QuoteScene";
@@ -219,9 +219,10 @@ const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy
   });
   const textStyle: React.CSSProperties = {
     fontSize: 60,
-    fontWeight: 900,
+    fontWeight: 400,
     lineHeight: 1.15,
-    fontFamily: specialGothicExpandedFont,
+    fontFamily: gasoekOneFont,
+    textTransform: "uppercase",
   };
   return (
     <SceneFrame

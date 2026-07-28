@@ -8,32 +8,38 @@
  * やること:
  *   1. Notion DBから「名前」列(漢字)が一致するページを探す
  *   2. Notionの「スラッグ」列(ローマ字、例: hosenin)を取得してファイル名・フォルダ名のベースにする
- *   3. プロパティ(フック/Fact内容/どんでん返し/キャッチコピー/系統/祭神名/番号 等)を読む
+ *   3. プロパティを読む(下記【Notion側の必須列】参照)
  *   4. src/spots/<番号>-<スラッグ>.ts を生成
  *   5. scripts/generate-narration-<スラッグ>.js を生成
  *   6. scripts/measure-narration-<スラッグ>.js を生成
  *   7. src/Root.tsx にコンポジション登録を追記
  *
  * 【Notion側の必須列】
- *   スラッグ: ローマ字のスポットID(例: hosenin)。ファイル名・フォルダ名・Composition IDに使用。
+ *   スラッグ        : ローマ字のスポットID(例: hosenin)。ファイル名・フォルダ名・Composition IDに使用。
+ *   accentColor    : アクセントカラー(例: #4a6d7a)
+ *   kanjiMotif     : 漢字モチーフ1文字(例: 船)
+ *   location       : 表示用ロケーション(例: Kyoto, Japan)
+ *   mapRegionLabel : マップ上部ラベル(例: KYOTO, JAPAN)
+ *   prefectureId   : 都道府県コード2桁(例: 26)
+ *   municipalityId : 市区町村コード5桁(例: 26463)
+ *   twistHeading   : ツイストシーンの見出し(例: A Garage That Became a Home)
  *
  * 【Notion側の記法ルール】(この形式で書かれている前提でパースする)
  *   フック: 1文
  *   Fact内容: "Fact1(kanji=秘,photo): heading文 || body文 / Fact2(kanji=縁,big=3,unit=体): label文 / Fact3(kanji=闇,photo): heading文 || body文"
  *     - big-numberにしたいFactは (big=数値,unit=単位) を付ける。それ以外はphoto-stat扱い。
- *     - photo-statは "heading || body" の2段。big-numberは label のみ。
- *   どんでん返し: heading行が無い場合は1文全体をbodyとし、headingは「N」等の空文字扱い→要手動調整
+ *     - photo-statは "heading || body" の2段。bodyがない場合はheadingをbodyにも使用。
+ *     - big-numberは label のみ。
+ *   どんでん返し: bodyテキスト全体
  *   キャッチコピー: 1文
  *   祭神名: 縦書きで出す文字列(Fact1のverticalTextに使う)
- *   系統: "ライト" or "ダーク"(accentColor/BGMの目安表示のみ。実際の値は手動調整推奨)
- *   写真プロンプト欄はコード化しない(参考メモのまま)。photoSrcは慣例に沿い
- *     hero.png / fact-1.png / fact-3.png のように、写真プロンプト欄の記載順で仮当てするので
- *     生成後に必ず目視で確認すること。
  *
- * 【重要】これは「叩き台」を作るスクリプトです。特に以下は生成後に必ず人の目で確認・調整してください:
- *   - 各Factの type(photo-stat / big-number)の妥当性
- *   - accentColor・kanjiMotif・prefectureId/municipalityId(自動推測できないため要手動入力)
- *   - durationSeconds(仮値。measure-narration実行後に実測値へ差し替え)
+ * 【spotName自動生成ルール】(スラッグ + 名前(漢字)末尾で判定)
+ *   nameJa末尾が "神社" → cap(slug) + " Shrine"  例: itsukushima → "Itsukushima Shrine"
+ *   nameJa末尾が "院" かつ slug末尾が "in" → cap(slug[:-2]) + "-in"  例: hosenin → "Hosen-in"
+ *   nameJa末尾が "寺" かつ slug末尾が "ji" → cap(slug[:-2]) + "-ji"  例: katsuoji → "Katsuo-ji"
+ *   nameJa末尾が "寺" かつ slug末尾が "dera" → cap(slug[:-4]) + "-dera"
+ *   それ以外 → cap(slug)  例: ine → "Ine"
  */
 
 const fs = require("fs");
@@ -54,6 +60,15 @@ if (!process.env.NOTION_API_KEY) {
 const DATA_SOURCE_ID = "3aa478e5-04f6-801d-91a9-000b2c107edf";
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
+function slugToSpotName(slug, nameJa) {
+  const cap = (s) => s[0].toUpperCase() + s.slice(1);
+  if (nameJa.endsWith("神社")) return cap(slug) + " Shrine";
+  if (nameJa.endsWith("院") && slug.endsWith("in")) return cap(slug.slice(0, -2)) + "-in";
+  if (nameJa.endsWith("寺") && slug.endsWith("ji")) return cap(slug.slice(0, -2)) + "-ji";
+  if (nameJa.endsWith("寺") && slug.endsWith("dera")) return cap(slug.slice(0, -4)) + "-dera";
+  return cap(slug);
+}
+
 function parseFacts(factText) {
   // "Fact1(kanji=秘,photo): heading || body / Fact2(kanji=縁,big=3,unit=体): label / ..."
   const chunks = factText.split(/\s*\/\s*Fact\d+/).map((c, i) => (i === 0 ? c.replace(/^Fact\d+/, "") : c));
@@ -64,7 +79,7 @@ function parseFacts(factText) {
       const metaMatch = chunk.match(/^\(([^)]*)\):\s*(.*)$/s);
       if (!metaMatch) {
         console.warn("⚠️ Factのパースに失敗、要手動修正:", chunk.slice(0, 40));
-        return { type: "photo-stat", kanji: "?", heading: "TODO", body: chunk, photoSrc: "TODO.png" };
+        return { type: "photo-stat", kanji: "?", heading: "PARSE_ERROR", body: chunk };
       }
       const meta = Object.fromEntries(
         metaMatch[1].split(",").map((kv) => {
@@ -81,13 +96,14 @@ function parseFacts(factText) {
           label: rest,
         };
       }
-      const [heading, body] = rest.split("||").map((s) => s.trim());
+      const parts = rest.split("||").map((s) => s.trim());
+      const heading = parts[0] || rest;
+      const body = parts[1] || heading; // bodyがない場合はheadingを使用
       return {
         type: "photo-stat",
         kanji: meta.kanji || "?",
-        heading: heading || rest,
-        body: body || "TODO",
-        photoSrc: "TODO.png",
+        heading,
+        body,
       };
     });
 }
@@ -129,14 +145,34 @@ async function main() {
   const twist = get("どんでん返し");
   const catchCopy = get("キャッチコピー");
   const verticalText = get("祭神名");
+  const accentColor = get("accentColor");
+  const kanjiMotif = get("kanjiMotif");
+  const location = get("location");
+  const mapRegionLabel = get("mapRegionLabel");
+  const prefectureId = get("prefectureId");
+  const municipalityId = get("municipalityId");
+  const twistHeading = get("twistHeading");
   const facts = parseFacts(get("Fact内容"));
+
+  const spotName = slugToSpotName(slug, nameJa);
+  const locationCity = location.split(",")[0].trim() || nameJa;
 
   const AUDIO_DIR = `audio/${paddedNumber}_${slug}`;
   const PHOTO_DIR = `photos/${paddedNumber}_${slug}`;
 
-  // Fact1にverticalTextを付与(慣例通り)
+  // Fact1のphoto-stat(最初に見つかったもの)にverticalTextを付与
   const firstPhotoFact = facts.find((f) => f.type === "photo-stat");
-  if (firstPhotoFact) firstPhotoFact.verticalText = verticalText;
+  if (firstPhotoFact && verticalText) firstPhotoFact.verticalText = verticalText;
+
+  // 空で残ったNotionフィールドの警告リスト
+  const missing = [];
+  if (!accentColor) missing.push("accentColor");
+  if (!kanjiMotif) missing.push("kanjiMotif");
+  if (!location) missing.push("location");
+  if (!mapRegionLabel) missing.push("mapRegionLabel");
+  if (!prefectureId) missing.push("prefectureId");
+  if (!municipalityId) missing.push("municipalityId");
+  if (!twistHeading) missing.push("twistHeading");
 
   let factCounter = 0;
   const factsTs = facts
@@ -157,7 +193,7 @@ async function main() {
     kanji: ${tsLiteral(f.kanji)},
     heading: ${tsLiteral(f.heading)},
     body: ${tsLiteral(f.body)},
-    photoSrc: "${PHOTO_DIR}/${f.photoSrc === "TODO.png" ? `fact-${factCounter}.png" /* TODO: 実ファイル名を確認 */` : f.photoSrc + '"'},
+    photoSrc: "${PHOTO_DIR}/fact-${factCounter}.png",
     photoSfx: "bgm/camera.mp3",${f.verticalText ? `\n    verticalText: ${tsLiteral(f.verticalText)},` : ""}
     narrationSrc: \`\${AUDIO_DIR}/fact-${factCounter}.mp3\`,
     durationSeconds: 11.0, // 仮値。measure-narration実行後に実測値へ差し替え
@@ -184,18 +220,18 @@ ${factsTs}
 ];
 
 export const defaultProps = {
-  spotName: "TODO_ローマ字表記",
+  spotName: ${tsLiteral(spotName)},
   spotNameJa: ${tsLiteral(nameJa)},
-  location: "TODO, Japan",
-  accentColor: "#TODO", // TODO: 系統(${get("系統", "select")})に合わせて手動設定
+  location: ${tsLiteral(location)},
+  accentColor: ${tsLiteral(accentColor)},
   heroPhotoSrc: HERO_PHOTO,
-  kanjiMotif: "TODO",
-  mapRegionLabel: "TODO",
-  prefectureId: "TODO",
-  municipalityId: "TODO",
+  kanjiMotif: ${tsLiteral(kanjiMotif)},
+  mapRegionLabel: ${tsLiteral(mapRegionLabel)},
+  prefectureId: ${tsLiteral(prefectureId)},
+  municipalityId: ${tsLiteral(municipalityId)},
   hookText: ${tsLiteral(hook)},
   facts,
-  twistHeading: "TODO_短い見出し",
+  twistHeading: ${tsLiteral(twistHeading)},
   twistBody: ${tsLiteral(twist)},
   narration: {
     title: \`\${AUDIO_DIR}/title.mp3\`,
@@ -205,9 +241,9 @@ export const defaultProps = {
     outro: \`\${AUDIO_DIR}/outro.mp3\`,
   },
   sceneDurations,
-  bgmSrc: "bgm/bgm002.wav", // TODO: 系統に応じて確認
+  bgmSrc: "bgm/bgm002.wav",
   bgmVolume: 0.12,
-  introSfx: "bgm/light_intro.mp3", // TODO: 系統に応じて確認
+  introSfx: "bgm/light_intro.mp3",
   catchCopy: ${tsLiteral(catchCopy)},
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: ${number},
@@ -219,12 +255,12 @@ export const defaultProps = {
   console.log(`✅ 作成: ${tsPath}`);
 
   const narrationLines = [
-    { file: "title.mp3", text: `${nameJa}, TODO地名.` },
-    { file: "map.mp3", text: `${nameJa}.` },
+    { file: "title.mp3", text: `${spotName}, ${locationCity}.` },
+    { file: "map.mp3", text: `${spotName}.` },
     { file: "hook.mp3", text: hook },
     ...facts.map((f, i) => ({
       file: `fact-${i + 1}.mp3`,
-      text: f.type === "big-number" ? f.label : `${f.heading} ${f.body}`,
+      text: f.type === "big-number" ? f.label : `${f.heading} ${f.body !== f.heading ? f.body : ""}`.trim(),
     })),
     { file: "twist.mp3", text: twist },
     { file: "outro.mp3", text: "Worth the visit? Absolutely." },
@@ -294,10 +330,12 @@ console.log(JSON.stringify(results, null, 2));
     console.log(`✅ 更新: ${rootPath}(要目視確認 — importとCompositionの位置がズレてないか)`);
   }
 
-  console.log("\n⚠️ 生成後に必ず確認・修正してください:");
-  console.log("- accentColor / kanjiMotif / prefectureId / municipalityId / spotName / location / mapRegionLabel / twistHeading");
-  console.log("- 各Factのphoto-src(実際のファイル名と一致してるか)");
-  console.log("- durationSecondsはmeasure-narration実行後に実測値へ差し替え");
+  if (missing.length > 0) {
+    console.log(`\n⚠️ 以下のNotionフィールドが空です。Notionに値を入力してから再実行するか、手動でファイルを修正してください:`);
+    missing.forEach((f) => console.log(`  - ${f}`));
+  } else {
+    console.log("\n✅ Notionの全フィールドが反映されました。durationSecondsのみmeasure-narration実行後に実測値へ差し替えてください。");
+  }
 }
 
 main().catch((e) => {

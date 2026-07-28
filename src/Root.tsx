@@ -12,6 +12,7 @@ import * as minashi from "./spots/008-minashi";
 import * as hasedera from "./spots/009-hasedera";
 import * as hosenin from "./spots/010-hosenin";
 import * as katsuoji from "./spots/011-katsuoji";
+import * as ine from "./spots/012-ine";
 
 export const Root: React.FC = () => {
   return (
@@ -114,6 +115,14 @@ export const Root: React.FC = () => {
         width={1080}
         height={1920}
         defaultProps={katsuoji.defaultProps}
+      />      <Composition
+        id="DeepDive-Ine"
+        component={DeepDive}
+        durationInFrames={getTotalDuration(ine.facts, ine.sceneDurations, ine.defaultProps)}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={ine.defaultProps}
       />
     </>
   );

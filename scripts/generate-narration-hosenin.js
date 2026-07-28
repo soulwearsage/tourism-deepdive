@@ -6,11 +6,11 @@ const OUTPUT_DIR = path.join(__dirname, "..", "public", "audio", "010_hosenin");
 const LINES = [
   {
     "file": "title.mp3",
-    "text": "Hosen-in, Kyoto."
+    "text": "Hoh-sen-in, Kyoto."
   },
   {
     "file": "map.mp3",
-    "text": "Hosen-in."
+    "text": "Hoh-sen-in."
   },
   {
     "file": "hook.mp3",
@@ -22,7 +22,7 @@ const LINES = [
   },
   {
     "file": "fact-2.mp3",
-    "text": "Hosen-in actually holds three distinct gardens — Bankan-en, the Crane-and-Turtle Garden, and Horaku-en."
+    "text": "Hoh-sen-in actually holds three distinct gardens — Bankan-en, the Crane-and-Turtle Garden, and Horaku-en."
   },
   {
     "file": "fact-3.mp3",

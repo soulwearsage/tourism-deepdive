@@ -9,7 +9,7 @@ import { FactScene, FactProps } from "./FactScene";
 import { BigNumberScene, BigNumberProps } from "./BigNumberScene";
 import { QuoteScene, QuoteProps } from "./QuoteScene";
 import { MapScene } from "./MapScene";
-import { KagomeTeaser } from "./KagomeTeaser";
+import { KagomeOutroContent } from "./KagomeTeaser";
 
 type PhotoStatFact = { type: "photo-stat"; narrationSrc?: string; durationSeconds?: number } & Omit<FactProps, "factNumber" | "totalFacts" | "accentColor" | "narrationSrc">;
 type BigNumberFact = { type: "big-number"; narrationSrc?: string; durationSeconds?: number } & Omit<BigNumberProps, "factNumber" | "totalFacts" | "accentColor" | "narrationSrc">;
@@ -41,7 +41,6 @@ type SceneDurations = {
   hook?: number;
   twist?: number;
   outro?: number;
-  epilogue?: number;
 };
 
 type Props = {
@@ -303,9 +302,20 @@ const TwistScene: React.FC<Props> = ({ twistHeading, twistBody, accentColor, kan
 };
 
 // --- Scene: 締め ---
-const OutroScene: React.FC<Props> = ({ spotName, accentColor, kanjiMotif, narration, episodeNumber }) => {
+const OutroScene: React.FC<Props> = ({ spotName, accentColor, kanjiMotif, narration, episodeNumber, epilogueType }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+
+  // 籠目紋アウトロ(伊根専用)
+  if (epilogueType === "kagome-teaser") {
+    return (
+      <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.outro}>
+        <KagomeOutroContent accentColor={accentColor} />
+      </SceneFrame>
+    );
+  }
+
+  // 通常アウトロ
   const scale = spring({ frame, fps, config: { damping: 14 } });
   const taglineOpacity = interpolate(frame, [65, 85], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
@@ -389,9 +399,6 @@ export const DeepDive: React.FC<Props> = (props) => {
   const HOOK_DUR = Math.round((sceneDurations?.hook ?? 5) * FPS);
   const TWIST_DUR = Math.round((sceneDurations?.twist ?? 8) * FPS);
   const OUTRO_DUR = Math.round((sceneDurations?.outro ?? 6) * FPS);
-  const EPILOGUE_DUR = props.epilogueType && sceneDurations?.epilogue
-    ? Math.round(sceneDurations.epilogue * FPS)
-    : 0;
 
   // Factも同様に、durationSecondsの指定があればそれを優先
   const factDuration = (fact: FactInput) => {
@@ -424,7 +431,6 @@ export const DeepDive: React.FC<Props> = (props) => {
   });
   const twistFrom = cursor; cursor += TWIST_DUR;
   const outroFrom = cursor; cursor += OUTRO_DUR;
-  const epilogueFrom = cursor; cursor += EPILOGUE_DUR;
 
   return (
     <AbsoluteFill>
@@ -470,11 +476,6 @@ export const DeepDive: React.FC<Props> = (props) => {
       <Sequence from={outroFrom} durationInFrames={OUTRO_DUR}>
         <OutroScene {...props} />
       </Sequence>
-      {props.epilogueType === "kagome-teaser" && EPILOGUE_DUR > 0 && (
-        <Sequence from={epilogueFrom} durationInFrames={EPILOGUE_DUR}>
-          <KagomeTeaser accentColor={accentColor} />
-        </Sequence>
-      )}
     </AbsoluteFill>
   );
 };
@@ -482,7 +483,7 @@ export const DeepDive: React.FC<Props> = (props) => {
 export const getTotalDuration = (
   facts: FactInput[],
   sceneDurations?: SceneDurations,
-  options?: { introSfx?: string; catchCopy?: string; epilogueType?: string }
+  options?: { introSfx?: string; catchCopy?: string }
 ) => {
   const factTotal = facts.reduce((sum, fact) => {
     if (fact.durationSeconds) return sum + Math.round(fact.durationSeconds * FPS);
@@ -505,8 +506,5 @@ export const getTotalDuration = (
   const hook = Math.round((sceneDurations?.hook ?? 5) * FPS);
   const twist = Math.round((sceneDurations?.twist ?? 8) * FPS);
   const outro = Math.round((sceneDurations?.outro ?? 6) * FPS);
-  const epilogue = options?.epilogueType && sceneDurations?.epilogue
-    ? Math.round(sceneDurations.epilogue * FPS)
-    : 0;
-  return catchDur + title + map + hook + factTotal + twist + outro + epilogue;
+  return catchDur + title + map + hook + factTotal + twist + outro;
 };

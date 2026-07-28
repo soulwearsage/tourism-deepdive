@@ -9,8 +9,7 @@ export const sceneDurations = {
   map: 4.2, // 自動計算(ナレーション0.5秒 + 余白)
   hook: 8.6, // 自動計算(ナレーション7.1秒 + 余白)
   twist: 12.8, // 自動計算(ナレーション11.3秒 + 余白)
-  outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白)
-  epilogue: 11, // 籠目紋ティーザー(KagomeTeaser) — 330フレーム
+  outro: 9, // 籠目紋アウトロ(アニメーション完成＋テキスト表示を含む)
 };
 
 export const facts: FactInput[] = [

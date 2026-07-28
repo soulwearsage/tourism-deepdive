@@ -10,6 +10,7 @@ import { specialGothicExpandedFont } from "./fonts";
 export type MapProps = {
   prefectureId: string;
   municipalityId: string; // 5桁の市区町村コード(例: 京都市="26100")。この市区町村までピンポイントでズームする
+  mapPinIndex?: number;   // 同一municipalityIdに複数ポリゴンある場合、ピンに使うindex(省略時=0)
   regionLabel: string;
   spotLabel: string;
   narrationSrc?: string;
@@ -23,6 +24,7 @@ const HEIGHT = 900;
 export const MapScene: React.FC<MapProps> = ({
   prefectureId,
   municipalityId,
+  mapPinIndex = 0,
   regionLabel,
   spotLabel,
   narrationSrc,
@@ -43,7 +45,7 @@ export const MapScene: React.FC<MapProps> = ({
     const prefPrefix = municipalityId.slice(0, 2);
     const sameAreaMunis = munis.features.filter((f: any) => String(f.id).startsWith(prefPrefix));
     const targetMunis = munis.features.filter((f: any) => String(f.id) === municipalityId);
-    const primaryMuni = targetMunis[0] ?? null;
+    const primaryMuni = targetMunis[mapPinIndex] ?? targetMunis[0] ?? null;
     const c = primaryMuni ? path.centroid(primaryMuni) : [WIDTH / 2, HEIGHT / 2];
 
     return {

@@ -45,7 +45,7 @@ export const facts: FactInput[] = [
 ];
 
 export const defaultProps = {
-  spotName: "Katsuoji",
+  spotName: "Katsuo-ji",
   spotNameJa: "勝尾寺",
   location: "Osaka, Japan",
   accentColor: "#c23b2e",

@@ -52,6 +52,7 @@ type Props = {
   mapRegionLabel: string;
   prefectureId: string;
   municipalityId: string; // 5桁の市区町村コード(地図のピンポイントズーム先)
+  mapPinIndex?: number;   // 同一municipalityIdに複数ポリゴンある場合、ピンに使うindex(省略時=0)
   hookText: string;
   facts: FactInput[];
   twistHeading: string;
@@ -449,7 +450,7 @@ export const DeepDive: React.FC<Props> = (props) => {
         <TitleScene {...props} />
       </Sequence>
       <Sequence from={mapFrom} durationInFrames={MAP_DUR}>
-        <MapScene prefectureId={prefectureId} municipalityId={municipalityId} regionLabel={mapRegionLabel} spotLabel={spotName} accentColor={accentColor} narrationSrc={props.narration?.map} episodeNumber={props.episodeNumber} />
+        <MapScene prefectureId={prefectureId} municipalityId={municipalityId} mapPinIndex={props.mapPinIndex} regionLabel={mapRegionLabel} spotLabel={spotName} accentColor={accentColor} narrationSrc={props.narration?.map} episodeNumber={props.episodeNumber} />
       </Sequence>
       {facts.map((fact, i) => (
         <Sequence key={i} from={factFroms[i]} durationInFrames={factDurs[i]}>

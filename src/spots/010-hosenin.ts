@@ -3,13 +3,13 @@ import { FactInput } from "../DeepDive";
 const HERO_PHOTO = "photos/010_hosenin/hero.png";
 const AUDIO_DIR = "audio/010_hosenin";
 
-// ※秒数は暫定値。ナレーション生成後にmeasure-narration-宝泉院.jsで実測し、正確な値に差し替えること
+// ※秒数は暫定値。ナレーション生成後にmeasure-narration-hosenin.jsで実測し、正確な値に差し替えること
 export const sceneDurations = {
-  title: 3, // 自動計算(ナレーション1.5秒 + 余白)
-  map: 4.2, // 自動計算(ナレーション0.8秒 + 余白)
-  hook: 11.7, // 自動計算(ナレーション10.2秒 + 余白)
-  twist: 17, // 自動計算(ナレーション15.5秒 + 余白)
-  outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白)
+  title: 3, // 自動計算(ナレーション0.9秒 + 余白) // 自動計算(ナレーション1.5秒 + 余白)
+  map: 4.2, // 自動計算(ナレーション0.6秒 + 余白) // 自動計算(ナレーション0.8秒 + 余白)
+  hook: 11.7, // 自動計算(ナレーション10.2秒 + 余白) // 自動計算(ナレーション10.2秒 + 余白)
+  twist: 17, // 自動計算(ナレーション15.5秒 + 余白) // 自動計算(ナレーション15.5秒 + 余白)
+  outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白) // 自動計算(ナレーション1.8秒 + 余白)
 };
 
 export const facts: FactInput[] = [
@@ -21,7 +21,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/010_hosenin/fact-1.png" /* TODO: 実ファイル名を確認 */,
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 20.7, // 自動計算(ナレーション19.2秒 + 余白)
+    durationSeconds: 20.6, // 自動計算(ナレーション19.1秒 + 余白)
   },
   {
     type: "big-number",
@@ -29,7 +29,7 @@ export const facts: FactInput[] = [
     value: "3",
     label: "宝泉院には性格の異なる3つの庭園がある(盤桓園・鶴亀庭園・宝楽園)",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
-    durationSeconds: 7.3, // 自動計算(ナレーション5.8秒 + 余白)
+    durationSeconds: 7.7, // 自動計算(ナレーション6.2秒 + 余白)
   },
   {
     type: "photo-stat",
@@ -44,18 +44,18 @@ export const facts: FactInput[] = [
 ];
 
 export const defaultProps = {
-  spotName: "TODO_ローマ字表記",
+  spotName: "Hosenin",
   spotNameJa: "宝泉院",
-  location: "TODO, Japan",
-  accentColor: "#TODO", // TODO: 系統(ライト)に合わせて手動設定
+  location: "Ohara, Kyoto, Japan",
+  accentColor: "#4a5d3a",
   heroPhotoSrc: HERO_PHOTO,
-  kanjiMotif: "TODO",
-  mapRegionLabel: "TODO",
-  prefectureId: "TODO",
-  municipalityId: "TODO",
+  kanjiMotif: "額",
+  mapRegionLabel: "OHARA, KYOTO",
+  prefectureId: "26",
+  municipalityId: "26100",
   hookText: "柱と柱の間だけを額縁に見立てて庭を鑑賞する完成された美学。でもその青々とした苔の庭は自然に生えたものじゃない。",
   facts,
-  twistHeading: "TODO_短い見出し",
+  twistHeading: "Not wild. Willed.",
   twistBody: "この\"完成された美学\"に見える苔庭は、実は自然に生えたものではなく、何世代もの僧侶が何十年もかけて雑草を一本ずつ手作業で抜き続けて維持している、\"人工の極限美\"だった。",
   narration: {
     title: `${AUDIO_DIR}/title.mp3`,
@@ -65,9 +65,9 @@ export const defaultProps = {
     outro: `${AUDIO_DIR}/outro.mp3`,
   },
   sceneDurations,
-  bgmSrc: "bgm/bgm002.wav", // TODO: 系統に応じて確認
+  bgmSrc: "bgm/bgm002.wav",
   bgmVolume: 0.12,
-  introSfx: "bgm/light_intro.mp3", // TODO: 系統に応じて確認
+  introSfx: "bgm/light_intro.mp3",
   catchCopy: "This view took 700 years to frame.",
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 10,

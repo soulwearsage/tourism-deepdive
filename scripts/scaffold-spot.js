@@ -3,15 +3,19 @@
  *
  * 使い方:
  *   export NOTION_API_KEY="secret_..."
- *   node scripts/scaffold-spot.js <ローマ字スポット名>  例: node scripts/scaffold-spot.js hasedera
+ *   node scripts/scaffold-spot.js <スポット漢字名>  例: node scripts/scaffold-spot.js 宝泉院
  *
  * やること:
- *   1. Notion DBから「名前」or ローマ字表記が一致するページを探す
- *   2. プロパティ(フック/Fact内容/どんでん返し/キャッチコピー/系統/祭神名/番号 等)を読む
- *   3. src/spots/<番号>-<ローマ字名>.ts を生成
- *   4. scripts/generate-narration-<ローマ字名>.js を生成
- *   5. scripts/measure-narration-<ローマ字名>.js を生成
- *   6. src/Root.tsx にコンポジション登録を追記
+ *   1. Notion DBから「名前」列(漢字)が一致するページを探す
+ *   2. Notionの「スラッグ」列(ローマ字、例: hosenin)を取得してファイル名・フォルダ名のベースにする
+ *   3. プロパティ(フック/Fact内容/どんでん返し/キャッチコピー/系統/祭神名/番号 等)を読む
+ *   4. src/spots/<番号>-<スラッグ>.ts を生成
+ *   5. scripts/generate-narration-<スラッグ>.js を生成
+ *   6. scripts/measure-narration-<スラッグ>.js を生成
+ *   7. src/Root.tsx にコンポジション登録を追記
+ *
+ * 【Notion側の必須列】
+ *   スラッグ: ローマ字のスポットID(例: hosenin)。ファイル名・フォルダ名・Composition IDに使用。
  *
  * 【Notion側の記法ルール】(この形式で書かれている前提でパースする)
  *   フック: 1文
@@ -36,9 +40,9 @@ const fs = require("fs");
 const path = require("path");
 const { Client } = require("@notionhq/client");
 
-const spotArg = process.argv[2];
-if (!spotArg) {
-  console.error("使い方: node scripts/scaffold-spot.js <ローマ字スポット名>");
+const nameArg = process.argv[2];
+if (!nameArg) {
+  console.error("使い方: node scripts/scaffold-spot.js <スポット漢字名>  例: node scripts/scaffold-spot.js 宝泉院");
   process.exit(1);
 }
 
@@ -95,11 +99,11 @@ function tsLiteral(value) {
 async function main() {
   const res = await notion.dataSources.query({
     data_source_id: DATA_SOURCE_ID,
-    filter: { property: "名前", rich_text: { contains: spotArg } },
+    filter: { property: "名前", rich_text: { contains: nameArg } },
   });
   const page = res.results[0];
   if (!page) {
-    console.error(`Notionに「${spotArg}」に一致するページが見つかりませんでした。`);
+    console.error(`Notionに「${nameArg}」に一致するページが見つかりませんでした。`);
     process.exit(1);
   }
   const p = page.properties;
@@ -112,6 +116,12 @@ async function main() {
     return prop.rich_text?.map((t) => t.plain_text).join("") || "";
   };
 
+  const slug = get("スラッグ");
+  if (!slug) {
+    console.error(`Notionの「スラッグ」列が空です。「${nameArg}」のページにローマ字スラッグ(例: hosenin)を設定してください。`);
+    process.exit(1);
+  }
+
   const number = get("番号", "number") || "?";
   const paddedNumber = String(number).padStart(3, "0");
   const nameJa = get("名前", "title");
@@ -121,8 +131,8 @@ async function main() {
   const verticalText = get("祭神名");
   const facts = parseFacts(get("Fact内容"));
 
-  const AUDIO_DIR = `audio/${paddedNumber}_${spotArg}`;
-  const PHOTO_DIR = `photos/${paddedNumber}_${spotArg}`;
+  const AUDIO_DIR = `audio/${paddedNumber}_${slug}`;
+  const PHOTO_DIR = `photos/${paddedNumber}_${slug}`;
 
   // Fact1にverticalTextを付与(慣例通り)
   const firstPhotoFact = facts.find((f) => f.type === "photo-stat");
@@ -160,7 +170,7 @@ async function main() {
 const HERO_PHOTO = "${PHOTO_DIR}/hero.png";
 const AUDIO_DIR = "${AUDIO_DIR}";
 
-// ※秒数は暫定値。ナレーション生成後にmeasure-narration-${spotArg}.jsで実測し、正確な値に差し替えること
+// ※秒数は暫定値。ナレーション生成後にmeasure-narration-${slug}.jsで実測し、正確な値に差し替えること
 export const sceneDurations = {
   title: 3.2,
   map: 4.5,
@@ -204,7 +214,7 @@ export const defaultProps = {
 };
 `;
 
-  const tsPath = path.join(__dirname, "..", "src", "spots", `${paddedNumber}-${spotArg}.ts`);
+  const tsPath = path.join(__dirname, "..", "src", "spots", `${paddedNumber}-${slug}.ts`);
   fs.writeFileSync(tsPath, tsContent);
   console.log(`✅ 作成: ${tsPath}`);
 
@@ -223,13 +233,13 @@ export const defaultProps = {
   const narrationJs = `const path = require("path");
 const { generateAll } = require("./_openai-common");
 
-const OUTPUT_DIR = path.join(__dirname, "..", "public", "audio", "${paddedNumber}_${spotArg}");
+const OUTPUT_DIR = path.join(__dirname, "..", "public", "audio", "${paddedNumber}_${slug}");
 
 const LINES = ${JSON.stringify(narrationLines, null, 2)};
 
 generateAll(OUTPUT_DIR, LINES);
 `;
-  const narrationPath = path.join(__dirname, `generate-narration-${spotArg}.js`);
+  const narrationPath = path.join(__dirname, `generate-narration-${slug}.js`);
   fs.writeFileSync(narrationPath, narrationJs);
   console.log(`✅ 作成: ${narrationPath}`);
 
@@ -237,7 +247,7 @@ generateAll(OUTPUT_DIR, LINES);
 const fs = require("fs");
 const getMP3Duration = require("get-mp3-duration");
 
-const AUDIO_DIR = path.join(__dirname, "..", "public", "audio", "${paddedNumber}_${spotArg}");
+const AUDIO_DIR = path.join(__dirname, "..", "public", "audio", "${paddedNumber}_${slug}");
 
 const FILES = ${JSON.stringify(narrationLines.map((l) => ({ key: l.file.replace(".mp3", ""), file: l.file })), null, 2)};
 
@@ -257,24 +267,24 @@ for (const { key, file } of FILES) {
 console.log("\\n--- この結果をそのままClaudeに貼り付けてください ---");
 console.log(JSON.stringify(results, null, 2));
 `;
-  const measurePath = path.join(__dirname, `measure-narration-${spotArg}.js`);
+  const measurePath = path.join(__dirname, `measure-narration-${slug}.js`);
   fs.writeFileSync(measurePath, measureJs);
   console.log(`✅ 作成: ${measurePath}`);
 
   // Root.tsxへの自動追記
   const rootPath = path.join(__dirname, "..", "src", "Root.tsx");
   let root = fs.readFileSync(rootPath, "utf-8");
-  const importLine = `import * as ${spotArg} from "./spots/${paddedNumber}-${spotArg}";`;
+  const importLine = `import * as ${slug} from "./spots/${paddedNumber}-${slug}";`;
   if (!root.includes(importLine)) {
     root = root.replace(/(import \* as \w+ from ".\/spots\/[^"]+";\n)(?!import \* as \w+ from)/, `$1${importLine}\n`);
     const compositionBlock = `      <Composition
-        id="DeepDive-${spotArg[0].toUpperCase()}${spotArg.slice(1)}"
+        id="DeepDive-${slug[0].toUpperCase()}${slug.slice(1)}"
         component={DeepDive}
-        durationInFrames={getTotalDuration(${spotArg}.facts, ${spotArg}.sceneDurations, ${spotArg}.defaultProps)}
+        durationInFrames={getTotalDuration(${slug}.facts, ${slug}.sceneDurations, ${slug}.defaultProps)}
         fps={30}
         width={1080}
         height={1920}
-        defaultProps={${spotArg}.defaultProps}
+        defaultProps={${slug}.defaultProps}
       />
     </>
   );

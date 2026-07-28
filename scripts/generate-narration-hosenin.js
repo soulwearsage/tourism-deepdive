@@ -6,11 +6,11 @@ const OUTPUT_DIR = path.join(__dirname, "..", "public", "audio", "010_hosenin");
 const LINES = [
   {
     "file": "title.mp3",
-    "text": "宝泉院, TODO地名."
+    "text": "Hosenin, Ohara."
   },
   {
     "file": "map.mp3",
-    "text": "宝泉院."
+    "text": "Hosenin."
   },
   {
     "file": "hook.mp3",

@@ -32,7 +32,8 @@ type NarrationMap = {
   map?: string;
   hook?: string;
   twist?: string;
-  outro?: string;
+  outro?: string;    // kagome-teaserがある場合はそのシーンのナレーション、なければ標準アウトロ
+  epilogue?: string; // 標準アウトロ専用(kagome-teaserあり時のみ使用)
 };
 
 type SceneDurations = {
@@ -40,7 +41,8 @@ type SceneDurations = {
   map?: number;
   hook?: number;
   twist?: number;
-  outro?: number;
+  outro?: number;    // kagome-teaserがある場合はそのシーンの尺、なければ標準アウトロの尺
+  epilogue?: number; // 標準アウトロの尺(kagome-teaserあり時のみ使用)
 };
 
 type Props = {
@@ -301,25 +303,24 @@ const TwistScene: React.FC<Props> = ({ twistHeading, twistBody, accentColor, kan
   );
 };
 
-// --- Scene: 締め ---
-const OutroScene: React.FC<Props> = ({ spotName, accentColor, kanjiMotif, narration, episodeNumber, epilogueType }) => {
+// --- Scene: 籠目紋ティーザー(TwistScene直後、OutroSceneの前に挿入) ---
+// epilogueType === "kagome-teaser" のスポット専用。narration.outro を使う。
+const KagomeTeaserScene: React.FC<Props> = ({ accentColor, narration, episodeNumber }) => {
+  return (
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="NEXT" narrationSrc={narration?.outro}>
+      <KagomeOutroContent accentColor={accentColor} />
+    </SceneFrame>
+  );
+};
+
+// --- Scene: 締め(常に標準フォーマット) ---
+const OutroScene: React.FC<Props> = ({ spotName, accentColor, narration, episodeNumber }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-
-  // 籠目紋アウトロ(伊根専用)
-  if (epilogueType === "kagome-teaser") {
-    return (
-      <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.outro}>
-        <KagomeOutroContent accentColor={accentColor} />
-      </SceneFrame>
-    );
-  }
-
-  // 通常アウトロ
   const scale = spring({ frame, fps, config: { damping: 14 } });
   const taglineOpacity = interpolate(frame, [65, 85], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.outro}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.epilogue ?? narration?.outro}>
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center" }}>
         <div style={{ transform: `scale(${scale})`, textAlign: "center" }}>
           <div style={{ color: "#f5f2eb", fontSize: 56, fontWeight: 700, fontFamily: specialGothicExpandedFont }}>
@@ -398,7 +399,12 @@ export const DeepDive: React.FC<Props> = (props) => {
   const MAP_DUR = Math.round((sceneDurations?.map ?? 6) * FPS);
   const HOOK_DUR = Math.round((sceneDurations?.hook ?? 5) * FPS);
   const TWIST_DUR = Math.round((sceneDurations?.twist ?? 8) * FPS);
-  const OUTRO_DUR = Math.round((sceneDurations?.outro ?? 6) * FPS);
+  // kagome-teaser がある場合: outro = 籠目紋シーンの尺, epilogue = 標準アウトロの尺
+  // ない場合: outro = 標準アウトロの尺, KAGOME_DUR = 0
+  const KAGOME_DUR = props.epilogueType === "kagome-teaser" ? Math.round((sceneDurations?.outro ?? 6) * FPS) : 0;
+  const OUTRO_DUR = props.epilogueType === "kagome-teaser"
+    ? Math.round((sceneDurations?.epilogue ?? 4.5) * FPS)
+    : Math.round((sceneDurations?.outro ?? 6) * FPS);
 
   // Factも同様に、durationSecondsの指定があればそれを優先
   const factDuration = (fact: FactInput) => {
@@ -430,6 +436,7 @@ export const DeepDive: React.FC<Props> = (props) => {
     cursor += d;
   });
   const twistFrom = cursor; cursor += TWIST_DUR;
+  const kagomeFrom = cursor; cursor += KAGOME_DUR;
   const outroFrom = cursor; cursor += OUTRO_DUR;
 
   return (
@@ -473,6 +480,11 @@ export const DeepDive: React.FC<Props> = (props) => {
       <Sequence from={twistFrom} durationInFrames={TWIST_DUR}>
         <TwistScene {...props} />
       </Sequence>
+      {props.epilogueType === "kagome-teaser" && (
+        <Sequence from={kagomeFrom} durationInFrames={KAGOME_DUR}>
+          <KagomeTeaserScene {...props} />
+        </Sequence>
+      )}
       <Sequence from={outroFrom} durationInFrames={OUTRO_DUR}>
         <OutroScene {...props} />
       </Sequence>
@@ -483,7 +495,7 @@ export const DeepDive: React.FC<Props> = (props) => {
 export const getTotalDuration = (
   facts: FactInput[],
   sceneDurations?: SceneDurations,
-  options?: { introSfx?: string; catchCopy?: string }
+  options?: { introSfx?: string; catchCopy?: string; epilogueType?: string }
 ) => {
   const factTotal = facts.reduce((sum, fact) => {
     if (fact.durationSeconds) return sum + Math.round(fact.durationSeconds * FPS);
@@ -505,6 +517,9 @@ export const getTotalDuration = (
   const map = Math.round((sceneDurations?.map ?? 6) * FPS);
   const hook = Math.round((sceneDurations?.hook ?? 5) * FPS);
   const twist = Math.round((sceneDurations?.twist ?? 8) * FPS);
-  const outro = Math.round((sceneDurations?.outro ?? 6) * FPS);
-  return catchDur + title + map + hook + factTotal + twist + outro;
+  const kagome = options?.epilogueType === "kagome-teaser" ? Math.round((sceneDurations?.outro ?? 6) * FPS) : 0;
+  const outro = options?.epilogueType === "kagome-teaser"
+    ? Math.round((sceneDurations?.epilogue ?? 4.5) * FPS)
+    : Math.round((sceneDurations?.outro ?? 6) * FPS);
+  return catchDur + title + map + hook + factTotal + twist + kagome + outro;
 };

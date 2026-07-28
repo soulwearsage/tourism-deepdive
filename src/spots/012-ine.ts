@@ -4,11 +4,12 @@ const HERO_PHOTO = "photos/012_ine/hero.png";
 const AUDIO_DIR = "audio/012_ine";
 
 export const sceneDurations = {
-  title: 3,    // ナレーション0.6秒 + 余白
-  map: 4.2,    // ナレーション0.6秒 + 余白
-  hook: 8.7,   // ナレーション7.2秒 + 余白
-  twist: 12.7, // ナレーション11.2秒 + 余白
-  outro: 19.6, // ナレーション17.1秒 + 余白(籠目紋アウトロ)
+  title: 3.2,  // ナレーション0.7秒 + 余白
+  map: 4.1,    // ナレーション0.6秒 + 余白
+  hook: 9.0,   // ナレーション7.4秒 + 余白
+  twist: 12.8, // ナレーション11.3秒 + 余白
+  outro: 19.5, // 籠目紋ティーザーシーン: ナレーション17.0秒 + 余白
+  epilogue: 4.6, // 標準アウトロ: ナレーション2.1秒 + 余白
 };
 
 export const facts: FactInput[] = [
@@ -20,7 +21,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/012_ine/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 17.0, // ナレーション15.5秒 + 余白
+    durationSeconds: 17.3, // ナレーション15.8秒 + 余白
   },
   {
     type: "photo-stat",
@@ -30,7 +31,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/012_ine/fact-2.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
-    durationSeconds: 17.2, // ナレーション15.7秒 + 余白
+    durationSeconds: 17.3, // ナレーション15.8秒 + 余白
   },
   {
     type: "big-number",
@@ -61,7 +62,8 @@ export const defaultProps = {
     map: `${AUDIO_DIR}/map.mp3`,
     hook: `${AUDIO_DIR}/hook.mp3`,
     twist: `${AUDIO_DIR}/twist.mp3`,
-    outro: `${AUDIO_DIR}/outro.mp3`,
+    outro: `${AUDIO_DIR}/outro.mp3`,       // 籠目紋ティーザーシーンのナレーション
+    epilogue: `${AUDIO_DIR}/epilogue.mp3`, // 標準アウトロ("Worth the visit? Absolutely.")
   },
   sceneDurations,
   bgmSrc: "bgm/bgm002.wav",

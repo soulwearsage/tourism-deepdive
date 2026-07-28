@@ -53,7 +53,7 @@ export const defaultProps = {
   kanjiMotif: "勝",
   mapRegionLabel: "OSAKA, JAPAN",
   prefectureId: "27",
-  municipalityId: "27000",
+  municipalityId: "27220", // 箕面市(勝尾寺の所在地)
   hookText: "This temple's name almost declared it more powerful than the Emperor himself.",
   facts,
   twistHeading: "One Character, Softened",

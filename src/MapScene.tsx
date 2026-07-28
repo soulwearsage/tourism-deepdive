@@ -32,7 +32,7 @@ export const MapScene: React.FC<MapProps> = ({
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const { countryPaths, prefPaths, muniPaths, targetMuniPath, centroid } = useMemo(() => {
+  const { countryPaths, prefPaths, muniPaths, targetMuniPaths, centroid } = useMemo(() => {
     const country = topojson.feature(japan as any, (japan as any).objects.country) as any;
     const prefs = topojson.feature(japan as any, (japan as any).objects.prefectures) as any;
     const munis = topojson.feature(japan as any, (japan as any).objects.municipalities) as any;
@@ -42,8 +42,9 @@ export const MapScene: React.FC<MapProps> = ({
     // 同じ都道府県内の市区町村だけに絞る(全国2800件を毎回描くと重いため)
     const prefPrefix = municipalityId.slice(0, 2);
     const sameAreaMunis = munis.features.filter((f: any) => String(f.id).startsWith(prefPrefix));
-    const targetMuni = munis.features.find((f: any) => String(f.id) === municipalityId);
-    const c = targetMuni ? path.centroid(targetMuni) : [WIDTH / 2, HEIGHT / 2];
+    const targetMunis = munis.features.filter((f: any) => String(f.id) === municipalityId);
+    const primaryMuni = targetMunis[0] ?? null;
+    const c = primaryMuni ? path.centroid(primaryMuni) : [WIDTH / 2, HEIGHT / 2];
 
     return {
       countryPaths: country.features
@@ -51,7 +52,7 @@ export const MapScene: React.FC<MapProps> = ({
         : [{ d: path(country) as string }],
       prefPaths: prefs.features.map((f: any) => ({ d: path(f) as string })),
       muniPaths: sameAreaMunis.map((f: any) => ({ d: path(f) as string })),
-      targetMuniPath: targetMuni ? (path(targetMuni) as string) : null,
+      targetMuniPaths: targetMunis.map((f: any) => path(f) as string),
       centroid: c as [number, number],
     };
   }, [prefectureId, municipalityId]);
@@ -120,7 +121,9 @@ export const MapScene: React.FC<MapProps> = ({
                 <path key={i} d={p.d} fill="none" stroke="#a39a86" strokeWidth={0.35 / Math.max(zoom / 6, 1)} />
               ))}
             </g>
-            {targetMuniPath && <path d={targetMuniPath} fill={accentColor} fillOpacity={fillOpacity} stroke="none" />}
+            {targetMuniPaths.map((d, i) => (
+              <path key={i} d={d} fill={accentColor} fillOpacity={fillOpacity} stroke="none" />
+            ))}
             <g style={{ opacity: pinOpacity, transform: `translateY(${interpolate(pinDrop, [0, 1], [-60, 0])}px)` }}>
               <circle cx={centroid[0]} cy={centroid[1]} r={(13 + pulse * 30) / Math.max(zoom, 1)} fill={accentColor} opacity={0.35 * (1 - pulse)} />
               <circle cx={centroid[0]} cy={centroid[1]} r={13 / Math.max(zoom, 1)} fill={accentColor} />

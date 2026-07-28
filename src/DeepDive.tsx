@@ -9,6 +9,7 @@ import { FactScene, FactProps } from "./FactScene";
 import { BigNumberScene, BigNumberProps } from "./BigNumberScene";
 import { QuoteScene, QuoteProps } from "./QuoteScene";
 import { MapScene } from "./MapScene";
+import { KagomeTeaser } from "./KagomeTeaser";
 
 type PhotoStatFact = { type: "photo-stat"; narrationSrc?: string; durationSeconds?: number } & Omit<FactProps, "factNumber" | "totalFacts" | "accentColor" | "narrationSrc">;
 type BigNumberFact = { type: "big-number"; narrationSrc?: string; durationSeconds?: number } & Omit<BigNumberProps, "factNumber" | "totalFacts" | "accentColor" | "narrationSrc">;
@@ -40,6 +41,7 @@ type SceneDurations = {
   hook?: number;
   twist?: number;
   outro?: number;
+  epilogue?: number;
 };
 
 type Props = {
@@ -64,6 +66,7 @@ type Props = {
   introSfx?: string; // イントロ音(light_intro/dark_introなど)
   catchCopy?: string; // イントロ音が鳴ってる間だけ出る、一番最初のパンチの効いた一言
   outroBgmSrc?: string; // アウトロのタグラインに合わせて鳴らす専用BGM
+  epilogueType?: "kagome-teaser"; // スポット固有のエピローグシーン種別
   episodeNumber: number; // シリーズの何本目か(左上の"NO. 00X"表示に使う)
 };
 
@@ -386,6 +389,9 @@ export const DeepDive: React.FC<Props> = (props) => {
   const HOOK_DUR = Math.round((sceneDurations?.hook ?? 5) * FPS);
   const TWIST_DUR = Math.round((sceneDurations?.twist ?? 8) * FPS);
   const OUTRO_DUR = Math.round((sceneDurations?.outro ?? 6) * FPS);
+  const EPILOGUE_DUR = props.epilogueType && sceneDurations?.epilogue
+    ? Math.round(sceneDurations.epilogue * FPS)
+    : 0;
 
   // Factも同様に、durationSecondsの指定があればそれを優先
   const factDuration = (fact: FactInput) => {
@@ -418,6 +424,7 @@ export const DeepDive: React.FC<Props> = (props) => {
   });
   const twistFrom = cursor; cursor += TWIST_DUR;
   const outroFrom = cursor; cursor += OUTRO_DUR;
+  const epilogueFrom = cursor; cursor += EPILOGUE_DUR;
 
   return (
     <AbsoluteFill>
@@ -463,6 +470,11 @@ export const DeepDive: React.FC<Props> = (props) => {
       <Sequence from={outroFrom} durationInFrames={OUTRO_DUR}>
         <OutroScene {...props} />
       </Sequence>
+      {props.epilogueType === "kagome-teaser" && EPILOGUE_DUR > 0 && (
+        <Sequence from={epilogueFrom} durationInFrames={EPILOGUE_DUR}>
+          <KagomeTeaser accentColor={accentColor} />
+        </Sequence>
+      )}
     </AbsoluteFill>
   );
 };
@@ -470,7 +482,7 @@ export const DeepDive: React.FC<Props> = (props) => {
 export const getTotalDuration = (
   facts: FactInput[],
   sceneDurations?: SceneDurations,
-  options?: { introSfx?: string; catchCopy?: string }
+  options?: { introSfx?: string; catchCopy?: string; epilogueType?: string }
 ) => {
   const factTotal = facts.reduce((sum, fact) => {
     if (fact.durationSeconds) return sum + Math.round(fact.durationSeconds * FPS);
@@ -493,5 +505,8 @@ export const getTotalDuration = (
   const hook = Math.round((sceneDurations?.hook ?? 5) * FPS);
   const twist = Math.round((sceneDurations?.twist ?? 8) * FPS);
   const outro = Math.round((sceneDurations?.outro ?? 6) * FPS);
-  return catchDur + title + map + hook + factTotal + twist + outro;
+  const epilogue = options?.epilogueType && sceneDurations?.epilogue
+    ? Math.round(sceneDurations.epilogue * FPS)
+    : 0;
+  return catchDur + title + map + hook + factTotal + twist + outro + epilogue;
 };

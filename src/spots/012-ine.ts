@@ -10,6 +10,7 @@ export const sceneDurations = {
   hook: 8.6, // 自動計算(ナレーション7.1秒 + 余白)
   twist: 12.8, // 自動計算(ナレーション11.3秒 + 余白)
   outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白)
+  epilogue: 11, // 籠目紋ティーザー(KagomeTeaser) — 330フレーム
 };
 
 export const facts: FactInput[] = [
@@ -56,7 +57,7 @@ export const defaultProps = {
   hookText: "This bay looks like something from a fairytale — houses that float on the water. But they were never built for people.",
   facts,
   twistHeading: "A Garage That Became a Home",
-  twistBody: "The fishing village a Heian-era poet once sang about still looks almost the same today. What was once built as a garage for boats slowly became the shape of everyday life itself.",
+  twistBody: "The fishing village a Heian-era poet once sang about still looks almost the same today. What was once built as a garage for boats slowly became the shape of everyday life itself. And just a short drive from here wait two more of Japan's mysteries: Amanohashidate, one of Japan's three most celebrated views, and Kono Shrine — the legendary \"former Ise,\" said to be where Ise Grand Shrine's deity once resided before moving south. The mystery isn't over yet.",
   narration: {
     title: `${AUDIO_DIR}/title.mp3`,
     map: `${AUDIO_DIR}/map.mp3`,
@@ -68,6 +69,7 @@ export const defaultProps = {
   bgmSrc: "bgm/bgm002.wav",
   bgmVolume: 0.12,
   introSfx: "bgm/light_intro.mp3",
+  epilogueType: "kagome-teaser" as const,
   catchCopy: "THESE HOUSES WERE NEVER BUILT FOR PEOPLE.",
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 12,

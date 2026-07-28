@@ -3,13 +3,12 @@ import { FactInput } from "../DeepDive";
 const HERO_PHOTO = "photos/012_ine/hero.png";
 const AUDIO_DIR = "audio/012_ine";
 
-// ※秒数は暫定値。ナレーション生成後にmeasure-narration-ine.jsで実測し、正確な値に差し替えること
 export const sceneDurations = {
-  title: 3, // 自動計算(ナレーション0.6秒 + 余白)
-  map: 4.2, // 自動計算(ナレーション0.5秒 + 余白)
-  hook: 8.6, // 自動計算(ナレーション7.1秒 + 余白)
-  twist: 12.8, // 自動計算(ナレーション11.3秒 + 余白)
-  outro: 9, // 籠目紋アウトロ(アニメーション完成＋テキスト表示を含む)
+  title: 3,    // ナレーション0.6秒 + 余白
+  map: 4.2,    // ナレーション0.6秒 + 余白
+  hook: 8.7,   // ナレーション7.2秒 + 余白
+  twist: 12.7, // ナレーション11.2秒 + 余白
+  outro: 19.6, // ナレーション17.1秒 + 余白(籠目紋アウトロ)
 };
 
 export const facts: FactInput[] = [
@@ -21,7 +20,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/012_ine/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 17.3, // 自動計算(ナレーション15.8秒 + 余白)
+    durationSeconds: 17.0, // ナレーション15.5秒 + 余白
   },
   {
     type: "photo-stat",
@@ -31,7 +30,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/012_ine/fact-2.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
-    durationSeconds: 17.3, // 自動計算(ナレーション15.8秒 + 余白)
+    durationSeconds: 17.2, // ナレーション15.7秒 + 余白
   },
   {
     type: "big-number",
@@ -39,7 +38,7 @@ export const facts: FactInput[] = [
     value: "230",
     label: "About 230 funaya line the 5-kilometer curve of Ine Bay.",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
-    durationSeconds: 5.8, // 自動計算(ナレーション4.3秒 + 余白)
+    durationSeconds: 5.7, // ナレーション4.2秒 + 余白
   }
 ];
 

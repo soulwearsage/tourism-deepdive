@@ -34,7 +34,7 @@ const LINES = [
   },
   {
     "file": "outro.mp3",
-    "text": "Worth the visit? Absolutely."
+    "text": "Just a short drive from here wait two more of Japan's mysteries: Amanohashidate, one of Japan's three most celebrated views, and Kono Shrine — the legendary 'former Ise,' said to be where Ise Grand Shrine's deity once resided before moving south. The mystery isn't over yet."
   }
 ];
 

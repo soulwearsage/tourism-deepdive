@@ -10,7 +10,7 @@ export type QuoteProps = {
   kanji?: string;
   narrationSrc?: string;
   accentColor: string;
-  visual?: "cross" | "pyramid"; // 任意のビジュアル演出
+  visual?: "cross" | "pyramid" | "kagome"; // 任意のビジュアル演出
 };
 
 // 線が少しずつ描かれるピラミッド+内部の通路・玄室のSVG
@@ -77,6 +77,46 @@ const PyramidVisual: React.FC<{ frame: number; accentColor: string }> = ({ frame
         strokeWidth="2.5"
         strokeLinecap="round"
       />
+    </svg>
+  );
+};
+
+// 線が少しずつ描かれる籠目紋(六芒星)のSVG — CrossVisualと同パターン
+// 400×400 viewBox, 外接円半径R=170
+const _CX = 200, _CY = 200, _R = 170;
+const _SQ3H = _R * Math.sqrt(3) / 2;
+const _TOP: [number, number] = [_CX,          _CY - _R       ];
+const _BR:  [number, number] = [_CX + _SQ3H,  _CY + _R / 2   ];
+const _BL:  [number, number] = [_CX - _SQ3H,  _CY + _R / 2   ];
+const _TR:  [number, number] = [_CX + _SQ3H,  _CY - _R / 2   ];
+const _BOT: [number, number] = [_CX,           _CY + _R       ];
+const _TL:  [number, number] = [_CX - _SQ3H,  _CY - _R / 2   ];
+const _lerp = (a: [number, number], b: [number, number], t: number): [number, number] => [
+  a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t,
+];
+
+export const KagomeVisual: React.FC<{ frame: number; accentColor: string }> = ({ frame, accentColor }) => {
+  const eOpt = { extrapolateLeft: "clamp" as const, extrapolateRight: "clamp" as const, easing: Easing.out(Easing.cubic) };
+  // 三角1・三角2の辺を交互に描く (各辺20フレーム、計58フレームで完成)
+  const p1 = interpolate(frame, [0,  20], [0, 1], eOpt); // tri1: TOP → BR
+  const p4 = interpolate(frame, [6,  26], [0, 1], eOpt); // tri2: TR  → BOT
+  const p2 = interpolate(frame, [16, 36], [0, 1], eOpt); // tri1: BR  → BL
+  const p5 = interpolate(frame, [22, 42], [0, 1], eOpt); // tri2: BOT → TL
+  const p3 = interpolate(frame, [32, 52], [0, 1], eOpt); // tri1: BL  → TOP
+  const p6 = interpolate(frame, [38, 58], [0, 1], eOpt); // tri2: TL  → TR
+  const glow = interpolate(frame, [55, 72], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
+    * interpolate(frame % 90, [0, 45, 90], [0.12, 0.32, 0.12]);
+  const fillOpacity = interpolate(frame, [58, 78], [0, 0.08], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const segs: Array<{ a: [number, number]; b: [number, number]; p: number }> = [
+    { a: _TOP, b: _BR, p: p1 }, { a: _BR, b: _BL, p: p2 }, { a: _BL, b: _TOP, p: p3 },
+    { a: _TR, b: _BOT, p: p4 }, { a: _BOT, b: _TL, p: p5 }, { a: _TL, b: _TR, p: p6 },
+  ];
+  return (
+    <svg width="400" height="400" viewBox="0 0 400 400" style={{ overflow: "visible" }}>
+      <polygon points={`${_TOP[0]},${_TOP[1]} ${_BR[0]},${_BR[1]} ${_BL[0]},${_BL[1]}`} fill={accentColor} fillOpacity={fillOpacity} stroke="none" />
+      <polygon points={`${_TR[0]},${_TR[1]} ${_BOT[0]},${_BOT[1]} ${_TL[0]},${_TL[1]}`} fill={accentColor} fillOpacity={fillOpacity} stroke="none" />
+      {segs.map(({ a, b, p }, i) => { const [x2, y2] = _lerp(a, b, p); return <line key={`g${i}`} x1={a[0]} y1={a[1]} x2={x2} y2={y2} stroke={accentColor} strokeWidth={10} opacity={glow} strokeLinecap="round" />; })}
+      {segs.map(({ a, b, p }, i) => { const [x2, y2] = _lerp(a, b, p); return <line key={`l${i}`} x1={a[0]} y1={a[1]} x2={x2} y2={y2} stroke={accentColor} strokeWidth={2.8} strokeLinecap="round" />; })}
     </svg>
   );
 };
@@ -174,6 +214,11 @@ export const QuoteScene: React.FC<QuoteProps> = ({
         {visual === "pyramid" && (
           <div style={{ marginBottom: 44 }}>
             <PyramidVisual frame={frame} accentColor={accentColor} />
+          </div>
+        )}
+        {visual === "kagome" && (
+          <div style={{ marginBottom: 44 }}>
+            <KagomeVisual frame={frame} accentColor={accentColor} />
           </div>
         )}
 

@@ -5,11 +5,11 @@ const AUDIO_DIR = "audio/010_hosenin";
 
 // ※秒数は暫定値。ナレーション生成後にmeasure-narration-hosenin.jsで実測し、正確な値に差し替えること
 export const sceneDurations = {
-  title: 3, // 自動計算(ナレーション0.9秒 + 余白) // 自動計算(ナレーション0.9秒 + 余白) // 自動計算(ナレーション1.5秒 + 余白)
-  map: 4.2, // 自動計算(ナレーション0.6秒 + 余白) // 自動計算(ナレーション0.6秒 + 余白) // 自動計算(ナレーション0.8秒 + 余白)
-  hook: 11.7, // 自動計算(ナレーション10.2秒 + 余白) // 自動計算(ナレーション10.2秒 + 余白) // 自動計算(ナレーション10.2秒 + 余白)
-  twist: 16.8, // 自動計算(ナレーション15.3秒 + 余白) // 自動計算(ナレーション15.5秒 + 余白) // 自動計算(ナレーション15.5秒 + 余白)
-  outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白) // 自動計算(ナレーション1.8秒 + 余白) // 自動計算(ナレーション1.8秒 + 余白)
+  title: 3, // 自動計算(ナレーション0.9秒 + 余白) // 自動計算(ナレーション0.9秒 + 余白)
+  map: 4.2, // 自動計算(ナレーション0.5秒 + 余白) // 自動計算(ナレーション0.6秒 + 余白)
+  hook: 11.4, // 自動計算(ナレーション9.9秒 + 余白) // 自動計算(ナレーション10.2秒 + 余白)
+  twist: 17.1, // 自動計算(ナレーション15.6秒 + 余白) // 自動計算(ナレーション15.3秒 + 余白)
+  outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白) // 自動計算(ナレーション1.8秒 + 余白)
 };
 
 export const facts: FactInput[] = [
@@ -18,7 +18,7 @@ export const facts: FactInput[] = [
     kanji: "額",
     heading: "額縁庭園(盤桓園)",
     body: "客殿の柱と鴨居を額縁に見立てて、大原の景色を1枚の絵画のように眺める趣向。正面には樹齢700年、近江富士(琵琶湖畔の三上山)をかたどった五葉松。「盤桓」は\"立ち去りがたい\"という意味。",
-    photoSrc: "photos/010_hosenin/fact-1.png" /* TODO: 実ファイル名を確認 */,
+    photoSrc: "photos/010_hosenin/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
     durationSeconds: 20.7, // 自動計算(ナレーション19.2秒 + 余白)
@@ -29,14 +29,14 @@ export const facts: FactInput[] = [
     value: "3",
     label: "宝泉院には性格の異なる3つの庭園がある(盤桓園・鶴亀庭園・宝楽園)",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
-    durationSeconds: 7.7, // 自動計算(ナレーション6.2秒 + 余白)
+    durationSeconds: 7.9, // 自動計算(ナレーション6.4秒 + 余白)
   },
   {
     type: "photo-stat",
     kanji: "額",
     heading: "水琴窟",
     body: "竹筒に耳を近づけると、地中に埋めた甕に水滴が反響して澄んだ音が聞こえる、音の仕掛け",
-    photoSrc: "photos/010_hosenin/fact-3.png" /* TODO: 実ファイル名を確認 */,
+    photoSrc: "photos/010_hosenin/fact-3.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
     durationSeconds: 10.2, // 自動計算(ナレーション8.7秒 + 余白)

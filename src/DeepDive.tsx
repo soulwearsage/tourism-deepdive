@@ -66,6 +66,7 @@ type Props = {
   bgmVolume?: number; // BGMの音量(0〜1)。デフォルト0.12(ナレーションの邪魔をしない程度に控えめ)
   introSfx?: string; // イントロ音(light_intro/dark_introなど)
   catchCopy?: string; // イントロ音が鳴ってる間だけ出る、一番最初のパンチの効いた一言
+  catchCopyFont?: string; // キャッチコピーのフォント上書き(省略時は gasoekOneFont)
   outroBgmSrc?: string; // アウトロのタグラインに合わせて鳴らす専用BGM
   epilogueType?: "kagome-teaser"; // スポット固有のエピローグシーン種別
   episodeNumber: number; // シリーズの何本目か(左上の"NO. 00X"表示に使う)
@@ -188,7 +189,7 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
 
 // --- Scene: フック ---
 // --- Scene: キャッチコピー(イントロ音が鳴ってる間だけ出る、一番最初のガツンとした一言) ---
-const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy, introSfx }) => {
+const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy, catchCopyFont, introSfx }) => {
   const frame = useCurrentFrame();
   // 実際の音源を解析して測った「低音がドーンと入るタイミング」(秒)。音源ごとに微妙に違う
   const bassHitSeconds = introSfx?.includes("light") ? 1.7 : 1.2;
@@ -221,7 +222,7 @@ const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy
     fontSize: 60,
     fontWeight: 400,
     lineHeight: 1.15,
-    fontFamily: gasoekOneFont,
+    fontFamily: catchCopyFont ?? gasoekOneFont,
     textTransform: "uppercase",
   };
   return (

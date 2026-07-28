@@ -1,4 +1,5 @@
 import { FactInput } from "../DeepDive";
+import { rubikGlitchFont } from "../fonts";
 
 const HERO_PHOTO = "photos/012_ine/hero.png";
 const AUDIO_DIR = "audio/012_ine";
@@ -71,6 +72,7 @@ export const defaultProps = {
   introSfx: "bgm/light_intro.mp3",
   epilogueType: "kagome-teaser" as const,
   catchCopy: "THESE HOUSES WERE NEVER BUILT FOR PEOPLE.",
+  catchCopyFont: rubikGlitchFont,
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 12,
 };

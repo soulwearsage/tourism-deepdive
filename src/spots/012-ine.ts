@@ -73,6 +73,7 @@ export const defaultProps = {
   epilogueType: "kagome-teaser" as const,
   catchCopy: "THESE HOUSES WERE NEVER BUILT FOR PEOPLE.",
   catchCopyFont: rubikGlitchFont,
+  catchCopyFontSize: 80,
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 12,
 };

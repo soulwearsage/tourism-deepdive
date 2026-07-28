@@ -96,7 +96,7 @@ export const Root: React.FC = () => {
         height={1920}
         defaultProps={hasedera.defaultProps}
       />      <Composition
-        id="DeepDive-hosenin"
+        id="DeepDive-Hosenin"
         component={DeepDive}
         durationInFrames={getTotalDuration(hosenin.facts, hosenin.sceneDurations, hosenin.defaultProps)}
         fps={30}

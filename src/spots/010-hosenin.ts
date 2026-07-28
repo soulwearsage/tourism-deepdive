@@ -5,11 +5,11 @@ const AUDIO_DIR = "audio/010_hosenin";
 
 // ※秒数は暫定値。ナレーション生成後にmeasure-narration-hosenin.jsで実測し、正確な値に差し替えること
 export const sceneDurations = {
-  title: 3, // 自動計算(ナレーション0.9秒 + 余白) // 自動計算(ナレーション1.5秒 + 余白)
-  map: 4.2, // 自動計算(ナレーション0.6秒 + 余白) // 自動計算(ナレーション0.8秒 + 余白)
-  hook: 11.7, // 自動計算(ナレーション10.2秒 + 余白) // 自動計算(ナレーション10.2秒 + 余白)
-  twist: 17, // 自動計算(ナレーション15.5秒 + 余白) // 自動計算(ナレーション15.5秒 + 余白)
-  outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白) // 自動計算(ナレーション1.8秒 + 余白)
+  title: 3, // 自動計算(ナレーション0.9秒 + 余白) // 自動計算(ナレーション0.9秒 + 余白) // 自動計算(ナレーション1.5秒 + 余白)
+  map: 4.2, // 自動計算(ナレーション0.6秒 + 余白) // 自動計算(ナレーション0.6秒 + 余白) // 自動計算(ナレーション0.8秒 + 余白)
+  hook: 11.7, // 自動計算(ナレーション10.2秒 + 余白) // 自動計算(ナレーション10.2秒 + 余白) // 自動計算(ナレーション10.2秒 + 余白)
+  twist: 16.8, // 自動計算(ナレーション15.3秒 + 余白) // 自動計算(ナレーション15.5秒 + 余白) // 自動計算(ナレーション15.5秒 + 余白)
+  outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白) // 自動計算(ナレーション1.8秒 + 余白) // 自動計算(ナレーション1.8秒 + 余白)
 };
 
 export const facts: FactInput[] = [
@@ -21,7 +21,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/010_hosenin/fact-1.png" /* TODO: 実ファイル名を確認 */,
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 20.6, // 自動計算(ナレーション19.1秒 + 余白)
+    durationSeconds: 20.7, // 自動計算(ナレーション19.2秒 + 余白)
   },
   {
     type: "big-number",
@@ -39,7 +39,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/010_hosenin/fact-3.png" /* TODO: 実ファイル名を確認 */,
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
-    durationSeconds: 10.1, // 自動計算(ナレーション8.6秒 + 余白)
+    durationSeconds: 10.2, // 自動計算(ナレーション8.7秒 + 余白)
   }
 ];
 

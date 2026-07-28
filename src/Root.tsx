@@ -10,6 +10,7 @@ import * as izumo from "./spots/006-izumo";
 import * as gassan from "./spots/007-gassan";
 import * as minashi from "./spots/008-minashi";
 import * as hasedera from "./spots/009-hasedera";
+import * as hosenin from "./spots/010-hosenin";
 
 export const Root: React.FC = () => {
   return (
@@ -94,6 +95,14 @@ export const Root: React.FC = () => {
         width={1080}
         height={1920}
         defaultProps={hasedera.defaultProps}
+      />      <Composition
+        id="DeepDive-hosenin"
+        component={DeepDive}
+        durationInFrames={getTotalDuration(hosenin.facts, hosenin.sceneDurations, hosenin.defaultProps)}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={hosenin.defaultProps}
       />
     </>
   );

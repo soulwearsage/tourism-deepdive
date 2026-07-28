@@ -22,9 +22,11 @@ const path = require("path");
 const { execSync } = require("child_process");
 const getMP3Duration = require("get-mp3-duration");
 
-const spotShortId = process.argv[2];
+const args = process.argv.slice(2);
+const skipNarration = args.includes("--skip-narration");
+const spotShortId = args.find((a) => !a.startsWith("--"));
 if (!spotShortId) {
-  console.error("使い方: node scripts/auto-pipeline.js <スポットの短い名前(例: minashi)>");
+  console.error("使い方: node scripts/auto-pipeline.js <スポットの短い名前(例: minashi)> [--skip-narration]");
   process.exit(1);
 }
 
@@ -72,12 +74,16 @@ if (missing.length > 0) {
 console.log("✓ 写真は揃ってます");
 
 // --- 2. ナレーション生成 ---
-if (!fs.existsSync(generateScript)) {
-  console.error(`✗ ${generateScript} が見つかりません。`);
-  process.exit(1);
+if (skipNarration) {
+  console.log("--- ナレーション生成をスキップ(--skip-narration) ---");
+} else {
+  if (!fs.existsSync(generateScript)) {
+    console.error(`✗ ${generateScript} が見つかりません。`);
+    process.exit(1);
+  }
+  console.log("--- ナレーション生成中(数分かかります) ---");
+  execSync(`node "${generateScript}"`, { stdio: "inherit", cwd: ROOT });
 }
-console.log("--- ナレーション生成中(数分かかります) ---");
-execSync(`node "${generateScript}"`, { stdio: "inherit", cwd: ROOT });
 
 // --- 3. 尺を計測 ---
 const FILES = ["title", "map", "hook", "fact-1", "fact-2", "fact-3", "fact-4", "twist", "outro"];

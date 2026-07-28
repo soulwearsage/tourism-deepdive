@@ -5,11 +5,11 @@ const AUDIO_DIR = "audio/010_hosenin";
 
 // ※秒数は暫定値。ナレーション生成後にmeasure-narration-hosenin.jsで実測し、正確な値に差し替えること
 export const sceneDurations = {
-  title: 3, // 自動計算(ナレーション0.9秒 + 余白) // 自動計算(ナレーション0.9秒 + 余白)
-  map: 4.2, // 自動計算(ナレーション0.5秒 + 余白) // 自動計算(ナレーション0.6秒 + 余白)
-  hook: 11.4, // 自動計算(ナレーション9.9秒 + 余白) // 自動計算(ナレーション10.2秒 + 余白)
-  twist: 17.1, // 自動計算(ナレーション15.6秒 + 余白) // 自動計算(ナレーション15.3秒 + 余白)
-  outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白) // 自動計算(ナレーション1.8秒 + 余白)
+  title: 3, // 自動計算(ナレーション1秒 + 余白) // 自動計算(ナレーション0.9秒 + 余白) // 自動計算(ナレーション0.9秒 + 余白)
+  map: 4.2, // 自動計算(ナレーション0.6秒 + 余白) // 自動計算(ナレーション0.5秒 + 余白) // 自動計算(ナレーション0.6秒 + 余白)
+  hook: 9.1, // 自動計算(ナレーション7.6秒 + 余白) // 自動計算(ナレーション9.9秒 + 余白) // 自動計算(ナレーション10.2秒 + 余白)
+  twist: 10.5, // 自動計算(ナレーション9秒 + 余白) // 自動計算(ナレーション15.6秒 + 余白) // 自動計算(ナレーション15.3秒 + 余白)
+  outro: 4.5, // 自動計算(ナレーション1.7秒 + 余白) // 自動計算(ナレーション1.8秒 + 余白) // 自動計算(ナレーション1.8秒 + 余白)
 };
 
 export const facts: FactInput[] = [
@@ -21,7 +21,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/010_hosenin/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 20.7, // 自動計算(ナレーション19.2秒 + 余白)
+    durationSeconds: 18.7, // 自動計算(ナレーション17.2秒 + 余白)
   },
   {
     type: "big-number",
@@ -39,18 +39,18 @@ export const facts: FactInput[] = [
     photoSrc: "photos/010_hosenin/fact-3.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
-    durationSeconds: 10.2, // 自動計算(ナレーション8.7秒 + 余白)
+    durationSeconds: 10.4, // 自動計算(ナレーション8.9秒 + 余白)
   }
 ];
 
 export const defaultProps = {
   spotName: "Hosenin",
   spotNameJa: "宝泉院",
-  location: "Ohara, Kyoto, Japan",
+  location: "Kyoto, Japan",
   accentColor: "#4a5d3a",
   heroPhotoSrc: HERO_PHOTO,
   kanjiMotif: "額",
-  mapRegionLabel: "OHARA, KYOTO",
+  mapRegionLabel: "KYOTO, JAPAN",
   prefectureId: "26",
   municipalityId: "26100",
   hookText: "柱と柱の間だけを額縁に見立てて庭を鑑賞する完成された美学。でもその青々とした苔の庭は自然に生えたものじゃない。",

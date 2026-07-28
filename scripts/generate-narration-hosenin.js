@@ -1,7 +1,7 @@
 const path = require("path");
 const { generateAll } = require("./_openai-common");
 
-const OUTPUT_DIR = path.join(__dirname, "..", "public", "audio", "010_宝泉院");
+const OUTPUT_DIR = path.join(__dirname, "..", "public", "audio", "010_hosenin");
 
 const LINES = [
   {

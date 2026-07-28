@@ -5,11 +5,11 @@ const AUDIO_DIR = "audio/010_hosenin";
 
 // ※秒数は暫定値。ナレーション生成後にmeasure-narration-宝泉院.jsで実測し、正確な値に差し替えること
 export const sceneDurations = {
-  title: 3.2,
-  map: 4.5,
-  hook: 7.0,
-  twist: 18.0,
-  outro: 4.5,
+  title: 3, // 自動計算(ナレーション1.5秒 + 余白)
+  map: 4.2, // 自動計算(ナレーション0.8秒 + 余白)
+  hook: 11.7, // 自動計算(ナレーション10.2秒 + 余白)
+  twist: 17, // 自動計算(ナレーション15.5秒 + 余白)
+  outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白)
 };
 
 export const facts: FactInput[] = [
@@ -21,7 +21,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/010_hosenin/fact-1.png" /* TODO: 実ファイル名を確認 */,
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 11.0, // 仮値。measure-narration実行後に実測値へ差し替え
+    durationSeconds: 20.7, // 自動計算(ナレーション19.2秒 + 余白)
   },
   {
     type: "big-number",
@@ -29,7 +29,7 @@ export const facts: FactInput[] = [
     value: "3",
     label: "宝泉院には性格の異なる3つの庭園がある(盤桓園・鶴亀庭園・宝楽園)",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
-    durationSeconds: 10.0, // 仮値。measure-narration実行後に実測値へ差し替え
+    durationSeconds: 7.3, // 自動計算(ナレーション5.8秒 + 余白)
   },
   {
     type: "photo-stat",
@@ -39,7 +39,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/010_hosenin/fact-3.png" /* TODO: 実ファイル名を確認 */,
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
-    durationSeconds: 11.0, // 仮値。measure-narration実行後に実測値へ差し替え
+    durationSeconds: 10.1, // 自動計算(ナレーション8.6秒 + 余白)
   }
 ];
 

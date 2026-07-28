@@ -6,11 +6,11 @@ const OUTPUT_DIR = path.join(__dirname, "..", "public", "audio", "012_ine");
 const LINES = [
   {
     "file": "title.mp3",
-    "text": "Ine, Kyoto."
+    "text": "Ineh, Kyoto."
   },
   {
     "file": "map.mp3",
-    "text": "Ine."
+    "text": "Ineh."
   },
   {
     "file": "hook.mp3",

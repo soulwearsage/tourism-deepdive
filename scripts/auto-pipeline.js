@@ -40,7 +40,7 @@ function listSpots() {
     const match = file.match(/^(\d+)-(.+)\.ts$/);
     const number = match[1];
     const kebabName = match[2];
-    const shortId = kebabName.split("-")[0];
+    const shortId = kebabName; // full kebab name (例: "shinto-vs-buddhism", "fushimi-inari")
     return { number, kebabName, shortId, file };
   });
 }

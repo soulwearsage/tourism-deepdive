@@ -64,7 +64,7 @@ export const JaSubtitleBar: React.FC<{ text: string; startFrame?: number }> = ({
         padding: "0 90px",
         textAlign: "center",
         fontFamily: wdxlLubrifontJPNFont,
-        fontSize: 30,
+        fontSize: 38,
         fontWeight: 400,
         color: "#f5f2eb",
         textShadow: "0 2px 10px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,1)",

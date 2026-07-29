@@ -74,7 +74,7 @@ export const MapScene: React.FC<MapProps> = ({
   }, [mapType, prefectureId, municipalityId]);
 
   // --- 全国透かしモード専用アニメーション ---
-  const watermapOpacity = interpolate(frame, [0, 40], [0, 0.07], {
+  const watermapOpacity = interpolate(frame, [0, 40], [0, 0.18], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
@@ -117,7 +117,7 @@ export const MapScene: React.FC<MapProps> = ({
           width={WIDTH}
           height={HEIGHT}
           viewBox={"0 0 " + WIDTH + " " + HEIGHT}
-          style={{ position: "absolute", left: baseLeft, top: baseTop, opacity: watermapOpacity }}
+          style={{ position: "absolute", left: baseLeft, top: baseTop, opacity: watermapOpacity, transform: "scale(1.8)", transformOrigin: "center center" }}
         >
           {countryPaths.map((p, i) => (
             <path key={i} d={p.d} fill="#ffffff" stroke="none" />

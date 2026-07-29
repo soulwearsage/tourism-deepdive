@@ -6,7 +6,7 @@ const AUDIO_DIR = "audio/013_shirakawago";
 // ※秒数は暫定値。ナレーション生成後にmeasure-narration-shirakawago.jsで実測し、正確な値に差し替えること
 export const sceneDurations = {
   title: 3, // 自動計算(ナレーション1.2秒 + 余白)
-  map: 4.2, // 自動計算(ナレーション0.9秒 + 余白)
+  map: 4.2, // 自動計算(ナレーション1.1秒 + 余白)
   hook: 9.3, // 自動計算(ナレーション7.8秒 + 余白)
   twist: 18.6, // 自動計算(ナレーション17.1秒 + 余白)
   outro: 4.5, // 自動計算(ナレーション1.7秒 + 余白)

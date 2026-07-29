@@ -1,6 +1,6 @@
 import React from "react";
 import { useCurrentFrame, interpolate } from "remotion";
-import { wdxlLubrifontJPNFont } from "./fonts";
+import { zenKurernaidoFont } from "./fonts";
 
 // 1行の最大文字数。句点で分割した後、この長さを超える場合は読点で追加改行する。
 // 「、」「。」の直後のみを改行候補とし、単語・助詞の途中では絶対に改行しない。
@@ -63,7 +63,7 @@ export const JaSubtitleBar: React.FC<{ text: string; startFrame?: number }> = ({
         right: 0,
         padding: "0 90px",
         textAlign: "center",
-        fontFamily: wdxlLubrifontJPNFont,
+        fontFamily: zenKurernaidoFont,
         fontSize: 38,
         fontWeight: 400,
         color: "#f5f2eb",

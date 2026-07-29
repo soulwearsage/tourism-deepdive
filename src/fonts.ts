@@ -21,6 +21,6 @@ _rubikGlitchEntry.load().then(({ loadFont }) => loadFont());
 export const rubikGlitchFont = "Rubik Glitch";
 
 // 日本語字幕専用
-const _wdxlEntry = getAvailableFonts().find((f) => f.importName === "WDXLLubrifontJPN")!;
-_wdxlEntry.load().then(({ loadFont }) => loadFont());
-export const wdxlLubrifontJPNFont = "WDXL Lubrifont JP N";
+const _zenKurernaidoEntry = getAvailableFonts().find((f) => f.importName === "ZenKurenaido")!;
+_zenKurernaidoEntry.load().then(({ loadFont }) => loadFont());
+export const zenKurernaidoFont = "Zen Kurenaido";

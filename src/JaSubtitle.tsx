@@ -45,9 +45,9 @@ export function splitSubtitleLines(text: string): string[] {
   return lines.filter((l) => l.length > 0);
 }
 
-export const JaSubtitleBar: React.FC<{ text: string }> = ({ text }) => {
+export const JaSubtitleBar: React.FC<{ text: string; startFrame?: number }> = ({ text, startFrame = 0 }) => {
   const frame = useCurrentFrame();
-  const opacity = interpolate(frame, [0, 20], [0, 1], {
+  const opacity = interpolate(frame, [startFrame, startFrame + 20], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });

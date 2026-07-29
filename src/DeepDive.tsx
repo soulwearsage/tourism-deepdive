@@ -331,7 +331,7 @@ const TwistScene: React.FC<Props> = ({ twistHeading, twistBody, accentColor, kan
 // epilogueType === "kagome-teaser" のスポット専用。narration.outro を使う。
 const KagomeTeaserScene: React.FC<Props> = ({ accentColor, narration, episodeNumber, jaSubtitles }) => {
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="NEXT" narrationSrc={narration?.outro} jaSubtitle={jaSubtitles?.outro}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="NEXT" narrationSrc={narration?.outro} jaSubtitle={jaSubtitles?.outro} jaSubtitleStartFrame={65}>
       <KagomeOutroContent accentColor={accentColor} />
     </SceneFrame>
   );
@@ -415,10 +415,13 @@ const renderFact = (fact: FactInput, index: number, total: number, accentColor: 
   })();
 
   if (!jaSubtitle || fact.type === "text-hero") return node;
+  // photo-stat の見出しは frame 15 から表示されるので字幕も合わせる。
+  // big-number / quote はコンテンツが frame 0 から始まるのでデフォルト(0)のまま。
+  const subtitleStartFrame = fact.type === "photo-stat" ? 15 : 0;
   return (
     <AbsoluteFill>
       {node}
-      <JaSubtitleBar text={jaSubtitle} />
+      <JaSubtitleBar text={jaSubtitle} startFrame={subtitleStartFrame} />
     </AbsoluteFill>
   );
 };

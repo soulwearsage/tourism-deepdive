@@ -223,7 +223,7 @@ const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy
     fontSize: catchCopyFontSize ?? 60,
     fontWeight: 400,
     lineHeight: 1.15,
-    fontFamily: catchCopyFont ?? gasoekOneFont,
+    fontFamily: catchCopyFont ?? specialGothicExpandedFont,
     textTransform: "uppercase",
   };
   return (

@@ -51,7 +51,7 @@ type JaSubtitles = {
   title?: string;
   hook?: string;
   twist?: string;
-  outro?: string;    // kagome-teaser シーン用
+  kagomeTeaser?: string; // kagome-teaser シーン用
   epilogue?: string; // 標準アウトロ用
   facts?: string[];  // facts 配列と index で対応
 };
@@ -331,7 +331,7 @@ const TwistScene: React.FC<Props> = ({ twistHeading, twistBody, accentColor, kan
 // epilogueType === "kagome-teaser" のスポット専用。narration.outro を使う。
 const KagomeTeaserScene: React.FC<Props> = ({ accentColor, narration, episodeNumber, jaSubtitles }) => {
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="NEXT" narrationSrc={narration?.outro} jaSubtitle={jaSubtitles?.outro} jaSubtitleStartFrame={65}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="NEXT" narrationSrc={narration?.outro} jaSubtitle={jaSubtitles?.kagomeTeaser} jaSubtitleStartFrame={65}>
       <KagomeOutroContent accentColor={accentColor} />
     </SceneFrame>
   );

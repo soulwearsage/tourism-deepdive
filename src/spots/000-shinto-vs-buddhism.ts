@@ -4,11 +4,11 @@ const HERO_PHOTO = "photos/000_shinto-vs-buddhism/hero.png";
 const AUDIO_DIR = "audio/000_shinto-vs-buddhism";
 
 export const sceneDurations = {
-  title: 3.2,
-  map: 5.0,
-  hook: 7.0,
-  twist: 18.0,
-  outro: 4.5,
+  title: 3.1, // 自動計算(ナレーション1.6秒 + 余白)
+  map: 4.2, // 自動計算(ナレーション1.2秒 + 余白)
+  hook: 10.9, // 自動計算(ナレーション9.4秒 + 余白)
+  twist: 27.1, // 自動計算(ナレーション25.6秒 + 余白)
+  outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白)
 };
 
 export const facts: FactInput[] = [
@@ -20,7 +20,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/000_shinto-vs-buddhism/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 11.0,
+    durationSeconds: 13.4, // 自動計算(ナレーション11.9秒 + 余白)
   },
   {
     type: "photo-stat",
@@ -30,14 +30,14 @@ export const facts: FactInput[] = [
     photoSrc: "photos/000_shinto-vs-buddhism/fact-2.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
-    durationSeconds: 11.0,
+    durationSeconds: 15.3, // 自動計算(ナレーション13.8秒 + 余白)
   },
   {
     type: "text-hero",
     kanji: "離",
     heading: "That fusion, over a thousand years in the making, was torn apart in 1868 by a new government decree — Shinbutsu Bunri, the forced separation of Shinto and Buddhism.",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
-    durationSeconds: 10.0,
+    durationSeconds: 12.3, // 自動計算(ナレーション10.8秒 + 余白)
   },
 ];
 

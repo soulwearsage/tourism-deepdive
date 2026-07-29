@@ -1,3 +1,33 @@
+// ============================================================
+// 【テンプレート: 地域に紐づかないテーマ回】
+//
+// 第0話「神道と仏教」は、特定の地域・場所が主役ではなく
+// 「文化・概念的なテーマ」を扱う回専用テンプレートとして位置づける。
+// 今後シリーズに同種の回を追加するときはこのファイルを雛形にすること。
+//
+// 特徴:
+//   - mapType: "national-watermark"
+//     prefectureId / municipalityId は不要。地図シーンでは日本全土の
+//     シルエットを背景に薄く表示する。
+//   - タイトル画面は地域スポットと完全に同一(hero.png を3カラム表示)。
+//     専用イラスト・特殊レイアウトは使わない。
+//   - エピソード番号は0番台(シリーズ本編と区別できる通し番号)。
+//
+// 新規テーマ回の追加手順:
+//   1. Notionの「地図タイプ」列を "national-watermark" に設定する。
+//      「prefectureId」「municipalityId」列は空でよい。
+//   2. scaffold-spot.js を実行して雛形を生成する。
+//   3. 生成された src/spots/<番号>-<スラッグ>.ts を手動で修正:
+//        a. defaultProps に  mapType: "national-watermark" as const  を追加
+//        b. prefectureId / municipalityId の行を削除
+//   4. location / mapRegionLabel は "Japan" など国全体を指す値にする。
+//   5. ナレーション台本の title.mp3 / map.mp3 はテーマ名で生成する
+//      (地名ではなくテーマタイトルを読み上げる)。
+//
+// ※ scaffold-spot.js は現状 mapType を自動判定しないため、
+//    手順3の手動修正が必須。
+// ============================================================
+
 import { FactInput } from "../DeepDive";
 
 const HERO_PHOTO = "photos/000_shinto-vs-buddhism/hero.png";

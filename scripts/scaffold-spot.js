@@ -40,6 +40,27 @@
  *   nameJa末尾が "寺" かつ slug末尾が "ji" → cap(slug[:-2]) + "-ji"  例: katsuoji → "Katsuo-ji"
  *   nameJa末尾が "寺" かつ slug末尾が "dera" → cap(slug[:-4]) + "-dera"
  *   それ以外 → cap(slug)  例: ine → "Ine"
+ *
+ * 【テーマ回(地域に紐づかない回)を追加する場合】
+ *   000_shinto-vs-buddhism がこのテンプレートの雛形。
+ *   このスクリプトは現状 mapType を自動設定しないため、生成後に以下を手動修正すること。
+ *
+ *   Notionへの入力:
+ *     地図タイプ列    : "national-watermark" と記入する
+ *     prefectureId   : 空欄でよい
+ *     municipalityId : 空欄でよい
+ *     location       : "Japan" など国全体を指す値
+ *     mapRegionLabel : "JAPAN"
+ *
+ *   scaffold実行後の手動修正(src/spots/<番号>-<スラッグ>.ts):
+ *     1. defaultProps に  mapType: "national-watermark" as const  を追加
+ *     2. prefectureId / municipalityId の行を削除
+ *
+ *   ナレーション台本(scripts/generate-narration-<スラッグ>.js):
+ *     title.mp3 / map.mp3 の text はテーマ名で書く(地名読み上げではない)。
+ *     短い固有名詞はOpenAI TTSの発音が崩れやすいため、
+ *     ハイフン表記より「スペース区切り + 地域名付き」形式が安定する。
+ *     例: "Shinto vs. Buddhism, Japan."
  */
 
 const fs = require("fs");

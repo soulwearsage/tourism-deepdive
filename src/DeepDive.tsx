@@ -93,7 +93,6 @@ const BgmTrack: React.FC<{ src: string; baseVolume: number; duckAtFrame?: number
   const frame = useCurrentFrame();
   const { durationInFrames, fps } = useVideoConfig();
   const fadeFrames = fps; // 1秒
-  const duckFrames = fps; // ダッキングも1秒かけて
   const fadeInStart = fadeInAtFrame ?? 0;
   let volume = interpolate(
     frame,
@@ -101,9 +100,10 @@ const BgmTrack: React.FC<{ src: string; baseVolume: number; duckAtFrame?: number
     [0, baseVolume, baseVolume, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
-  // Outro BGMが鳴り始めるタイミング(duckAtFrame)に合わせて、メインBGMをフェードダウンさせる
+  // Outro BGMが鳴り始める45f前からフェードダウンを開始し、10f後にゼロ到達。
+  // アウトロBGMと重なるのは最後の10fだけ(短いクロスフェード)。
   if (duckAtFrame !== undefined) {
-    const duck = interpolate(frame, [duckAtFrame - duckFrames, duckAtFrame], [1, 0.15], {
+    const duck = interpolate(frame, [duckAtFrame - 45, duckAtFrame + 10], [1, 0], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
     });

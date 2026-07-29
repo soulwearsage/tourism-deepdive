@@ -64,9 +64,10 @@ type Props = {
   heroPhotoSrc: string;
   kanjiMotif: string;
   mapRegionLabel: string;
-  prefectureId: string;
-  municipalityId: string; // 5桁の市区町村コード(地図のピンポイントズーム先)
-  mapPinIndex?: number;   // 同一municipalityIdに複数ポリゴンある場合、ピンに使うindex(省略時=0)
+  mapType?: "pinpoint" | "national-watermark";
+  prefectureId?: string;
+  municipalityId?: string; // 5桁の市区町村コード(地図のピンポイントズーム先)
+  mapPinIndex?: number;    // 同一municipalityIdに複数ポリゴンある場合、ピンに使うindex(省略時=0)
   hookText: string;
   facts: FactInput[];
   twistHeading: string;
@@ -427,7 +428,7 @@ const renderFact = (fact: FactInput, index: number, total: number, accentColor: 
 };
 
 export const DeepDive: React.FC<Props> = (props) => {
-  const { facts, accentColor, spotName, mapRegionLabel, prefectureId, municipalityId, sceneDurations, bgmSrc, bgmVolume = 0.12, outroBgmSrc } = props;
+  const { facts, accentColor, spotName, mapRegionLabel, prefectureId, municipalityId, mapType, sceneDurations, bgmSrc, bgmVolume = 0.12, outroBgmSrc } = props;
 
   // ナレーションの実測秒数(sceneDurations)があればそれを優先し、無ければ既定値を使う
   // イントロ音がある場合、その音が鳴りきるまでの余裕を持たせてタイトルの尺を伸ばす
@@ -509,7 +510,7 @@ export const DeepDive: React.FC<Props> = (props) => {
         <TitleScene {...props} />
       </Sequence>
       <Sequence from={mapFrom} durationInFrames={MAP_DUR}>
-        <MapScene prefectureId={prefectureId} municipalityId={municipalityId} mapPinIndex={props.mapPinIndex} regionLabel={mapRegionLabel} spotLabel={spotName} accentColor={accentColor} narrationSrc={props.narration?.map} episodeNumber={props.episodeNumber} />
+        <MapScene mapType={mapType} prefectureId={prefectureId} municipalityId={municipalityId} mapPinIndex={props.mapPinIndex} regionLabel={mapRegionLabel} spotLabel={spotName} accentColor={accentColor} narrationSrc={props.narration?.map} episodeNumber={props.episodeNumber} />
       </Sequence>
       {facts.map((fact, i) => (
         <Sequence key={i} from={factFroms[i]} durationInFrames={factDurs[i]}>

@@ -1,6 +1,7 @@
 import React from "react";
 import { Composition } from "remotion";
 import { DeepDive, getTotalDuration } from "./DeepDive";
+import * as shintoVsBuddhism from "./spots/000-shinto-vs-buddhism";
 import * as fushimiInari from "./spots/001-fushimi-inari";
 import * as itsukushima from "./spots/002-itsukushima";
 import * as takaya from "./spots/003-takaya";
@@ -18,6 +19,15 @@ import * as shirakawago from "./spots/013-shirakawago";
 export const Root: React.FC = () => {
   return (
     <>
+      <Composition
+        id="DeepDive-ShintoVsBuddhism"
+        component={DeepDive}
+        durationInFrames={getTotalDuration(shintoVsBuddhism.facts, shintoVsBuddhism.sceneDurations, shintoVsBuddhism.defaultProps)}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={shintoVsBuddhism.defaultProps}
+      />
       <Composition
         id="DeepDive-FushimiInari"
         component={DeepDive}

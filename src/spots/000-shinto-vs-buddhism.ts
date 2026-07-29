@@ -53,20 +53,20 @@ export const facts: FactInput[] = [
     durationSeconds: 13.4, // 自動計算(ナレーション11.9秒 + 余白)
   },
   {
-    type: "photo-stat",
+    type: "text-hero",
     kanji: "合",
     heading: "Two Faiths Under One Roof",
     body: "In the 6th century, Buddhism arrived from the mainland. But the old gods weren't pushed out — instead, kami and Buddhist statues began sharing the same shrine grounds, blending into a single faith called Shinbutsu-shugo.",
-    photoSrc: "photos/000_shinto-vs-buddhism/fact-2.png",
-    photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
     durationSeconds: 15.3, // 自動計算(ナレーション13.8秒 + 余白)
   },
   {
-    type: "text-hero",
+    type: "photo-stat",
     kanji: "離",
     heading: "A Line Drawn by Law",
     body: "That fusion, over a thousand years in the making, was torn apart in 1868 by a new government decree — Shinbutsu Bunri, the forced separation of Shinto and Buddhism.",
+    photoSrc: "photos/000_shinto-vs-buddhism/fact-2.png",
+    photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
     durationSeconds: 12.3, // 自動計算(ナレーション10.8秒 + 余白)
   },

@@ -5,11 +5,11 @@ const AUDIO_DIR = "audio/013_shirakawago";
 
 // ※秒数は暫定値。ナレーション生成後にmeasure-narration-shirakawago.jsで実測し、正確な値に差し替えること
 export const sceneDurations = {
-  title: 3.2,
-  map: 4.5,
-  hook: 7.0,
-  twist: 18.0,
-  outro: 4.5,
+  title: 3, // 自動計算(ナレーション1.2秒 + 余白)
+  map: 4.2, // 自動計算(ナレーション0.9秒 + 余白)
+  hook: 9.3, // 自動計算(ナレーション7.8秒 + 余白)
+  twist: 18.6, // 自動計算(ナレーション17.1秒 + 余白)
+  outro: 4.5, // 自動計算(ナレーション1.7秒 + 余白)
 };
 
 export const facts: FactInput[] = [
@@ -21,7 +21,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/013_shirakawago/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 11.0, // 仮値。measure-narration実行後に実測値へ差し替え
+    durationSeconds: 13.2, // 自動計算(ナレーション11.7秒 + 余白)
   },
   {
     type: "photo-stat",
@@ -31,7 +31,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/013_shirakawago/fact-2.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
-    durationSeconds: 11.0, // 仮値。measure-narration実行後に実測値へ差し替え
+    durationSeconds: 14.5, // 自動計算(ナレーション13秒 + 余白)
   },
   {
     type: "photo-stat",
@@ -41,7 +41,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/013_shirakawago/fact-3.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
-    durationSeconds: 11.0, // 仮値。measure-narration実行後に実測値へ差し替え
+    durationSeconds: 12.4, // 自動計算(ナレーション10.9秒 + 余白)
   },
 ];
 

@@ -26,7 +26,7 @@ function listSpots() {
       const match = file.match(/^(\d+)-(.+)\.ts$/);
       const number = parseInt(match[1], 10);
       const kebabName = match[2]; // 例: "fushimi-inari"
-      const shortId = kebabName.split("-")[0]; // render.ymlのspot選択肢用。例: "fushimi-inari"→"fushimi"
+      const shortId = kebabName; // render.ymlのspot選択肢用。例: "fushimi-inari", "shinto-vs-buddhism"
       const compositionId = `DeepDive-${toPascalCase(kebabName)}`; // 例: "DeepDive-FushimiInari"
       return {
         number,

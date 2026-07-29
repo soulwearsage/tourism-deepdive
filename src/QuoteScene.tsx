@@ -95,7 +95,7 @@ const _lerp = (a: [number, number], b: [number, number], t: number): [number, nu
   a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t,
 ];
 
-export const KagomeVisual: React.FC<{ frame: number; accentColor: string }> = ({ frame, accentColor }) => {
+export const KagomeVisual: React.FC<{ frame: number; accentColor: string; size?: number }> = ({ frame, accentColor, size = 400 }) => {
   const eOpt = { extrapolateLeft: "clamp" as const, extrapolateRight: "clamp" as const, easing: Easing.out(Easing.cubic) };
   // 三角1・三角2の辺を交互に描く (各辺20フレーム、計58フレームで完成)
   const p1 = interpolate(frame, [0,  20], [0, 1], eOpt); // tri1: TOP → BR
@@ -112,7 +112,7 @@ export const KagomeVisual: React.FC<{ frame: number; accentColor: string }> = ({
     { a: _TR, b: _BOT, p: p4 }, { a: _BOT, b: _TL, p: p5 }, { a: _TL, b: _TR, p: p6 },
   ];
   return (
-    <svg width="400" height="400" viewBox="0 0 400 400" style={{ overflow: "visible" }}>
+    <svg width={size} height={size} viewBox="0 0 400 400" style={{ overflow: "visible" }}>
       <polygon points={`${_TOP[0]},${_TOP[1]} ${_BR[0]},${_BR[1]} ${_BL[0]},${_BL[1]}`} fill={accentColor} fillOpacity={fillOpacity} stroke="none" />
       <polygon points={`${_TR[0]},${_TR[1]} ${_BOT[0]},${_BOT[1]} ${_TL[0]},${_TL[1]}`} fill={accentColor} fillOpacity={fillOpacity} stroke="none" />
       {segs.map(({ a, b, p }, i) => { const [x2, y2] = _lerp(a, b, p); return <line key={`g${i}`} x1={a[0]} y1={a[1]} x2={x2} y2={y2} stroke={accentColor} strokeWidth={10} opacity={glow} strokeLinecap="round" />; })}

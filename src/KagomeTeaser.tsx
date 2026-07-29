@@ -38,7 +38,7 @@ export const KagomeOutroContent: React.FC<{ accentColor: string }> = ({ accentCo
     >
       {/* QuoteScene の CrossVisual と同位置・同余白 */}
       <div style={{ marginBottom: 44 }}>
-        <KagomeVisual frame={frame} accentColor={accentColor} />
+        <KagomeVisual frame={frame} accentColor={accentColor} size={280} />
       </div>
 
       {/* QuoteScene の quote + caption と同一レイアウト */}

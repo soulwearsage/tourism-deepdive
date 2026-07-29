@@ -33,14 +33,11 @@ export const facts: FactInput[] = [
     durationSeconds: 11.0,
   },
   {
-    type: "photo-stat",
+    type: "text-hero",
     kanji: "離",
     heading: "That fusion, over a thousand years in the making, was torn apart in 1868 by a new government decree — Shinbutsu Bunri, the forced separation of Shinto and Buddhism.",
-    body: "That fusion, over a thousand years in the making, was torn apart in 1868 by a new government decree — Shinbutsu Bunri, the forced separation of Shinto and Buddhism.",
-    photoSrc: "photos/000_shinto-vs-buddhism/fact-3.png",
-    photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
-    durationSeconds: 11.0,
+    durationSeconds: 10.0,
   },
 ];
 

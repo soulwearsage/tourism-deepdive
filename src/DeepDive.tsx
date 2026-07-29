@@ -47,6 +47,7 @@ type SceneDurations = {
 };
 
 type JaSubtitles = {
+  catchCopy?: string; // キャッチコピーシーン用
   title?: string;
   hook?: string;
   twist?: string;
@@ -210,7 +211,7 @@ function toTitleCase(str: string): string {
   }).join(' ');
 }
 
-const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy, catchCopyFont, catchCopyFontSize, introSfx }) => {
+const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy, catchCopyFont, catchCopyFontSize, introSfx, jaSubtitles }) => {
   const frame = useCurrentFrame();
   // 実際の音源を解析して測った「低音がドーンと入るタイミング」(秒)。音源ごとに微妙に違う
   const bassHitSeconds = introSfx?.includes("light") ? 1.7 : 1.2;
@@ -252,6 +253,7 @@ const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy
       cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`}
       footerLeft="Japan Deep Dive"
       footerRight="INTRO"
+      jaSubtitle={jaSubtitles?.catchCopy}
     >
       {introSfx && <Audio src={staticFile(introSfx)} volume={0.18} />}
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center", padding: "0 100px" }}>

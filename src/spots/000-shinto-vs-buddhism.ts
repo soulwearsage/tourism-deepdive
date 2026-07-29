@@ -1,7 +1,7 @@
 import { FactInput } from "../DeepDive";
 
 const HERO_PHOTO = "photos/000_shinto-vs-buddhism/hero.png";
-const AUDIO_DIR = "audio/000_shintovsbuddhism";
+const AUDIO_DIR = "audio/000_shinto-vs-buddhism";
 
 export const sceneDurations = {
   title: 3.2,

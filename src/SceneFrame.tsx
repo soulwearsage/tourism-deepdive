@@ -1,5 +1,6 @@
 import React from "react";
 import { AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame, interpolate } from "remotion";
+import { JaSubtitleBar } from "./JaSubtitle";
 
 export type SceneFrameProps = {
   accentColor: string;
@@ -11,6 +12,7 @@ export type SceneFrameProps = {
   kanjiOpacity?: number;
   narrationSrc?: string; // public/からの相対パス(例: "audio/001_fushimi-inari/title.mp3")。無ければ無音
   narrationDelayFrames?: number; // ナレーションの開始を遅らせるフレーム数(イントロ音と被らせないため)
+  jaSubtitle?: string; // 日本語字幕(任意)。指定時は画面下部にオーバーレイ表示
   children: React.ReactNode;
 };
 
@@ -28,6 +30,7 @@ export const SceneFrame: React.FC<SceneFrameProps> = ({
   kanjiOpacity = 0.08,
   narrationSrc,
   narrationDelayFrames = 0,
+  jaSubtitle,
   children,
 }) => {
   const frame = useCurrentFrame();
@@ -88,6 +91,8 @@ export const SceneFrame: React.FC<SceneFrameProps> = ({
       </div>
 
       {children}
+
+      {jaSubtitle && <JaSubtitleBar text={jaSubtitle} />}
 
       <div
         style={{

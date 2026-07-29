@@ -10,6 +10,7 @@ import { BigNumberScene, BigNumberProps } from "./BigNumberScene";
 import { QuoteScene, QuoteProps } from "./QuoteScene";
 import { MapScene } from "./MapScene";
 import { KagomeOutroContent } from "./KagomeTeaser";
+import { JaSubtitleBar } from "./JaSubtitle";
 
 type PhotoStatFact = { type: "photo-stat"; narrationSrc?: string; durationSeconds?: number } & Omit<FactProps, "factNumber" | "totalFacts" | "accentColor" | "narrationSrc">;
 type BigNumberFact = { type: "big-number"; narrationSrc?: string; durationSeconds?: number } & Omit<BigNumberProps, "factNumber" | "totalFacts" | "accentColor" | "narrationSrc">;
@@ -45,6 +46,15 @@ type SceneDurations = {
   epilogue?: number; // 標準アウトロの尺(kagome-teaserあり時のみ使用)
 };
 
+type JaSubtitles = {
+  title?: string;
+  hook?: string;
+  twist?: string;
+  outro?: string;    // kagome-teaser シーン用
+  epilogue?: string; // 標準アウトロ用
+  facts?: string[];  // facts 配列と index で対応
+};
+
 type Props = {
   spotName: string;
   spotNameJa: string;
@@ -71,6 +81,7 @@ type Props = {
   outroBgmSrc?: string; // アウトロのタグラインに合わせて鳴らす専用BGM
   epilogueType?: "kagome-teaser"; // スポット固有のエピローグシーン種別
   episodeNumber: number; // シリーズの何本目か(左上の"NO. 00X"表示に使う)
+  jaSubtitles?: JaSubtitles; // 日本語字幕(試験的。省略時は全シーン字幕なし)
 };
 
 const FPS = 30;
@@ -123,7 +134,7 @@ const PANEL_W = (PANEL_SIZE - GAP * 2) / 3;
 const PANEL_BOTTOM = PANEL_TOP + PANEL_SIZE;
 
 // --- Scene: タイトルカード ---
-const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentColor, heroPhotoSrc, kanjiMotif, narration, episodeNumber, introSfx, catchCopy }) => {
+const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentColor, heroPhotoSrc, kanjiMotif, narration, episodeNumber, introSfx, catchCopy, jaSubtitles }) => {
   const frame = useCurrentFrame();
   const panelOpacity = interpolate(frame, [0, 18], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const titleY = interpolate(frame, [15, 35], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
@@ -140,7 +151,7 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
   const jaChars = spotNameJa.split("");
 
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="deepdive.jp" narrationSrc={narration?.title} narrationDelayFrames={introSfx && !catchCopy ? 140 : 0}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="deepdive.jp" narrationSrc={narration?.title} narrationDelayFrames={introSfx && !catchCopy ? 140 : 0} jaSubtitle={jaSubtitles?.title}>
       {introSfx && !catchCopy && <Audio src={staticFile(introSfx)} volume={0.18} />}
       <div style={{ position: "absolute", top: PANEL_TOP, left: PANEL_LEFT, width: PANEL_SIZE, height: PANEL_SIZE, opacity: panelOpacity, overflow: "hidden" }}>
         <div style={{ display: "flex", gap: GAP, width: "100%", height: "100%", transform: `scale(${kenBurnsScale})`, transformOrigin: "center center" }}>
@@ -279,11 +290,11 @@ const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy
   );
 };
 
-const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narration, episodeNumber }) => {
+const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narration, episodeNumber, jaSubtitles }) => {
   const frame = useCurrentFrame();
   const opacity = interpolate(frame, [0, 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="HOOK" narrationSrc={narration?.hook} kanji={kanjiMotif} kanjiOpacity={0.16}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="HOOK" narrationSrc={narration?.hook} kanji={kanjiMotif} kanjiOpacity={0.16} jaSubtitle={jaSubtitles?.hook}>
       {/* イントロ音はTitleSceneの方で鳴らす(写真が出る瞬間に合わせるため) */}
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center", padding: "0 100px" }}>
         <div style={{ textAlign: "center", opacity }}>
@@ -301,9 +312,9 @@ const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narrati
 };
 
 // --- Scene: どんでん返し(写真無し、漢字の透かし付きのテキストヒーロー型) ---
-const TwistScene: React.FC<Props> = ({ twistHeading, twistBody, accentColor, kanjiMotif, narration }) => {
+const TwistScene: React.FC<Props> = ({ twistHeading, twistBody, accentColor, kanjiMotif, narration, jaSubtitles }) => {
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="THE TWIST" footerLeft="Japan Deep Dive" footerRight="TWIST" kanji={kanjiMotif} kanjiOpacity={0.16} narrationSrc={narration?.twist}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="THE TWIST" footerLeft="Japan Deep Dive" footerRight="TWIST" kanji={kanjiMotif} kanjiOpacity={0.16} narrationSrc={narration?.twist} jaSubtitle={jaSubtitles?.twist}>
       <TextHeroScene
         eyebrow="Here's the twist"
         heading={twistHeading}
@@ -316,22 +327,22 @@ const TwistScene: React.FC<Props> = ({ twistHeading, twistBody, accentColor, kan
 
 // --- Scene: 籠目紋ティーザー(TwistScene直後、OutroSceneの前に挿入) ---
 // epilogueType === "kagome-teaser" のスポット専用。narration.outro を使う。
-const KagomeTeaserScene: React.FC<Props> = ({ accentColor, narration, episodeNumber }) => {
+const KagomeTeaserScene: React.FC<Props> = ({ accentColor, narration, episodeNumber, jaSubtitles }) => {
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="NEXT" narrationSrc={narration?.outro}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="NEXT" narrationSrc={narration?.outro} jaSubtitle={jaSubtitles?.outro}>
       <KagomeOutroContent accentColor={accentColor} />
     </SceneFrame>
   );
 };
 
 // --- Scene: 締め(常に標準フォーマット) ---
-const OutroScene: React.FC<Props> = ({ spotName, accentColor, narration, episodeNumber }) => {
+const OutroScene: React.FC<Props> = ({ spotName, accentColor, narration, episodeNumber, jaSubtitles }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const scale = spring({ frame, fps, config: { damping: 14 } });
   const taglineOpacity = interpolate(frame, [65, 85], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.epilogue ?? narration?.outro}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="END" narrationSrc={narration?.epilogue ?? narration?.outro} jaSubtitle={jaSubtitles?.epilogue}>
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center" }}>
         <div style={{ transform: `scale(${scale})`, textAlign: "center" }}>
           <div style={{ color: "#f5f2eb", fontSize: 56, fontWeight: 700, fontFamily: specialGothicExpandedFont }}>
@@ -353,49 +364,61 @@ const OutroScene: React.FC<Props> = ({ spotName, accentColor, narration, episode
   );
 };
 
-const renderFact = (fact: FactInput, index: number, total: number, accentColor: string) => {
+const renderFact = (fact: FactInput, index: number, total: number, accentColor: string, jaSubtitle?: string) => {
   const factNumber = index + 1;
-  switch (fact.type) {
-    case "photo-stat": {
-      const { type, ...rest } = fact;
-      return <FactScene {...rest} factNumber={factNumber} totalFacts={total} accentColor={accentColor} />;
-    }
-    case "big-number": {
-      const { type, ...rest } = fact;
-      return <BigNumberScene {...rest} factNumber={factNumber} totalFacts={total} accentColor={accentColor} />;
-    }
-    case "quote": {
-      const { type, ...rest } = fact;
-      return <QuoteScene {...rest} factNumber={factNumber} totalFacts={total} accentColor={accentColor} />;
-    }
-    case "text-hero": {
-      return (
-        <SceneFrame
-          accentColor={accentColor}
-          cornerLabel={`FACT ${String(factNumber).padStart(2, "0")}`}
-          footerLeft="Japan Deep Dive"
-          footerRight={`${String(factNumber).padStart(2, "0")} / ${String(total).padStart(2, "0")}`}
-          kanji={fact.kanji}
-          narrationSrc={fact.narrationSrc}
-        >
-          <TextHeroScene
-            eyebrow={`Fact ${String(factNumber).padStart(2, "0")}`}
-            heading={fact.heading}
-            subheading={fact.subheading}
-            tagline={fact.tagline}
+
+  const node = (() => {
+    switch (fact.type) {
+      case "photo-stat": {
+        const { type, ...rest } = fact;
+        return <FactScene {...rest} factNumber={factNumber} totalFacts={total} accentColor={accentColor} />;
+      }
+      case "big-number": {
+        const { type, ...rest } = fact;
+        return <BigNumberScene {...rest} factNumber={factNumber} totalFacts={total} accentColor={accentColor} />;
+      }
+      case "quote": {
+        const { type, ...rest } = fact;
+        return <QuoteScene {...rest} factNumber={factNumber} totalFacts={total} accentColor={accentColor} />;
+      }
+      case "text-hero": {
+        return (
+          <SceneFrame
             accentColor={accentColor}
-          />
-          {fact.body && (
-            <div style={{ position: "absolute", top: "60%", left: 90, right: 90 }}>
-              <div style={{ color: "#9a9285", fontSize: 24, lineHeight: 1.7, fontFamily: "'Liberation Serif', serif", fontStyle: "italic", maxWidth: 820 }}>
-                {fact.body}
+            cornerLabel={`FACT ${String(factNumber).padStart(2, "0")}`}
+            footerLeft="Japan Deep Dive"
+            footerRight={`${String(factNumber).padStart(2, "0")} / ${String(total).padStart(2, "0")}`}
+            kanji={fact.kanji}
+            narrationSrc={fact.narrationSrc}
+            jaSubtitle={jaSubtitle}
+          >
+            <TextHeroScene
+              eyebrow={`Fact ${String(factNumber).padStart(2, "0")}`}
+              heading={fact.heading}
+              subheading={fact.subheading}
+              tagline={fact.tagline}
+              accentColor={accentColor}
+            />
+            {fact.body && (
+              <div style={{ position: "absolute", top: "60%", left: 90, right: 90 }}>
+                <div style={{ color: "#9a9285", fontSize: 24, lineHeight: 1.7, fontFamily: "'Liberation Serif', serif", fontStyle: "italic", maxWidth: 820 }}>
+                  {fact.body}
+                </div>
               </div>
-            </div>
-          )}
-        </SceneFrame>
-      );
+            )}
+          </SceneFrame>
+        );
+      }
     }
-  }
+  })();
+
+  if (!jaSubtitle || fact.type === "text-hero") return node;
+  return (
+    <AbsoluteFill>
+      {node}
+      <JaSubtitleBar text={jaSubtitle} />
+    </AbsoluteFill>
+  );
 };
 
 export const DeepDive: React.FC<Props> = (props) => {
@@ -485,7 +508,7 @@ export const DeepDive: React.FC<Props> = (props) => {
       </Sequence>
       {facts.map((fact, i) => (
         <Sequence key={i} from={factFroms[i]} durationInFrames={factDurs[i]}>
-          {renderFact(fact, i, facts.length, accentColor)}
+          {renderFact(fact, i, facts.length, accentColor, props.jaSubtitles?.facts?.[i])}
         </Sequence>
       ))}
       <Sequence from={twistFrom} durationInFrames={TWIST_DUR}>

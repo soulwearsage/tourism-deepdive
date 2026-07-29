@@ -70,6 +70,18 @@ export const defaultProps = {
   bgmVolume: 0.12,
   introSfx: "bgm/light_intro.mp3",
   epilogueType: "kagome-teaser" as const,
+  jaSubtitles: {
+    title: "（ここに日本語字幕が入ります）",
+    hook: "（ここに日本語字幕が入ります）",
+    facts: [
+      "（ここに日本語字幕が入ります）",
+      "（ここに日本語字幕が入ります）",
+      "（ここに日本語字幕が入ります）",
+    ],
+    twist: "（ここに日本語字幕が入ります）",
+    outro: "（ここに日本語字幕が入ります）",
+    epilogue: "（ここに日本語字幕が入ります）",
+  },
   catchCopy: "THESE HOUSES WERE NEVER BUILT FOR PEOPLE.",
   catchCopyFontSize: 80,
   outroBgmSrc: "bgm/outro_bgm.mp3",

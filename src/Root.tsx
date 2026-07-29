@@ -13,6 +13,7 @@ import * as hasedera from "./spots/009-hasedera";
 import * as hosenin from "./spots/010-hosenin";
 import * as katsuoji from "./spots/011-katsuoji";
 import * as ine from "./spots/012-ine";
+import * as shirakawago from "./spots/013-shirakawago";
 
 export const Root: React.FC = () => {
   return (
@@ -123,6 +124,15 @@ export const Root: React.FC = () => {
         width={1080}
         height={1920}
         defaultProps={ine.defaultProps}
+      />
+      <Composition
+        id="DeepDive-Shirakawago"
+        component={DeepDive}
+        durationInFrames={getTotalDuration(shirakawago.facts, shirakawago.sceneDurations, shirakawago.defaultProps)}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={shirakawago.defaultProps}
       />
     </>
   );

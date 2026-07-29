@@ -2,44 +2,55 @@ import React from "react";
 import { useCurrentFrame, interpolate } from "remotion";
 import { zenKurernaidoFont } from "./fonts";
 
-// 1行の最大文字数。句点で分割した後、この長さを超える場合は読点で追加改行する。
-// 「、」「。」の直後のみを改行候補とし、単語・助詞の途中では絶対に改行しない。
-const MAX_LINE_CHARS = 29;
+const MAX_LINE_CHARS = 23;
 
 export function splitSubtitleLines(text: string): string[] {
   const lines: string[] = [];
   let remaining = text;
 
   while (remaining.length > 0) {
-    // 句点で1文を切り出す(句点含む)
-    const kIdx = remaining.indexOf("。");
-    const sentence = kIdx === -1 ? remaining : remaining.slice(0, kIdx + 1);
-    remaining = kIdx === -1 ? "" : remaining.slice(kIdx + 1);
+    if (remaining.length <= MAX_LINE_CHARS) {
+      lines.push(remaining);
+      break;
+    }
 
-    if (sentence.length <= MAX_LINE_CHARS) {
-      lines.push(sentence);
+    const chunk = remaining.slice(0, MAX_LINE_CHARS);
+
+    // Priority 1: 23文字以内の最後の句点で改行
+    const kIdx = chunk.lastIndexOf("。");
+    if (kIdx !== -1) {
+      lines.push(remaining.slice(0, kIdx + 1));
+      remaining = remaining.slice(kIdx + 1);
       continue;
     }
 
-    // MAX_LINE_CHARS を超える文は読点でグリーディに折り返す
-    let currentLine = "";
-    let seg = sentence;
-    while (seg.length > 0) {
-      const tIdx = seg.indexOf("、");
-      const part = tIdx === -1 ? seg : seg.slice(0, tIdx + 1);
-      seg = tIdx === -1 ? "" : seg.slice(tIdx + 1);
+    // Priority 2: 23文字以内の最後の読点で改行
+    const tIdx = chunk.lastIndexOf("、");
+    if (tIdx !== -1) {
+      lines.push(remaining.slice(0, tIdx + 1));
+      remaining = remaining.slice(tIdx + 1);
+      continue;
+    }
 
-      if (currentLine === "") {
-        // 最初の読点区間はそのまま設定(それ自体が長くても分割不可)
-        currentLine = part;
-      } else if ((currentLine + part).length <= MAX_LINE_CHARS) {
-        currentLine += part;
+    // Priority 3: Intl.Segmenter で単語境界を検出し、23文字以内の最後の区切りで改行
+    const segmenter = new Intl.Segmenter("ja", { granularity: "word" });
+    let breakAt = 0;
+    for (const seg of segmenter.segment(remaining)) {
+      const end = seg.index + seg.segment.length;
+      if (end <= MAX_LINE_CHARS) {
+        breakAt = end;
       } else {
-        lines.push(currentLine);
-        currentLine = part;
+        break;
       }
     }
-    if (currentLine) lines.push(currentLine);
+
+    if (breakAt > 0) {
+      lines.push(remaining.slice(0, breakAt));
+      remaining = remaining.slice(breakAt);
+    } else {
+      lines.push(chunk);
+      remaining = remaining.slice(MAX_LINE_CHARS);
+    }
   }
 
   return lines.filter((l) => l.length > 0);
@@ -75,7 +86,7 @@ export const JaSubtitleBar: React.FC<{ text: string; startFrame?: number }> = ({
       }}
     >
       {lines.map((line, i) => (
-        <div key={i}>{line}</div>
+        <div key={i} style={{ whiteSpace: "nowrap" }}>{line}</div>
       ))}
     </div>
   );

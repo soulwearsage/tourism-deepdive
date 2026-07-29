@@ -15,7 +15,7 @@ export const sceneDurations = {
 export const facts: FactInput[] = [
   {
     type: "photo-stat",
-    kanji: "勝",
+    kanji: "癒",
     heading: "The Name Too Bold for an Emperor",
     body: "In the Heian era, Emperor Seiwa was so moved after a monk's prayers cured his illness that he declared the temple's power had \"defeated\" (katsu) even the emperor himself, and wanted to name it accordingly.",
     photoSrc: "photos/011_katsuoji/fact-1.png",
@@ -26,7 +26,7 @@ export const facts: FactInput[] = [
   },
   {
     type: "photo-stat",
-    kanji: "勝",
+    kanji: "誓",
     heading: "A Wish You Sign Yourself",
     body: "Countless tiny red daruma dolls fill every gap in the stone steps and walls — each one a self-made vow, not a wish granted by someone else. Pilgrims write their life's purpose on the bottom, a 365-day goal on the back, then paint in one eye as a signature to their own resolve.",
     photoSrc: "photos/011_katsuoji/fact-3.png",
@@ -36,7 +36,7 @@ export const facts: FactInput[] = [
   },
   {
     type: "big-number",
-    kanji: "勝",
+    kanji: "坪",
     value: "80,000",
     label: "The temple grounds span roughly 80,000 tsubo — about 264,000 square meters.",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,

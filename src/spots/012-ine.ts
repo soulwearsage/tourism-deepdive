@@ -15,7 +15,7 @@ export const sceneDurations = {
 export const facts: FactInput[] = [
   {
     type: "photo-stat",
-    kanji: "船",
+    kanji: "記",
     heading: "A Village Older Than Its Houses",
     body: "Ine's first written record dates back to 1191, in a document called the Chokodo Shoryo Chumon, where it appears as \"Ine-no-sho.\" The poet Kamo no Chōmei, author of the famous Hojoki, is even said to have composed a poem about this very bay.",
     photoSrc: "photos/012_ine/fact-1.png",
@@ -35,7 +35,7 @@ export const facts: FactInput[] = [
   },
   {
     type: "big-number",
-    kanji: "船",
+    kanji: "湾",
     value: "230",
     label: "About 230 funaya line the 5-kilometer curve of Ine Bay.",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
@@ -49,7 +49,7 @@ export const defaultProps = {
   location: "Kyoto, Japan",
   accentColor: "#4a6d7a",
   heroPhotoSrc: HERO_PHOTO,
-  kanjiMotif: "船",
+  kanjiMotif: "謎",
   mapRegionLabel: "KYOTO, JAPAN",
   prefectureId: "26",
   municipalityId: "26463",

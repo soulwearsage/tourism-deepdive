@@ -25,7 +25,7 @@ export const facts: FactInput[] = [
   },
   {
     type: "big-number",
-    kanji: "額",
+    kanji: "庭",
     value: "3",
     label: "Hosen-in actually holds three distinct gardens — Bankan-en, the Crane-and-Turtle Garden, and Horaku-en.",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
@@ -33,7 +33,7 @@ export const facts: FactInput[] = [
   },
   {
     type: "photo-stat",
-    kanji: "額",
+    kanji: "音",
     heading: "The Water Zither",
     body: "Lean close to the bamboo pipe and you'll hear it — water dripping into a buried jar underground, its sound echoing up in a clear, hidden chime.",
     photoSrc: "photos/010_hosenin/fact-3.png",
@@ -49,7 +49,7 @@ export const defaultProps = {
   location: "Kyoto, Japan",
   accentColor: "#4a5d3a",
   heroPhotoSrc: HERO_PHOTO,
-  kanjiMotif: "額",
+  kanjiMotif: "苔",
   mapRegionLabel: "KYOTO, JAPAN",
   prefectureId: "26",
   municipalityId: "26100",

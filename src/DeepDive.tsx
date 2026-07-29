@@ -135,8 +135,32 @@ const GAP = 6;
 const PANEL_W = (PANEL_SIZE - GAP * 2) / 3;
 const PANEL_BOTTOM = PANEL_TOP + PANEL_SIZE;
 
+// SVG illustrations for national-watermark title scene
+const ToriiSvg: React.FC<{ color: string }> = ({ color }) => (
+  <svg width={520} height={520} viewBox="0 0 230 270" fill={color}>
+    <rect x="70" y="100" width="20" height="170" rx="4" />
+    <rect x="140" y="100" width="20" height="170" rx="4" />
+    <path d="M 12 100 Q 115 72 218 100 L 218 118 Q 115 90 12 118 Z" />
+    <rect x="52" y="118" width="54" height="14" rx="2" />
+    <rect x="124" y="118" width="54" height="14" rx="2" />
+    <rect x="60" y="165" width="110" height="16" rx="3" />
+  </svg>
+);
+
+const LotusSvg: React.FC<{ color: string }> = ({ color }) => (
+  <svg width={520} height={520} viewBox="0 0 200 200" fill={color}>
+    {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => {
+      const rad = (deg * Math.PI) / 180;
+      const px = 100 + Math.cos(rad) * 58;
+      const py = 100 + Math.sin(rad) * 58;
+      return <ellipse key={deg} cx={px} cy={py} rx={18} ry={38} transform={`rotate(${deg + 90}, ${px}, ${py})`} />;
+    })}
+    <circle cx="100" cy="100" r="26" />
+  </svg>
+);
+
 // --- Scene: タイトルカード ---
-const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentColor, heroPhotoSrc, kanjiMotif, narration, episodeNumber, introSfx, catchCopy, jaSubtitles }) => {
+const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentColor, heroPhotoSrc, kanjiMotif, narration, episodeNumber, introSfx, catchCopy, jaSubtitles, mapType }) => {
   const frame = useCurrentFrame();
   const panelOpacity = interpolate(frame, [0, 18], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const titleY = interpolate(frame, [15, 35], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
@@ -150,20 +174,37 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
     easing: Easing.out(Easing.cubic),
   });
 
+  // national-watermark専用: 鳥居→ハスへのクロスフェード
+  const toriiOpacity = interpolate(frame, [0, 18, 60, 80], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const lotusOpacity = interpolate(frame, [60, 80], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+
   const jaChars = spotNameJa.split("");
 
   return (
     <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="deepdive.jp" narrationSrc={narration?.title} narrationDelayFrames={introSfx && !catchCopy ? 140 : 0} jaSubtitle={jaSubtitles?.title}>
       {introSfx && !catchCopy && <Audio src={staticFile(introSfx)} volume={0.18} />}
-      <div style={{ position: "absolute", top: PANEL_TOP, left: PANEL_LEFT, width: PANEL_SIZE, height: PANEL_SIZE, opacity: panelOpacity, overflow: "hidden" }}>
-        <div style={{ display: "flex", gap: GAP, width: "100%", height: "100%", transform: `scale(${kenBurnsScale})`, transformOrigin: "center center" }}>
-          {[0, 1, 2].map((i) => (
-            <div key={i} style={{ width: PANEL_W, height: PANEL_SIZE, overflow: "hidden", position: "relative" }}>
-              <GradedPhoto src={heroPhotoSrc} style={{ width: PANEL_SIZE, height: PANEL_SIZE, position: "absolute", left: -i * (PANEL_W + GAP) }} />
+      {mapType === "national-watermark" ? (
+        <div style={{ position: "absolute", top: PANEL_TOP, left: 0, right: 0, height: PANEL_SIZE, display: "flex", justifyContent: "center", alignItems: "center", opacity: panelOpacity }}>
+          <div style={{ position: "relative", width: 520, height: 520 }}>
+            <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center", opacity: toriiOpacity, transform: `scale(${kenBurnsScale})` }}>
+              <ToriiSvg color="#d8d2c4" />
             </div>
-          ))}
+            <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center", opacity: lotusOpacity, transform: `scale(${kenBurnsScale})` }}>
+              <LotusSvg color="#d8d2c4" />
+            </div>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div style={{ position: "absolute", top: PANEL_TOP, left: PANEL_LEFT, width: PANEL_SIZE, height: PANEL_SIZE, opacity: panelOpacity, overflow: "hidden" }}>
+          <div style={{ display: "flex", gap: GAP, width: "100%", height: "100%", transform: `scale(${kenBurnsScale})`, transformOrigin: "center center" }}>
+            {[0, 1, 2].map((i) => (
+              <div key={i} style={{ width: PANEL_W, height: PANEL_SIZE, overflow: "hidden", position: "relative" }}>
+                <GradedPhoto src={heroPhotoSrc} style={{ width: PANEL_SIZE, height: PANEL_SIZE, position: "absolute", left: -i * (PANEL_W + GAP) }} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div
         style={{

@@ -15,8 +15,8 @@ export const sceneDurations = {
 export const facts: FactInput[] = [
   {
     type: "photo-stat",
-    kanji: "蚕",
-    heading: "In the mountain valleys once ruled by the Kaga domain, gassho-zukuri houses stand with steep thatched roofs, lashed together with rope instead of a single nail — a shape evolved purely to shed heavy snow.",
+    kanji: "雪",
+    heading: "A Shape Built to Shed Snow",
     body: "In the mountain valleys once ruled by the Kaga domain, gassho-zukuri houses stand with steep thatched roofs, lashed together with rope instead of a single nail — a shape evolved purely to shed heavy snow.",
     photoSrc: "photos/013_shirakawago/fact-1.png",
     photoSfx: "bgm/camera.mp3",
@@ -26,7 +26,7 @@ export const facts: FactInput[] = [
   {
     type: "photo-stat",
     kanji: "蚕",
-    heading: "The vast attic space, sometimes stacked two or three stories high, was never just storage. From the Meiji era onward, entire families raised silkworms there — turning a single house into a small silk factory.",
+    heading: "Not Just an Attic",
     body: "The vast attic space, sometimes stacked two or three stories high, was never just storage. From the Meiji era onward, entire families raised silkworms there — turning a single house into a small silk factory.",
     photoSrc: "photos/013_shirakawago/fact-2.png",
     photoSfx: "bgm/camera.mp3",
@@ -35,8 +35,8 @@ export const facts: FactInput[] = [
   },
   {
     type: "photo-stat",
-    kanji: "蚕",
-    heading: "Beneath the floor lay an even bigger secret. Villagers fermented straw and wild plants for years to produce gunpowder — a closely guarded military secret of the Kaga domain.",
+    kanji: "硝",
+    heading: "Gunpowder, Hidden Below",
     body: "Beneath the floor lay an even bigger secret. Villagers fermented straw and wild plants for years to produce gunpowder — a closely guarded military secret of the Kaga domain.",
     photoSrc: "photos/013_shirakawago/fact-3.png",
     photoSfx: "bgm/camera.mp3",

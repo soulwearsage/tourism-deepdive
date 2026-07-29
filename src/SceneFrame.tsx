@@ -14,6 +14,7 @@ export type SceneFrameProps = {
   narrationDelayFrames?: number; // ナレーションの開始を遅らせるフレーム数(イントロ音と被らせないため)
   jaSubtitle?: string;          // 日本語字幕(任意)。指定時は画面下部にオーバーレイ表示
   jaSubtitleStartFrame?: number; // 字幕フェードイン開始フレーム(省略時=0)
+  jaSubtitleTotalFrames?: number; // シーン総フレーム数。指定時は長い字幕を前半・後半に自動分割表示
   children: React.ReactNode;
 };
 
@@ -33,6 +34,7 @@ export const SceneFrame: React.FC<SceneFrameProps> = ({
   narrationDelayFrames = 0,
   jaSubtitle,
   jaSubtitleStartFrame,
+  jaSubtitleTotalFrames,
   children,
 }) => {
   const frame = useCurrentFrame();
@@ -94,7 +96,7 @@ export const SceneFrame: React.FC<SceneFrameProps> = ({
 
       {children}
 
-      {jaSubtitle && <JaSubtitleBar text={jaSubtitle} startFrame={jaSubtitleStartFrame} />}
+      {jaSubtitle && <JaSubtitleBar text={jaSubtitle} startFrame={jaSubtitleStartFrame} totalFrames={jaSubtitleTotalFrames} />}
 
       <div
         style={{

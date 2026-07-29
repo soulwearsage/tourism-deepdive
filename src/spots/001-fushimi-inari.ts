@@ -84,6 +84,17 @@ export const defaultProps = {
   bgmSrc: "bgm/bgm003.mp3",
   bgmVolume: 0.12,
   introSfx: "bgm/dark_intro.mp3",
+  jaSubtitles: {
+    catchCopy: "一万の、名もなき神々。",
+    hook: "訪れる人の九割は、自分が誰に祈っているのか知らないまま帰っていく。",
+    facts: [
+      "山には、一万に及ぶお塚が刻まれている。稲荷信仰の名を借りた、名もなき信仰の痕跡。",
+      "十字架の「INRI」と「稲荷」——秦氏の渡来にまつわる、都市伝説めいた符合。",
+      "祀られる神は五柱。主神は、宇迦之御魂大神。",
+      "狐は神そのものではない。鍵と玉、そして巻物を運ぶ、神の使いだ。",
+    ],
+    twist: "この神社に、壁はない。ご神体は、稲荷山そのもの。鳥居は参道ではない。鳥居こそが、神域なのだ。",
+  },
   catchCopy: "10,000 UNKNOWN GODS.",
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 1,

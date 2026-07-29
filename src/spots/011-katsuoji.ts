@@ -69,6 +69,16 @@ export const defaultProps = {
   bgmSrc: "bgm/bgm002.wav",
   bgmVolume: 0.12,
   introSfx: "bgm/light_intro.mp3",
+  jaSubtitles: {
+    catchCopy: "天皇にさえ勝ちかけた、寺。",
+    hook: "この寺の名前は、天皇よりも力を持つと宣言するところだった。",
+    facts: [
+      "平安の世、清和天皇は僧の祈りで病が癒えたことに深く感動し、この寺の力は天皇にも「勝った」として、その名にしようとした。",
+      "石段のあらゆる隙間を、無数の小さな赤いだるまが埋め尽くす。誰かに叶えてもらう願いではなく、自らに立てた誓い。人生の目的を底に、一年の目標を裏に書き、片目を入れて、自分自身への署名とする。",
+      "境内は、およそ8万坪。",
+    ],
+    twist: "天皇が望んだ名前は「勝王寺」——王に勝った寺。だが僧たちはそれをあまりにも不遜だと考え、そっと「王」の字を「尾」に置き換えた。天皇に勝ったと誇れたはずの寺は、日本でも屈指の、謙虚な名前を持つことになった。",
+  },
   catchCopy: "THE TEMPLE THAT ALMOST BEAT AN EMPEROR.",
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 11,

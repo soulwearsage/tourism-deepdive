@@ -71,6 +71,16 @@ export const defaultProps = {
   bgmSrc: "bgm/bgm003.mp3",
   bgmVolume: 0.12,
   introSfx: "bgm/dark_intro.mp3",
+  jaSubtitles: {
+    catchCopy: "六十二回、建て替えられてきた。",
+    hook: "ここに祀られる神は、最初から女神だったとは限らない。",
+    facts: [
+      "125の宮社からなり、内宮には天照大御神、外宮には豊受大御神。2000年を超える歴史を持つ。",
+      "式年遷宮は、690年から数えて62回。社殿は、幾度も生まれ変わってきた。",
+      "アマテラスは、本来男神だったという説がある。それが女神とされたのは、女帝・持統天皇の時代だったという。",
+    ],
+    twist: "千二百年の間、在位中の天皇は一度もここを訪れなかった。代わりに参拝したのは、儀式の代理人。その沈黙を破ったのは、1869年、明治の時代だった。",
+  },
   catchCopy: "REBUILT 62 TIMES.",
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 4,

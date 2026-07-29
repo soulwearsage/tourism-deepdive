@@ -72,6 +72,16 @@ export const defaultProps = {
   bgmSrc: "bgm/bgm003.mp3",
   bgmVolume: 0.12,
   introSfx: "bgm/dark_intro.mp3",
+  jaSubtitles: {
+    catchCopy: "誰も知らない神。",
+    hook: "毎年10月、日本中の神々が社から姿を消す。ただ一つの場所を除いて。",
+    facts: [
+      "国譲りの見返りに建てられたという、高さ48メートルの巨大神殿。2000年の発掘調査で、その柱の跡が発見された。",
+      "その内部構造は、ピラミッドとの類似を指摘する都市伝説さえ生んでいる。",
+      "大国主は、なぜか西を向いて祀られている。理由は、今も謎のままだ。",
+    ],
+    twist: "ある神社の神だけは、決して出雲へは向かわない。古の力比べの末に交わされた誓いゆえに。だからこそ諏訪だけは、今も「神在月」ではなく、神がいる月と呼ばれ続けている。",
+  },
   catchCopy: "THE GOD NO ONE KNOWS.",
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 6,

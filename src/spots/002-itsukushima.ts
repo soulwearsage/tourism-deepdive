@@ -80,6 +80,17 @@ export const defaultProps = {
   bgmSrc: "bgm/bgm002.wav",
   bgmVolume: 0.12,
   introSfx: "bgm/light_intro.mp3",
+  jaSubtitles: {
+    catchCopy: "消えることのない、一つの火。",
+    hook: "この島では、千年以上、誰も生まれず、誰も死ぬことを許されない。",
+    facts: [
+      "大鳥居は、地面に固定されていない。６０トンの、自らの重みだけで立っている。",
+      "出産も、埋葬も、この島では禁じられてきた。",
+      "祀られるのは宗像三女神。創建は593年に遡る。",
+      "島を歩く鹿もまた、神の使いとされている。",
+    ],
+    twist: "806年、弥山で灯された一つの火は、千二百年以上、消えることなく燃え続けている。1945年、その火は広島の「平和の灯」にも分けられた。",
+  },
   catchCopy: "A FLAME THAT NEVER WENT OUT.",
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 2,

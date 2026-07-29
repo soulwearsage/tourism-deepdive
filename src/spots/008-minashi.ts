@@ -69,6 +69,16 @@ export const defaultProps = {
   bgmSrc: "bgm/bgm002.wav",
   bgmVolume: 0.12,
   introSfx: "bgm/light_intro.mp3",
+  jaSubtitles: {
+    catchCopy: "『君の名は。』の裏にある神社。",
+    hook: "日本一有名なアニメ映画の裏に、さらに古い秘密が隠れている。",
+    facts: [
+      "「水無（みなし）」と「宮水（みやみず）」——名前は鏡合わせ。『君の名は。』のモデルという説がある。",
+      "位山は、日本海と太平洋、二つの海を分ける分水嶺。",
+      "戦時中、熱田神宮の神器・草薙剣は、密かにここへ避難させられていた。",
+    ],
+    twist: "正史には残されていない土地の伝承は語る。ヤマトより前、出雲より前、幻の「飛騨王朝」がこの山から国を治めていた、と。",
+  },
   catchCopy: "THE SHRINE BEHIND YOUR NAME.",
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 8,

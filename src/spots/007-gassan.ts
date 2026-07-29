@@ -71,6 +71,16 @@ export const defaultProps = {
   bgmSrc: "bgm/bgm003.mp3",
   bgmVolume: 0.12,
   introSfx: "bgm/dark_intro.mp3",
+  jaSubtitles: {
+    catchCopy: "自らの神話から、姿を消した神。",
+    hook: "日本を作った三柱の神の一柱には、ほとんど物語が残されていない。",
+    facts: [
+      "標高1984メートルの円形火山。593年、蜂子皇子によって開かれ、三本足の霊烏がその道を導いたという。",
+      "戦国の世、人々は宝物を洞窟に隠し、代々それを守り継いできた。",
+      "山頂の本宮は撮影禁止。参拝には、お払いが欠かせない。",
+    ],
+    twist: "ツクヨミに残された神話は、たった一つ。穢れを厭い、食物の女神を斬り殺し、姉アマテラスに永遠に追放されたという話。昼と夜が決して交わらないのは、そのためだと伝わる。忘れられたその神が今、死者の山を統べている。",
+  },
   catchCopy: "THE GOD WHO VANISHED FROM HIS OWN MYTH.",
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 7,

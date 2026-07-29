@@ -71,6 +71,16 @@ export const defaultProps = {
   bgmSrc: "bgm/bgm002.wav",
   bgmVolume: 0.12,
   introSfx: "bgm/light_intro.mp3",
+  jaSubtitles: {
+    catchCopy: "日本の、天空の門。",
+    hook: "なぜこんな不便な山の上に建てられたのか、訪れる人の多くは知らないまま帰っていく。",
+    facts: [
+      "標高404メートル。空に浮かぶような、天空の鳥居。",
+      "祀られる神は3柱。讃岐に24ある式内社の一つに数えられる。",
+      "指一本で揺れるのに、決して落ちない。人はそれを「ゆるぎ石」と呼ぶ。",
+    ],
+    twist: "神社は二度、山から下ろされた。だが1831年、祟りを恐れた村人たちが、再び山頂へと担ぎ上げた。",
+  },
   catchCopy: "JAPAN'S GATE TO THE SKY.",
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 3,

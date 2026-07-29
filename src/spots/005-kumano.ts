@@ -71,6 +71,16 @@ export const defaultProps = {
   bgmSrc: "bgm/bgm003.mp3",
   bgmVolume: 0.12,
   introSfx: "bgm/dark_intro.mp3",
+  jaSubtitles: {
+    catchCopy: "この神が誰なのか、誰も知らない。",
+    hook: "日本有数の聖地でありながら、人々は自分が誰に祈っているのか、確信が持てずにいる。",
+    facts: [
+      "高さ全34メートル、日本一の大鳥居。1889年の大水害で、社は元の場所から移された。",
+      "全国4700社を超える熊野神社の、総本宮。",
+      "三本足の八咫烏は、神武天皇を導いたと伝わる。今ではサッカー日本代表の紋章にもなっている。",
+    ],
+    twist: "この地は「紀伊」——スサノオの神話にちなむ「木の国」。そして「熊野」とは「隠れた場所」を意味する。太陽の神か、水の神か、木の神か。学者たちの間でも、答えはまだ出ていない。",
+  },
   catchCopy: "NO ONE KNOWS WHO THIS GOD IS.",
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 5,

@@ -190,6 +190,15 @@ const TitleScene: React.FC<Props> = ({ spotName, spotNameJa, location, accentCol
 
 // --- Scene: フック ---
 // --- Scene: キャッチコピー(イントロ音が鳴ってる間だけ出る、一番最初のガツンとした一言) ---
+const _LOWERCASE_WORDS = new Set(['is','at','a','an','the','of','in','on','to','and','or','for','with','from','as','by']);
+function toTitleCase(str: string): string {
+  return str.toLowerCase().split(' ').map((word, i) => {
+    if (i === 0) return word.charAt(0).toUpperCase() + word.slice(1);
+    const bare = word.replace(/[^a-z]/g, '');
+    return _LOWERCASE_WORDS.has(bare) ? word : word.charAt(0).toUpperCase() + word.slice(1);
+  }).join(' ');
+}
+
 const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy, catchCopyFont, catchCopyFontSize, introSfx }) => {
   const frame = useCurrentFrame();
   // 実際の音源を解析して測った「低音がドーンと入るタイミング」(秒)。音源ごとに微妙に違う
@@ -224,7 +233,6 @@ const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy
     fontWeight: 400,
     lineHeight: 1.15,
     fontFamily: catchCopyFont ?? specialGothicExpandedFont,
-    textTransform: "uppercase",
   };
   return (
     <SceneFrame
@@ -248,7 +256,7 @@ const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy
               transform: `translateX(${-glitchOffset}px)`,
             }}
           >
-            {catchCopy}
+            {toTitleCase(catchCopy ?? "")}
           </div>
           {/* 水色側にズレたレイヤー */}
           <div
@@ -261,10 +269,10 @@ const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy
               transform: `translateX(${glitchOffset}px)`,
             }}
           >
-            {catchCopy}
+            {toTitleCase(catchCopy ?? "")}
           </div>
           {/* 本体(白) */}
-          <div style={{ ...textStyle, position: "relative", color: "#f5f2eb" }}>{catchCopy}</div>
+          <div style={{ ...textStyle, position: "relative", color: "#f5f2eb" }}>{toTitleCase(catchCopy ?? "")}</div>
         </div>
       </div>
     </SceneFrame>

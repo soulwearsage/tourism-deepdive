@@ -10,7 +10,7 @@ export type QuoteProps = {
   kanji?: string;
   narrationSrc?: string;
   accentColor: string;
-  visual?: "cross" | "pyramid" | "kagome"; // 任意のビジュアル演出
+  visual?: "cross" | "pyramid" | "kagome" | "circle-split"; // 任意のビジュアル演出
 };
 
 // 線が少しずつ描かれるピラミッド+内部の通路・玄室のSVG
@@ -121,6 +121,41 @@ export const KagomeVisual: React.FC<{ frame: number; accentColor: string; size?:
   );
 };
 
+// 1つの円がフェードインして中央に現れ、左右2つの円に分かれていくアニメーション
+const CircleSplitVisual: React.FC<{ frame: number; accentColor: string }> = ({ frame, accentColor }) => {
+  const r = 38;
+  const cx = 90, cy = 75;
+
+  const singleOpacity = interpolate(frame, [0, 20, 40, 60], [0, 1, 1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
+  const splitOpacity = interpolate(frame, [40, 60], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
+  const splitOffset = interpolate(frame, [40, 85], [0, r * 2], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.out(Easing.cubic),
+  });
+
+  const glow = interpolate(frame % 90, [0, 45, 90], [0.12, 0.28, 0.12]);
+
+  return (
+    <svg width="240" height="150" viewBox="0 0 240 150" style={{ overflow: "visible" }}>
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke={accentColor} strokeWidth={8} opacity={singleOpacity * glow} />
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke={accentColor} strokeWidth={1.5} opacity={singleOpacity} />
+      <circle cx={cx - splitOffset} cy={cy} r={r} fill="none" stroke={accentColor} strokeWidth={8} opacity={splitOpacity * glow} />
+      <circle cx={cx - splitOffset} cy={cy} r={r} fill="none" stroke={accentColor} strokeWidth={1.5} opacity={splitOpacity} />
+      <circle cx={cx + splitOffset} cy={cy} r={r} fill="none" stroke={accentColor} strokeWidth={8} opacity={splitOpacity * glow} />
+      <circle cx={cx + splitOffset} cy={cy} r={r} fill="none" stroke={accentColor} strokeWidth={1.5} opacity={splitOpacity} />
+    </svg>
+  );
+};
+
 // 線が少しずつ描かれる十字架のSVG
 const CrossVisual: React.FC<{ frame: number; accentColor: string }> = ({ frame, accentColor }) => {
   const vProgress = interpolate(frame, [0, 22], [0, 1], {
@@ -219,6 +254,11 @@ export const QuoteScene: React.FC<QuoteProps> = ({
         {visual === "kagome" && (
           <div style={{ marginBottom: 44 }}>
             <KagomeVisual frame={frame} accentColor={accentColor} />
+          </div>
+        )}
+        {visual === "circle-split" && (
+          <div style={{ marginBottom: 44 }}>
+            <CircleSplitVisual frame={frame} accentColor={accentColor} />
           </div>
         )}
 

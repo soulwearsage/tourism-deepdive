@@ -34,11 +34,11 @@ const HERO_PHOTO = "photos/000_shinto-vs-buddhism/hero.png";
 const AUDIO_DIR = "audio/000_shinto-vs-buddhism";
 
 export const sceneDurations = {
-  title: 3.1, // 自動計算(ナレーション1.6秒 + 余白)
-  map: 4.2, // 自動計算(ナレーション1.2秒 + 余白)
-  hook: 16.6, // 自動計算(ナレーション15.1秒 + 余白)
-  twist: 29.4, // 自動計算(ナレーション27.9秒 + 余白)
-  outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白)
+  title: 3.1, // 自動計算(ナレーション1.6秒 + 余白) // 自動計算(ナレーション1.6秒 + 余白)
+  map: 4.2, // 自動計算(ナレーション1.2秒 + 余白) // 自動計算(ナレーション1.2秒 + 余白)
+  hook: 16.8, // 自動計算(ナレーション15.3秒 + 余白) // 自動計算(ナレーション15.1秒 + 余白)
+  twist: 29.5, // 自動計算(ナレーション28秒 + 余白) // 自動計算(ナレーション27.9秒 + 余白)
+  outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白) // 自動計算(ナレーション1.8秒 + 余白)
 };
 
 export const facts: FactInput[] = [
@@ -50,7 +50,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/000_shinto-vs-buddhism/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 26.5, // 自動計算(ナレーション23.5秒 + 余白)
+    durationSeconds: 25, // 自動計算(ナレーション23.5秒 + 余白)
   },
   {
     type: "quote",
@@ -59,7 +59,7 @@ export const facts: FactInput[] = [
     caption: "SHINBUTSU-SHUGO",
     visual: "circle-split",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
-    durationSeconds: 22.8, // 自動計算(ナレーション21.3秒 + 余白)
+    durationSeconds: 23.7, // 自動計算(ナレーション22.2秒 + 余白)
   },
   {
     type: "photo-stat",

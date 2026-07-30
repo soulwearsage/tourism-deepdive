@@ -56,7 +56,7 @@ export const defaultProps = {
   municipalityId: "27220", // 箕面市(勝尾寺の所在地)
   hookText: "This temple's name almost declared it more powerful than the Emperor himself.",
   facts,
-  twistHeading: "One Character, Softened",
+  twistHeading: "One character, softened",
   twistBody: "The name the emperor wanted was \"Katsuou-ji\" — the temple that defeated the king. But the monks found that far too immodest, so they quietly swapped one character, 王 (king) for 尾 (tail) — and the temple that could have boasted about beating an emperor ended up with one of the humblest name origins in Japan.",
   narration: {
     title: `${AUDIO_DIR}/title.mp3`,

@@ -57,7 +57,7 @@ export const defaultProps = {
   municipalityId: "21505",
   hookText: "For centuries, these houses were built to survive Japan's heaviest snowfall. But snow wasn't the only thing they were hiding.",
   facts,
-  twistHeading: "Two Secrets in One House",
+  twistHeading: "Two secrets in one house",
   twistBody: "In a quiet snowbound village, silkworms spun thread overhead while gunpowder fermented underfoot — two hidden industries inside a single house. In 1995, it was precisely that hidden quietness that earned Shirakawa-go its status as a UNESCO World Heritage Site.",
   narration: {
     title: `${AUDIO_DIR}/title.mp3`,

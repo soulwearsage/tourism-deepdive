@@ -64,7 +64,7 @@ export const BigNumberScene: React.FC<BigNumberProps> = ({
         footerLeft="Japan Deep Dive"
         footerRight={`${String(factNumber).padStart(2, "0")} / ${String(totalFacts).padStart(2, "0")}`}
         kanji={kanji}
-        kanjiOpacity={0.16}
+        kanjiOpacity={0.10}
         narrationSrc={narrationSrc}
       >
         <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "0 90px" }}>
@@ -149,7 +149,7 @@ export const BigNumberScene: React.FC<BigNumberProps> = ({
       footerLeft="Japan Deep Dive"
       footerRight={`${String(factNumber).padStart(2, "0")} / ${String(totalFacts).padStart(2, "0")}`}
       kanji={kanji}
-        kanjiOpacity={0.16}
+        kanjiOpacity={0.10}
       narrationSrc={narrationSrc}
     >
       <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "0 90px" }}>

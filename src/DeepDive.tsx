@@ -298,7 +298,7 @@ const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narrati
   const frame = useCurrentFrame();
   const opacity = interpolate(frame, [0, 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="HOOK" narrationSrc={narration?.hook} kanji={kanjiMotif} kanjiOpacity={0.16} jaSubtitle={jaSubtitles?.hook}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel={`NO. ${String(episodeNumber).padStart(3, "0")}`} footerLeft="Japan Deep Dive" footerRight="HOOK" narrationSrc={narration?.hook} kanji={kanjiMotif} kanjiOpacity={0.10} jaSubtitle={jaSubtitles?.hook}>
       {/* イントロ音はTitleSceneの方で鳴らす(写真が出る瞬間に合わせるため) */}
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center", padding: "0 100px" }}>
         <div style={{ textAlign: "center", opacity }}>
@@ -318,7 +318,7 @@ const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narrati
 // --- Scene: どんでん返し(写真無し、漢字の透かし付きのテキストヒーロー型) ---
 const TwistScene: React.FC<Props & { twistDur?: number }> = ({ twistHeading, twistBody, accentColor, kanjiMotif, narration, jaSubtitles, twistDur }) => {
   return (
-    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="THE TWIST" footerLeft="Japan Deep Dive" footerRight="TWIST" kanji={kanjiMotif} kanjiOpacity={0.16} narrationSrc={narration?.twist} jaSubtitle={jaSubtitles?.twist} jaSubtitleTotalFrames={twistDur}>
+    <SceneFrame accentColor={accentColor} cornerLabel="DEEP DIVE" cornerSubLabel="THE TWIST" footerLeft="Japan Deep Dive" footerRight="TWIST" kanji={kanjiMotif} kanjiOpacity={0.10} narrationSrc={narration?.twist} jaSubtitle={jaSubtitles?.twist} jaSubtitleTotalFrames={twistDur}>
       <TextHeroScene
         eyebrow="Here's the twist"
         heading={twistHeading}

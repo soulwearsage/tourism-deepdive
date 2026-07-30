@@ -2,12 +2,22 @@ import React from "react";
 import { useCurrentFrame, interpolate } from "remotion";
 import { zenKurernaidoFont } from "./fonts";
 
-const MAX_LINE_CHARS = 23;
-const MIN_SPLIT_CHARS = 80; // これより短いテキストは分割しない
+const MAX_LINE_CHARS = 20;
+const clamp = { extrapolateLeft: "clamp" as const, extrapolateRight: "clamp" as const };
 
+// 空行ギャップのマーカー(句点の直後に挿入する視覚的区切り)
+const GAP = " ";
+
+/**
+ * テキストを表示行に分割する。
+ * - 改行優先順: 句点「。」→ 読点「、」→ Intl.Segmenter 単語境界
+ * - 「——」「…」は改行ポイントとして使わない
+ * - 句点の直後にギャップ行(GAP)を挿入して文のかたまりを視覚的に区切る
+ * - 1行の上限: 全角20文字
+ */
 export function splitSubtitleLines(text: string): string[] {
   const lines: string[] = [];
-  let remaining = text;
+  let remaining = text.trim();
 
   while (remaining.length > 0) {
     if (remaining.length <= MAX_LINE_CHARS) {
@@ -17,15 +27,16 @@ export function splitSubtitleLines(text: string): string[] {
 
     const chunk = remaining.slice(0, MAX_LINE_CHARS);
 
-    // Priority 1: 23文字以内の最後の句点で改行
+    // Priority 1: 句点 → 改行後にギャップ行を挿入
     const kIdx = chunk.lastIndexOf("。");
     if (kIdx !== -1) {
       lines.push(remaining.slice(0, kIdx + 1));
-      remaining = remaining.slice(kIdx + 1);
+      remaining = remaining.slice(kIdx + 1).trimStart();
+      if (remaining.length > 0) lines.push(GAP);
       continue;
     }
 
-    // Priority 2: 23文字以内の最後の読点で改行
+    // Priority 2: 読点
     const tIdx = chunk.lastIndexOf("、");
     if (tIdx !== -1) {
       lines.push(remaining.slice(0, tIdx + 1));
@@ -33,16 +44,17 @@ export function splitSubtitleLines(text: string): string[] {
       continue;
     }
 
-    // Priority 3: Intl.Segmenter で単語境界を検出し、残り文字数の中点に最も近い区切りで改行
-    // (「最後の境界」ではなく「中点に近い境界」を選ぶことで、短すぎる行の生成を防ぐ)
+    // Priority 3: Intl.Segmenter 単語境界（——/…は改行ポイントとして除外）
+    // midTarget: 残り文字が少ない場合は中点狙い、長い場合は20文字上限狙い
     const segmenter = new Intl.Segmenter("ja", { granularity: "word" });
-    const mid = remaining.length / 2;
+    const midTarget = Math.min(remaining.length / 2, MAX_LINE_CHARS);
     let breakAt = 0;
     let bestDist = Infinity;
     for (const seg of segmenter.segment(remaining)) {
       const end = seg.index + seg.segment.length;
       if (end > MAX_LINE_CHARS) break;
-      const dist = Math.abs(end - mid);
+      if (seg.segment === "—" || seg.segment === "——" || seg.segment === "…") continue;
+      const dist = Math.abs(end - midTarget);
       if (dist < bestDist) {
         bestDist = dist;
         breakAt = end;
@@ -58,34 +70,24 @@ export function splitSubtitleLines(text: string): string[] {
     }
   }
 
-  return lines.filter((l) => l.length > 0);
+  // 末尾のギャップ行を除去
+  while (lines.length > 0 && lines[lines.length - 1] === GAP) {
+    lines.pop();
+  }
+
+  return lines;
 }
 
-// 長いテキストを句点で最も均等に前半・後半に2分割する。短すぎる/分割不要ならnullを返す
-function splitAtMidKuten(text: string): [string, string] | null {
-  if (text.length < MIN_SPLIT_CHARS) return null;
-  const positions: number[] = [];
-  for (let i = 0; i < text.length; i++) {
-    if (text[i] === "。") positions.push(i + 1);
-  }
-  if (positions.length < 2) return null;
-  const mid = text.length / 2;
-  let bestPos = positions[0];
-  let bestDist = Math.abs(positions[0] - mid);
-  for (const pos of positions) {
-    const dist = Math.abs(pos - mid);
-    if (dist < bestDist) { bestDist = dist; bestPos = pos; }
-  }
-  const second = text.slice(bestPos).trim();
-  if (!second) return null;
-  return [text.slice(0, bestPos), second];
-}
-
-export const JaSubtitleBar: React.FC<{ text: string; startFrame?: number; totalFrames?: number; endFrame?: number }> = ({ text, startFrame = 0, totalFrames, endFrame }) => {
+export const JaSubtitleBar: React.FC<{
+  text: string;
+  startFrame?: number;
+  totalFrames?: number;
+  endFrame?: number;
+}> = ({ text, startFrame = 0, totalFrames, endFrame }) => {
   const frame = useCurrentFrame();
 
   const fadeOut = endFrame !== undefined
-    ? interpolate(frame, [endFrame, endFrame + 20], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
+    ? interpolate(frame, [endFrame, endFrame + 20], [1, 0], clamp)
     : 1;
 
   const baseStyle: React.CSSProperties = {
@@ -105,49 +107,57 @@ export const JaSubtitleBar: React.FC<{ text: string; startFrame?: number; totalF
     pointerEvents: "none",
   };
 
-  const splitPair = totalFrames ? splitAtMidKuten(text) : null;
+  const renderLines = (ls: string[]) =>
+    ls.map((line, i) => (
+      <div key={i} style={{ whiteSpace: "nowrap" }}>{line}</div>
+    ));
 
-  if (splitPair) {
-    const [firstHalf, secondHalf] = splitPair;
-    // テキスト長の比率でスイッチタイミングを決める(文字数≒読み上げ時間の近似)
-    const switchFrame = Math.round(totalFrames! * (firstHalf.length / text.length));
-    const fadeLen = 20;
-    const firstOpacity = interpolate(
-      frame,
-      [startFrame, startFrame + fadeLen, switchFrame, switchFrame + fadeLen],
-      [0, 1, 1, 0],
-      { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-    ) * fadeOut;
-    const secondOpacity = interpolate(
-      frame,
-      [switchFrame, switchFrame + fadeLen],
-      [0, 1],
-      { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-    ) * fadeOut;
-    const firstLines = splitSubtitleLines(firstHalf);
-    const secondLines = splitSubtitleLines(secondHalf);
-    return (
-      <>
-        <div style={{ ...baseStyle, opacity: firstOpacity }}>
-          {firstLines.map((line, i) => <div key={i} style={{ whiteSpace: "nowrap" }}>{line}</div>)}
-        </div>
-        <div style={{ ...baseStyle, opacity: secondOpacity }}>
-          {secondLines.map((line, i) => <div key={i} style={{ whiteSpace: "nowrap" }}>{line}</div>)}
-        </div>
-      </>
-    );
+  const allLines = splitSubtitleLines(text);
+  const needsTwoPhase = allLines.length > 4 && !!totalFrames;
+
+  if (!needsTwoPhase) {
+    const opacity = interpolate(frame, [startFrame, startFrame + 20], [0, 1], clamp) * fadeOut;
+    return <div style={{ ...baseStyle, opacity }}>{renderLines(allLines)}</div>;
   }
 
-  const opacity = interpolate(frame, [startFrame, startFrame + 20], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  }) * fadeOut;
-  const lines = splitSubtitleLines(text);
+  // 2段階表示: 句点後のギャップ行(GAP)を優先して行数の中点近くで分割
+  const midLine = Math.floor(allLines.length / 2);
+  let splitAt = midLine;
+  let minDist = Infinity;
+  for (let i = 0; i < allLines.length; i++) {
+    if (allLines[i] === GAP) {
+      const dist = Math.abs(i - midLine);
+      if (dist < minDist) {
+        minDist = dist;
+        splitAt = i + 1; // ギャップの次の行から後半開始
+      }
+    }
+  }
+
+  const firstLines = allLines.slice(0, splitAt);
+  const secondLines = allLines.slice(splitAt);
+  const firstText = firstLines.filter(l => l !== GAP).join("");
+  const switchFrame = Math.round(totalFrames! * (firstText.length / text.length));
+  const fadeLen = 20;
+
+  const firstOpacity = interpolate(
+    frame,
+    [startFrame, startFrame + fadeLen, switchFrame, switchFrame + fadeLen],
+    [0, 1, 1, 0],
+    clamp
+  ) * fadeOut;
+
+  const secondOpacity = interpolate(
+    frame,
+    [switchFrame, switchFrame + fadeLen],
+    [0, 1],
+    clamp
+  ) * fadeOut;
+
   return (
-    <div style={{ ...baseStyle, opacity }}>
-      {lines.map((line, i) => (
-        <div key={i} style={{ whiteSpace: "nowrap" }}>{line}</div>
-      ))}
-    </div>
+    <>
+      <div style={{ ...baseStyle, opacity: firstOpacity }}>{renderLines(firstLines)}</div>
+      <div style={{ ...baseStyle, opacity: secondOpacity }}>{renderLines(secondLines)}</div>
+    </>
   );
 };

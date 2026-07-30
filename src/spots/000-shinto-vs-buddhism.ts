@@ -50,7 +50,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/000_shinto-vs-buddhism/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 13.4, // 自動計算(ナレーション11.9秒 + 余白)
+    durationSeconds: 14.9, // 自動計算(ナレーション11.9秒 + 余白)
   },
   {
     type: "text-hero",

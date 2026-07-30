@@ -22,7 +22,7 @@ export const facts: FactInput[] = [
     photoSfx: "bgm/camera.mp3",
     verticalText: "高野山真言宗",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 14.6, // 自動計算(ナレーション13.1秒 + 余白)
+    durationSeconds: 16.1, // 自動計算(ナレーション13.1秒 + 余白)
   },
   {
     type: "photo-stat",

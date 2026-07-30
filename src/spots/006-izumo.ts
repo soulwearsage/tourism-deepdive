@@ -23,7 +23,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/006_izumo/fact-2.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 25.0, // ナレーション23.6秒 + 余白
+    durationSeconds: 26.5, // ナレーション23.6秒 + 余白
   },
   {
     type: "quote",

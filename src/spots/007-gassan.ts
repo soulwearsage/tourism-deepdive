@@ -24,7 +24,7 @@ export const facts: FactInput[] = [
     photoSfx: "bgm/camera.mp3",
     verticalText: "月読命",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 16.0, // ナレーション14.5秒 + 余白
+    durationSeconds: 17.5, // ナレーション14.5秒 + 余白
   },
   {
     type: "quote",

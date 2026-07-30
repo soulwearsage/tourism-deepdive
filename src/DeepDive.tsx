@@ -255,6 +255,7 @@ const CatchCopyScene: React.FC<Props> = ({ accentColor, episodeNumber, catchCopy
       footerLeft="Japan Deep Dive"
       footerRight="INTRO"
       jaSubtitle={jaSubtitles?.catchCopy}
+      jaSubtitleEndFrame={100}
     >
       {introSfx && <Audio src={staticFile(introSfx)} volume={0.18} />}
       <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", alignItems: "center", padding: "0 100px" }}>

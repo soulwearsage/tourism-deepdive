@@ -33,15 +33,19 @@ export function splitSubtitleLines(text: string): string[] {
       continue;
     }
 
-    // Priority 3: Intl.Segmenter で単語境界を検出し、23文字以内の最後の区切りで改行
+    // Priority 3: Intl.Segmenter で単語境界を検出し、残り文字数の中点に最も近い区切りで改行
+    // (「最後の境界」ではなく「中点に近い境界」を選ぶことで、短すぎる行の生成を防ぐ)
     const segmenter = new Intl.Segmenter("ja", { granularity: "word" });
+    const mid = remaining.length / 2;
     let breakAt = 0;
+    let bestDist = Infinity;
     for (const seg of segmenter.segment(remaining)) {
       const end = seg.index + seg.segment.length;
-      if (end <= MAX_LINE_CHARS) {
+      if (end > MAX_LINE_CHARS) break;
+      const dist = Math.abs(end - mid);
+      if (dist < bestDist) {
+        bestDist = dist;
         breakAt = end;
-      } else {
-        break;
       }
     }
 
@@ -77,8 +81,12 @@ function splitAtMidKuten(text: string): [string, string] | null {
   return [text.slice(0, bestPos), second];
 }
 
-export const JaSubtitleBar: React.FC<{ text: string; startFrame?: number; totalFrames?: number }> = ({ text, startFrame = 0, totalFrames }) => {
+export const JaSubtitleBar: React.FC<{ text: string; startFrame?: number; totalFrames?: number; endFrame?: number }> = ({ text, startFrame = 0, totalFrames, endFrame }) => {
   const frame = useCurrentFrame();
+
+  const fadeOut = endFrame !== undefined
+    ? interpolate(frame, [endFrame, endFrame + 20], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
+    : 1;
 
   const baseStyle: React.CSSProperties = {
     position: "absolute",
@@ -109,13 +117,13 @@ export const JaSubtitleBar: React.FC<{ text: string; startFrame?: number; totalF
       [startFrame, startFrame + fadeLen, switchFrame, switchFrame + fadeLen],
       [0, 1, 1, 0],
       { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-    );
+    ) * fadeOut;
     const secondOpacity = interpolate(
       frame,
       [switchFrame, switchFrame + fadeLen],
       [0, 1],
       { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-    );
+    ) * fadeOut;
     const firstLines = splitSubtitleLines(firstHalf);
     const secondLines = splitSubtitleLines(secondHalf);
     return (
@@ -133,7 +141,7 @@ export const JaSubtitleBar: React.FC<{ text: string; startFrame?: number; totalF
   const opacity = interpolate(frame, [startFrame, startFrame + 20], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
-  });
+  }) * fadeOut;
   const lines = splitSubtitleLines(text);
   return (
     <div style={{ ...baseStyle, opacity }}>

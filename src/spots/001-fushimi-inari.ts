@@ -25,7 +25,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/001_fushimi-inari/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 15.5, // ナレーション14.2秒 + 余白を詰めた
+    durationSeconds: 17.0, // ナレーション14.2秒 + 余白
   },
   {
     type: "big-number",

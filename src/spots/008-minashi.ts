@@ -22,7 +22,7 @@ export const facts: FactInput[] = [
     photoSfx: "bgm/camera.mp3",
     verticalText: "御歳大神",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 10.5, // ナレーション8.7秒 + 余白
+    durationSeconds: 12.0, // ナレーション8.7秒 + 余白
   },
   {
     type: "big-number",

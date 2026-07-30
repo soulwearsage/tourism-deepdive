@@ -21,7 +21,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/012_ine/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 17.3, // ナレーション15.8秒 + 余白
+    durationSeconds: 18.8, // ナレーション15.8秒 + 余白
   },
   {
     type: "photo-stat",

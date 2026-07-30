@@ -24,6 +24,7 @@
     "@types/react": "^18.2.0",
     "@types/topojson-client": "^3.1.5",
     "get-mp3-duration": "^1.0.0",
+    "googleapis": "^173.0.0",
     "typescript": "^5.3.0"
   }
 }

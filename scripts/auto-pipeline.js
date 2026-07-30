@@ -24,6 +24,7 @@ const getMP3Duration = require("get-mp3-duration");
 
 const args = process.argv.slice(2);
 const skipNarration = args.includes("--skip-narration");
+const skipPhotos = args.includes("--skip-photos");
 const spotShortId = args.find((a) => !a.startsWith("--"));
 if (!spotShortId) {
   console.error("使い方: node scripts/auto-pipeline.js <スポットの短い名前(例: minashi)> [--skip-narration]");
@@ -57,6 +58,15 @@ const audioDir = path.join(ROOT, "public", "audio", `${spot.number}_${spot.short
 const generateScript = path.join(ROOT, "scripts", `generate-narration-${spot.shortId}.js`);
 
 console.log(`=== ${spot.shortId}(${spot.file}) の自動パイプラインを開始 ===`);
+
+// --- 0. Google Driveから写真をダウンロード ---
+if (skipPhotos) {
+  console.log("--- 写真ダウンロードをスキップ(--skip-photos) ---");
+} else {
+  const downloadScript = path.join(ROOT, "scripts", "download-photos.js");
+  console.log("--- Google Driveから写真をダウンロード中 ---");
+  execSync(`node "${downloadScript}" ${spot.shortId}`, { stdio: "inherit", cwd: ROOT });
+}
 
 // --- 1. 写真の確認 ---
 const specText = fs.readFileSync(specFile, "utf8");

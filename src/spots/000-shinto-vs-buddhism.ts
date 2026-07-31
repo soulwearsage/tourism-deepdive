@@ -45,7 +45,7 @@ export const facts: FactInput[] = [
   {
     type: "photo-stat",
     kanji: "岩",
-    heading: "When Nature Itself Was God",
+    heading: "When nature itself was god",
     body: "Long before Buddhism arrived, ancient Japanese worshipped nature itself — giant rocks, mountains, rivers, and ancient trees were believed to be the dwelling places of kami. This worldview became known as Ko-Shinto, the ancient way of the gods.",
     photoSrc: "photos/000_shinto-vs-buddhism/fact-1.png",
     photoSfx: "bgm/camera.mp3",
@@ -63,7 +63,7 @@ export const facts: FactInput[] = [
   {
     type: "photo-stat",
     kanji: "離",
-    heading: "A Line Drawn by Law",
+    heading: "A line drawn by law",
     body: "That fusion endured for more than a thousand years. Then in 1868, the Meiji government issued a decree — Shinbutsu Bunri — ordering the separation of Shinto and Buddhism. Centuries of shared tradition were dismantled almost overnight.",
     photoSrc: "photos/000_shinto-vs-buddhism/fact-2.png",
     photoSfx: "bgm/camera.mp3",

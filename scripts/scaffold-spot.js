@@ -98,11 +98,11 @@ function slugToSpotName(slug, nameJa) {
   return cap(slug);
 }
 
-function buildFacts(fact1Text, fact1Kanji, fact2Text, fact2Kanji, fact3Text, fact3Kanji) {
+function buildFacts(fact1Text, fact1Kanji, fact1Heading, fact2Text, fact2Kanji, fact2Heading, fact3Text, fact3Kanji, fact3Heading) {
   const facts = [];
-  if (fact1Text) facts.push({ type: "photo-stat", kanji: fact1Kanji || "?", heading: "", body: fact1Text });
-  if (fact2Text) facts.push({ type: "photo-stat", kanji: fact2Kanji || "?", heading: "", body: fact2Text });
-  if (fact3Text) facts.push({ type: "photo-stat", kanji: fact3Kanji || "?", heading: "", body: fact3Text });
+  if (fact1Text) facts.push({ type: "photo-stat", kanji: fact1Kanji || "?", heading: fact1Heading || "", body: fact1Text });
+  if (fact2Text) facts.push({ type: "photo-stat", kanji: fact2Kanji || "?", heading: fact2Heading || "", body: fact2Text });
+  if (fact3Text) facts.push({ type: "photo-stat", kanji: fact3Kanji || "?", heading: fact3Heading || "", body: fact3Text });
   return facts;
 }
 
@@ -149,7 +149,10 @@ async function main() {
   const mapRegionLabel = get("mapRegionLabel");
   const prefectureId = get("prefectureId");
   const municipalityId = get("municipalityId");
-  const twistHeading = get("twistHeading");
+  const twistHeading = get("どんでん返し見出し(英語・センテンスケース)") || get("twistHeading");
+  const fact1Heading = get("Fact1見出し(英語・センテンスケース)");
+  const fact2Heading = get("Fact2見出し(英語・センテンスケース)");
+  const fact3Heading = get("Fact3見出し(英語・センテンスケース)");
   const fact1Text = get("Fact1内容(英語2文・150字以内)");
   const fact1Kanji = get("Fact1漢字");
   const fact2Text = get("Fact2内容(英語2文・150字以内)");
@@ -162,7 +165,7 @@ async function main() {
   const ja_fact2 = get("字幕_Fact2(18字/行・4行まで)");
   const ja_fact3 = get("字幕_Fact3(18字/行・4行まで)");
   const ja_twist = get("字幕_どんでん返し(日本語18字/行・最大4行)");
-  const facts = buildFacts(fact1Text, fact1Kanji, fact2Text, fact2Kanji, fact3Text, fact3Kanji);
+  const facts = buildFacts(fact1Text, fact1Kanji, fact1Heading, fact2Text, fact2Kanji, fact2Heading, fact3Text, fact3Kanji, fact3Heading);
 
   const spotName = slugToSpotName(slug, nameJa);
   const locationCity = location.split(",")[0].trim() || nameJa;

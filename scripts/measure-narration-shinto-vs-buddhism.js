@@ -12,6 +12,7 @@ const FILES = [
   { "key": "fact-2", "file": "fact-2.mp3" },
   { "key": "fact-3", "file": "fact-3.mp3" },
   { "key": "twist",  "file": "twist.mp3" },
+  { "key": "twist-2", "file": "twist-2.mp3" },
   { "key": "outro",  "file": "outro.mp3" }
 ];
 

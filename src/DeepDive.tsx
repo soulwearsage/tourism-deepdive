@@ -85,6 +85,7 @@ type Props = {
   episodeNumber: number; // シリーズの何本目か(左上の"NO. 00X"表示に使う)
   jaSubtitles?: JaSubtitles; // 日本語字幕(試験的。省略時は全シーン字幕なし)
   showJaSubtitles?: boolean; // falseのとき日本語字幕を非表示にする(デフォルトtrue)
+  twistFacts?: FactInput[]; // どんでん返しの直後に続く追加シーン(photo-statなど)
 };
 
 const FPS = 30;
@@ -494,6 +495,14 @@ export const DeepDive: React.FC<Props> = (props) => {
     cursor += d;
   });
   const twistFrom = cursor; cursor += TWIST_DUR;
+  const twistFactFroms: number[] = [];
+  const twistFactDurs: number[] = [];
+  (props.twistFacts ?? []).forEach((fact) => {
+    const d = factDuration(fact);
+    twistFactFroms.push(cursor);
+    twistFactDurs.push(d);
+    cursor += d;
+  });
   const kagomeFrom = cursor; cursor += KAGOME_DUR;
   const outroFrom = cursor; cursor += OUTRO_DUR;
 
@@ -538,6 +547,11 @@ export const DeepDive: React.FC<Props> = (props) => {
       <Sequence from={twistFrom} durationInFrames={TWIST_DUR}>
         <TwistScene {...props} jaSubtitles={effectiveSubtitles} twistDur={TWIST_DUR} />
       </Sequence>
+      {(props.twistFacts ?? []).map((fact, i) => (
+        <Sequence key={i} from={twistFactFroms[i]} durationInFrames={twistFactDurs[i]}>
+          {renderFact(fact, i, props.twistFacts!.length, accentColor, undefined, twistFactDurs[i])}
+        </Sequence>
+      ))}
       {props.epilogueType === "kagome-teaser" && (
         <Sequence from={kagomeFrom} durationInFrames={KAGOME_DUR}>
           <KagomeTeaserScene {...props} jaSubtitles={effectiveSubtitles} />
@@ -553,21 +567,19 @@ export const DeepDive: React.FC<Props> = (props) => {
 export const getTotalDuration = (
   facts: FactInput[],
   sceneDurations?: SceneDurations,
-  options?: { introSfx?: string; catchCopy?: string; epilogueType?: string }
+  options?: { introSfx?: string; catchCopy?: string; epilogueType?: string; twistFacts?: FactInput[] }
 ) => {
-  const factTotal = facts.reduce((sum, fact) => {
-    if (fact.durationSeconds) return sum + Math.round(fact.durationSeconds * FPS);
+  const calcFact = (fact: FactInput) => {
+    if (fact.durationSeconds) return Math.round(fact.durationSeconds * FPS);
     switch (fact.type) {
-      case "photo-stat":
-        return sum + 11 * FPS;
-      case "big-number":
-        return sum + 7 * FPS;
-      case "quote":
-        return sum + 6 * FPS;
-      case "text-hero":
-        return sum + 8 * FPS;
+      case "photo-stat": return 11 * FPS;
+      case "big-number": return 7 * FPS;
+      case "quote": return 6 * FPS;
+      case "text-hero": return 8 * FPS;
     }
-  }, 0);
+  };
+  const factTotal = facts.reduce((sum, f) => sum + calcFact(f), 0);
+  const twistFactTotal = (options?.twistFacts ?? []).reduce((sum, f) => sum + calcFact(f), 0);
   // キャッチコピーシーン、およびイントロ音の分の尺の伸びを、実際のシーン側のロジックと必ず一致させる
   const catchDur = options?.catchCopy ? 5 * FPS : 0;
   const introTail = options?.introSfx && !options?.catchCopy ? 6 * FPS : 0;
@@ -579,5 +591,5 @@ export const getTotalDuration = (
   const outro = options?.epilogueType === "kagome-teaser"
     ? Math.round((sceneDurations?.epilogue ?? 4.5) * FPS)
     : Math.round((sceneDurations?.outro ?? 6) * FPS);
-  return catchDur + title + map + hook + factTotal + twist + kagome + outro;
+  return catchDur + title + map + hook + factTotal + twist + twistFactTotal + kagome + outro;
 };

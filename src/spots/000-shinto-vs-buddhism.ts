@@ -36,8 +36,8 @@ const AUDIO_DIR = "audio/000_shinto-vs-buddhism";
 export const sceneDurations = {
   title: 3.1, // 自動計算(ナレーション1.6秒 + 余白) // 自動計算(ナレーション1.6秒 + 余白)
   map: 4.2, // 自動計算(ナレーション1.2秒 + 余白) // 自動計算(ナレーション1.2秒 + 余白)
-  hook: 6.5, // 自動計算(ナレーション5秒 + 余白)
-  twist: 29.5, // 自動計算(ナレーション28秒 + 余白) // 自動計算(ナレーション27.9秒 + 余白)
+  hook: 6.7, // 自動計算(ナレーション5.2秒 + 余白)
+  twist: 11.1, // 自動計算(ナレーション9.6秒 + 余白)
   outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白) // 自動計算(ナレーション1.8秒 + 余白)
 };
 
@@ -50,12 +50,12 @@ export const facts: FactInput[] = [
     photoSrc: "photos/000_shinto-vs-buddhism/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 16.5, // 自動計算(ナレーション15秒 + 余白)
+    durationSeconds: 16.6, // 自動計算(ナレーション15.1秒 + 余白)
   },
   {
     type: "text-hero",
     kanji: "合",
-    heading: "SHINBUTSU-SHUGO",
+    heading: "Shinbutsu-shugo",
     body: "In the 6th century, Buddhism arrived from the Asian mainland. But the old gods weren't pushed aside — instead, kami and Buddhas came to be understood as different expressions of the same sacred truth, and this blended tradition became known as Shinbutsu-shugo.",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
     durationSeconds: 17.7, // 自動計算(ナレーション16.2秒 + 余白)
@@ -68,7 +68,7 @@ export const facts: FactInput[] = [
     photoSrc: "photos/000_shinto-vs-buddhism/fact-2.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
-    durationSeconds: 16.8, // 自動計算(ナレーション15.3秒 + 余白)
+    durationSeconds: 16.7, // 自動計算(ナレーション15.2秒 + 余白)
   },
 ];
 
@@ -83,8 +83,20 @@ export const defaultProps = {
   mapType: "national-watermark" as const,
   hookText: "Think Japanese shrines and temples are the same?\nThey were.\nUntil 1868.",
   facts,
-  twistHeading: "Two Faiths, Still Apart",
-  twistBody: "More than 150 years later, Japan's shrines and temples are still living out that forced divorce — standing side by side, but never again as one. Yet history never disappears completely. In a few quiet corners of Japan, the old fusion survived — hidden deep in the mountains, or carved into cliffs where Buddhas and kami still seem to share the same sacred landscape. So why did building a modern nation require tearing one faith into two?",
+  twistHeading: "Two faiths, still apart",
+  twistBody: "More than 150 years later, Japan's shrines and temples are still living out that forced divorce — standing side by side, but never again as one.",
+  twistFacts: [
+    {
+      type: "photo-stat",
+      kanji: "問",
+      heading: "A question history hasn't answered yet.",
+      body: "Yet history never disappears completely. In a few quiet corners of Japan, the old fusion survived — hidden deep in the mountains, or carved into cliffs where Buddhas and kami still seem to share the same sacred landscape. So why did building a modern nation require tearing one faith into two?",
+      photoSrc: "photos/000_shinto-vs-buddhism/hero.png",
+      photoSfx: "bgm/camera.mp3",
+      narrationSrc: `${AUDIO_DIR}/twist-2.mp3`,
+      durationSeconds: 19.7, // 自動計算(ナレーション18.2秒 + 余白)
+    },
+  ],
   narration: {
     title: `${AUDIO_DIR}/title.mp3`,
     map: `${AUDIO_DIR}/map.mp3`,

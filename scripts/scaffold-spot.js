@@ -24,15 +24,23 @@
  *   municipalityId : 市区町村コード5桁(例: 26463)
  *   twistHeading   : ツイストシーンの見出し(例: A Garage That Became a Home)
  *
- * 【Notion側の記法ルール】(この形式で書かれている前提でパースする)
- *   フック: 1文
- *   Fact内容: "Fact1(kanji=秘,photo): heading文 || body文 / Fact2(kanji=縁,big=3,unit=体): label文 / Fact3(kanji=闇,photo): heading文 || body文"
- *     - big-numberにしたいFactは (big=数値,unit=単位) を付ける。それ以外はphoto-stat扱い。
- *     - photo-statは "heading || body" の2段。bodyがない場合はheadingをbodyにも使用。
- *     - big-numberは label のみ。
- *   どんでん返し: bodyテキスト全体
- *   キャッチコピー: 1文
- *   祭神名: 縦書きで出す文字列(Fact1のverticalTextに使う)
+ * 【Notion側の列構成】
+ *   フック(英語2文・120字以内)          : フックテキスト
+ *   Fact1内容(英語2文・150字以内)        : Fact1本文
+ *   Fact1漢字                           : Fact1漢字1文字
+ *   Fact2内容(英語2文・150字以内)        : Fact2本文
+ *   Fact2漢字                           : Fact2漢字1文字
+ *   Fact3内容(英語2文・150字以内)        : Fact3本文
+ *   Fact3漢字                           : Fact3漢字1文字
+ *   どんでん返し                         : ツイストbodyテキスト全体
+ *   キャッチコピー                        : 1文
+ *   祭神名                              : 縦書きで出す文字列(Fact1のverticalTextに使う)
+ *   字幕_キャッチコピー                   : jaSubtitles.catchCopy
+ *   字幕_フック(18字/行・4行まで)         : jaSubtitles.hook
+ *   字幕_Fact1(18字/行・4行まで)         : jaSubtitles.facts[0]
+ *   字幕_Fact2(18字/行・4行まで)         : jaSubtitles.facts[1]
+ *   字幕_Fact3(18字/行・4行まで)         : jaSubtitles.facts[2]
+ *   字幕_どんでん返し(日本語18字/行・最大4行): jaSubtitles.twist
  *
  * 【spotName自動生成ルール】(スラッグ + 名前(漢字)末尾で判定)
  *   nameJa末尾が "神社" → cap(slug) + " Shrine"  例: itsukushima → "Itsukushima Shrine"
@@ -90,43 +98,12 @@ function slugToSpotName(slug, nameJa) {
   return cap(slug);
 }
 
-function parseFacts(factText) {
-  // "Fact1(kanji=秘,photo): heading || body / Fact2(kanji=縁,big=3,unit=体): label / ..."
-  const chunks = factText.split(/\s*\/\s*Fact\d+/).map((c, i) => (i === 0 ? c.replace(/^Fact\d+/, "") : c));
-  return chunks
-    .map((chunk) => chunk.trim())
-    .filter(Boolean)
-    .map((chunk) => {
-      const metaMatch = chunk.match(/^\(([^)]*)\):\s*(.*)$/s);
-      if (!metaMatch) {
-        console.warn("⚠️ Factのパースに失敗、要手動修正:", chunk.slice(0, 40));
-        return { type: "photo-stat", kanji: "?", heading: "PARSE_ERROR", body: chunk };
-      }
-      const meta = Object.fromEntries(
-        metaMatch[1].split(",").map((kv) => {
-          const [k, v] = kv.split("=");
-          return [k.trim(), v === undefined ? true : v.trim()];
-        })
-      );
-      const rest = metaMatch[2].trim();
-      if (meta.big) {
-        return {
-          type: "big-number",
-          kanji: meta.kanji || "?",
-          value: meta.big,
-          label: rest,
-        };
-      }
-      const parts = rest.split("||").map((s) => s.trim());
-      const heading = parts[0] || rest;
-      const body = parts[1] || heading; // bodyがない場合はheadingを使用
-      return {
-        type: "photo-stat",
-        kanji: meta.kanji || "?",
-        heading,
-        body,
-      };
-    });
+function buildFacts(fact1Text, fact1Kanji, fact2Text, fact2Kanji, fact3Text, fact3Kanji) {
+  const facts = [];
+  if (fact1Text) facts.push({ type: "photo-stat", kanji: fact1Kanji || "?", heading: "", body: fact1Text });
+  if (fact2Text) facts.push({ type: "photo-stat", kanji: fact2Kanji || "?", heading: "", body: fact2Text });
+  if (fact3Text) facts.push({ type: "photo-stat", kanji: fact3Kanji || "?", heading: "", body: fact3Text });
+  return facts;
 }
 
 function tsLiteral(value) {
@@ -162,7 +139,7 @@ async function main() {
   const number = get("番号", "number") || "?";
   const paddedNumber = String(number).padStart(3, "0");
   const nameJa = get("名前", "title");
-  const hook = get("フック");
+  const hook = get("フック(英語2文・120字以内)");
   const twist = get("どんでん返し");
   const catchCopy = get("キャッチコピー");
   const verticalText = get("祭神名");
@@ -173,7 +150,19 @@ async function main() {
   const prefectureId = get("prefectureId");
   const municipalityId = get("municipalityId");
   const twistHeading = get("twistHeading");
-  const facts = parseFacts(get("Fact内容"));
+  const fact1Text = get("Fact1内容(英語2文・150字以内)");
+  const fact1Kanji = get("Fact1漢字");
+  const fact2Text = get("Fact2内容(英語2文・150字以内)");
+  const fact2Kanji = get("Fact2漢字");
+  const fact3Text = get("Fact3内容(英語2文・150字以内)");
+  const fact3Kanji = get("Fact3漢字");
+  const ja_catchCopy = get("字幕_キャッチコピー");
+  const ja_hook = get("字幕_フック(18字/行・4行まで)");
+  const ja_fact1 = get("字幕_Fact1(18字/行・4行まで)");
+  const ja_fact2 = get("字幕_Fact2(18字/行・4行まで)");
+  const ja_fact3 = get("字幕_Fact3(18字/行・4行まで)");
+  const ja_twist = get("字幕_どんでん返し(日本語18字/行・最大4行)");
+  const facts = buildFacts(fact1Text, fact1Kanji, fact2Text, fact2Kanji, fact3Text, fact3Kanji);
 
   const spotName = slugToSpotName(slug, nameJa);
   const locationCity = location.split(",")[0].trim() || nameJa;
@@ -194,6 +183,9 @@ async function main() {
   if (!prefectureId) missing.push("prefectureId");
   if (!municipalityId) missing.push("municipalityId");
   if (!twistHeading) missing.push("twistHeading");
+  if (!fact1Text) missing.push("Fact1内容(英語2文・150字以内)");
+  if (!fact2Text) missing.push("Fact2内容(英語2文・150字以内)");
+  if (!fact3Text) missing.push("Fact3内容(英語2文・150字以内)");
 
   let factCounter = 0;
   const factsTs = facts
@@ -221,6 +213,18 @@ async function main() {
   }`;
     })
     .join(",\n");
+
+  const jaSubtitlesTs = (ja_catchCopy || ja_hook || ja_fact1 || ja_fact2 || ja_fact3 || ja_twist) ? `
+  jaSubtitles: {
+    catchCopy: ${tsLiteral(ja_catchCopy)},
+    hook: ${tsLiteral(ja_hook)},
+    facts: [
+      ${tsLiteral(ja_fact1)},
+      ${tsLiteral(ja_fact2)},
+      ${tsLiteral(ja_fact3)},
+    ],
+    twist: ${tsLiteral(ja_twist)},
+  },` : "";
 
   const tsContent = `import { FactInput } from "../DeepDive";
 
@@ -267,7 +271,7 @@ export const defaultProps = {
   introSfx: "bgm/light_intro.mp3",
   catchCopy: ${tsLiteral(catchCopy)},
   outroBgmSrc: "bgm/outro_bgm.mp3",
-  episodeNumber: ${number},
+  episodeNumber: ${number},${jaSubtitlesTs}
 };
 `;
 
@@ -281,7 +285,7 @@ export const defaultProps = {
     { file: "hook.mp3", text: hook },
     ...facts.map((f, i) => ({
       file: `fact-${i + 1}.mp3`,
-      text: f.type === "big-number" ? f.label : `${f.heading} ${f.body !== f.heading ? f.body : ""}`.trim(),
+      text: f.type === "big-number" ? f.label : f.body,
     })),
     { file: "twist.mp3", text: twist },
     { file: "outro.mp3", text: "Worth the visit? Absolutely." },

@@ -53,11 +53,10 @@ export const facts: FactInput[] = [
     durationSeconds: 16.5, // 自動計算(ナレーション15秒 + 余白)
   },
   {
-    type: "quote",
+    type: "text-hero",
     kanji: "合",
-    quote: "In the 6th century, Buddhism arrived from the Asian mainland. But the old gods weren't pushed aside — instead, kami and Buddhas came to be understood as different expressions of the same sacred truth, and this blended tradition became known as Shinbutsu-shugo.",
-    caption: "SHINBUTSU-SHUGO",
-    visual: "circle-split",
+    heading: "SHINBUTSU-SHUGO",
+    body: "In the 6th century, Buddhism arrived from the Asian mainland. But the old gods weren't pushed aside — instead, kami and Buddhas came to be understood as different expressions of the same sacred truth, and this blended tradition became known as Shinbutsu-shugo.",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
     durationSeconds: 17.7, // 自動計算(ナレーション16.2秒 + 余白)
   },

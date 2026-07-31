@@ -307,8 +307,22 @@ const HookScene: React.FC<Props> = ({ hookText, accentColor, kanjiMotif, narrati
             MOST VISITORS MISS THIS
           </div>
           <div style={{ width: 60, height: 1, background: "#4a453d", margin: "0 auto 28px" }} />
-          <div style={{ color: "#f5f2eb", fontSize: 48, fontWeight: 900, lineHeight: 1.3, fontFamily: specialGothicExpandedFont }}>
-            <StaggeredText text={hookText} frame={frame} startFrame={10} />
+          <div style={{ color: "#f5f2eb", fontSize: 48, fontWeight: 900, lineHeight: 1.5, fontFamily: specialGothicExpandedFont }}>
+            {(() => {
+              const lines = hookText.split("\n");
+              const staggerFrames = 8;
+              const lineStartFrames: number[] = [];
+              let wordOffset = 0;
+              for (const line of lines) {
+                lineStartFrames.push(10 + wordOffset * staggerFrames);
+                wordOffset += line.split(" ").length;
+              }
+              return lines.map((line, i) => (
+                <div key={i}>
+                  <StaggeredText text={line} frame={frame} startFrame={lineStartFrames[i]} staggerFrames={staggerFrames} />
+                </div>
+              ));
+            })()}
           </div>
         </div>
       </div>

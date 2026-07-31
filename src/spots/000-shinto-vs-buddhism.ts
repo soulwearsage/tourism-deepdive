@@ -36,7 +36,7 @@ const AUDIO_DIR = "audio/000_shinto-vs-buddhism";
 export const sceneDurations = {
   title: 3.1, // 自動計算(ナレーション1.6秒 + 余白) // 自動計算(ナレーション1.6秒 + 余白)
   map: 4.2, // 自動計算(ナレーション1.2秒 + 余白) // 自動計算(ナレーション1.2秒 + 余白)
-  hook: 16.8, // 自動計算(ナレーション15.3秒 + 余白) // 自動計算(ナレーション15.1秒 + 余白)
+  hook: 6.5, // 自動計算(ナレーション5秒 + 余白)
   twist: 29.5, // 自動計算(ナレーション28秒 + 余白) // 自動計算(ナレーション27.9秒 + 余白)
   outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白) // 自動計算(ナレーション1.8秒 + 余白)
 };
@@ -46,30 +46,30 @@ export const facts: FactInput[] = [
     type: "photo-stat",
     kanji: "岩",
     heading: "When Nature Itself Was God",
-    body: "Long before Buddhism arrived, ancient Japanese worshipped nature itself — giant rocks, mountains, rivers, and ancient trees were believed to be the dwelling places of kami. This worldview became known as Ko-Shinto, the ancient way of the gods. Rather than building grand sanctuaries everywhere, many sacred places were simply left untouched, because nature itself was the shrine.",
+    body: "Long before Buddhism arrived, ancient Japanese worshipped nature itself — giant rocks, mountains, rivers, and ancient trees were believed to be the dwelling places of kami. This worldview became known as Ko-Shinto, the ancient way of the gods.",
     photoSrc: "photos/000_shinto-vs-buddhism/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
-    durationSeconds: 25, // 自動計算(ナレーション23.5秒 + 余白)
+    durationSeconds: 16.5, // 自動計算(ナレーション15秒 + 余白)
   },
   {
     type: "quote",
     kanji: "合",
-    quote: "In the 6th century, Buddhism arrived from the Asian mainland. But the old gods weren't pushed aside. Instead, kami and Buddhas gradually came to be understood as different expressions of the same sacred truth. Shrines and temples shared the same grounds, priests performed rituals side by side, and this blended tradition became known as Shinbutsu-shugo.",
+    quote: "In the 6th century, Buddhism arrived from the Asian mainland. But the old gods weren't pushed aside — instead, kami and Buddhas came to be understood as different expressions of the same sacred truth, and this blended tradition became known as Shinbutsu-shugo.",
     caption: "SHINBUTSU-SHUGO",
     visual: "circle-split",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
-    durationSeconds: 23.7, // 自動計算(ナレーション22.2秒 + 余白)
+    durationSeconds: 17.7, // 自動計算(ナレーション16.2秒 + 余白)
   },
   {
     type: "photo-stat",
     kanji: "離",
     heading: "A Line Drawn by Law",
-    body: "That fusion endured for more than a thousand years. Then, in 1868, the new Meiji government issued a decree that changed everything: Shinbutsu Bunri, the official separation of Shinto and Buddhism. Temples and shrines were ordered to divide, sacred images were removed, and centuries of shared tradition were dismantled almost overnight.",
+    body: "That fusion endured for more than a thousand years. Then in 1868, the Meiji government issued a decree — Shinbutsu Bunri — ordering the separation of Shinto and Buddhism. Centuries of shared tradition were dismantled almost overnight.",
     photoSrc: "photos/000_shinto-vs-buddhism/fact-2.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
-    durationSeconds: 23.2, // 自動計算(ナレーション21.7秒 + 余白)
+    durationSeconds: 16.8, // 自動計算(ナレーション15.3秒 + 余白)
   },
 ];
 
@@ -82,7 +82,7 @@ export const defaultProps = {
   kanjiMotif: "道",
   mapRegionLabel: "JAPAN",
   mapType: "national-watermark" as const,
-  hookText: "Today, Shinto shrines and Buddhist temples in Japan seem like two completely separate worlds. But few visitors ever ask why that's the case. The answer lies in a forgotten chapter of history that reshaped an entire nation's spiritual identity.",
+  hookText: "Think Japanese shrines and temples are the same?\nThey were.\nUntil 1868.",
   facts,
   twistHeading: "Two Faiths, Still Apart",
   twistBody: "More than 150 years later, Japan's shrines and temples are still living out that forced divorce — standing side by side, but never again as one. Yet history never disappears completely. In a few quiet corners of Japan, the old fusion survived — hidden deep in the mountains, or carved into cliffs where Buddhas and kami still seem to share the same sacred landscape. So why did building a modern nation require tearing one faith into two?",
@@ -97,16 +97,17 @@ export const defaultProps = {
   bgmSrc: "bgm/bgm002.wav",
   bgmVolume: 0.12,
   introSfx: "bgm/light_intro.mp3",
-  catchCopy: "One Faith, Torn in Two.",
+  catchCopy: "The Forgotten Faith of Japan",
   outroBgmSrc: "bgm/outro_bgm.mp3",
   episodeNumber: 0,
+  showJaSubtitles: false,
   jaSubtitles: {
-    catchCopy: "一つの信仰が、二つに引き裂かれた。",
-    hook: "今、日本の神社と寺は、まるで別々の世界のように見える。でも、なぜそうなったのか疑問に思う人はほとんどいない。その答えは、日本という国の信仰そのものを書き換えた、忘れられた歴史の中に眠っている。",
+    catchCopy: "忘れられた日本の信仰",
+    hook: "日本の神社と寺は同じだと思ってるよね？\nその通りだった。\n1868年までは。",
     facts: [
-      "仏教が伝わるずっと前、古代の日本人は自然そのものを神として崇めていた。巨岩や山、川、そして老木には、神が宿ると信じられていたのである。その世界観は「古神道」と呼ばれた。壮麗な社殿を建てるよりも、手つかずの自然そのものが、神を迎える聖域だった。",
-      "6世紀、大陸から仏教が伝わった。だが古い神々は排除されなかった。それどころか、神と仏は同じ真理を異なる姿で現した存在だと考えられるようになっていく。神社と寺は同じ境内に建ち、神職と僧侶が並んで祈りを捧げる——そうして「神仏習合」という、一つの信仰の形が育まれていった。",
-      "その融合は千年以上にわたり受け継がれてきた。だが1868年、明治政府はすべてを変える法令を出す。「神仏分離」である。寺と神社は分けられ、仏像や神像は移され、何世紀にもわたって続いた信仰の姿は、わずかな期間で解体されていった。",
+      "仏教が伝わるずっと前、古代の日本人は自然そのものを神として崇めていた。巨岩や山、川、そして老木には、神が宿ると信じられていたのである。その世界観は「古神道」と呼ばれた。",
+      "6世紀、大陸から仏教が伝わった。だが古い神々は排除されなかった。神と仏は同じ真理を異なる姿で現した存在とされ、「神仏習合」という一つの信仰の形が育まれた。",
+      "その融合は千年以上にわたり続いた。だが1868年、明治政府は「神仏分離」を命じる。何世紀もの信仰の姿は、わずかな期間で解体されていった。",
     ],
     twist: "それから150年以上が過ぎた今も、日本の神社と寺は、その強制的な離別を生き続けている。隣り合って立ちながら、二度と一つには戻らないまま。しかし、歴史は完全には消え去らない。この国の静かな山奥には、神仏が共に息づいていた時代の姿が、崖に刻まれた仏や古い聖地として今も残されている。では、近代国家を築くために、なぜ一つだった信仰を引き裂く必要があったのだろうか。",
   },

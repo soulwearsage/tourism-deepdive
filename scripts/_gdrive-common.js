@@ -5,17 +5,15 @@
  *   ~/.tourism-deepdive/gdrive-credentials.json  ← GCPコンソールからダウンロードしたOAuth2認証情報
  *   ~/.tourism-deepdive/gdrive-token.json         ← 初回認証後に自動生成されるトークン(自動更新)
  *
- * GCPでの準備手順:
- *   1. Google Cloud Console > APIとサービス > ライブラリ > Google Drive API を有効化
- *   2. 認証情報 > OAuth 2.0クライアントID を作成(アプリの種類: デスクトップアプリ)
- *   3. JSONをダウンロードして ~/.tourism-deepdive/gdrive-credentials.json に配置
- *   4. 初回実行時にブラウザで認証 → トークンが自動保存される
+ * 認証方式: ローカルHTTPサーバー方式(Googleのループバックフロー推奨)
+ *   ブラウザで認証 → localhost にリダイレクト → サーバーが自動でコードをキャプチャ
+ *   コードの手動コピーは不要。
  */
 
 const { google } = require("googleapis");
 const fs = require("fs");
 const path = require("path");
-const readline = require("readline");
+const http = require("http");
 const os = require("os");
 
 const CONFIG_DIR = path.join(os.homedir(), ".tourism-deepdive");
@@ -35,31 +33,55 @@ async function getAuthClient() {
   }
 
   const creds = JSON.parse(fs.readFileSync(CREDENTIALS_PATH, "utf8"));
-  const { client_id, client_secret, redirect_uris } = creds.installed || creds.web;
-  const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
+  const { client_id, client_secret } = creds.installed || creds.web;
 
   // 保存済みトークンがあれば使用(期限切れは自動リフレッシュ)
   if (fs.existsSync(TOKEN_PATH)) {
     const savedToken = JSON.parse(fs.readFileSync(TOKEN_PATH, "utf8"));
+    const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, "");
     oAuth2Client.setCredentials(savedToken);
     oAuth2Client.on("tokens", (newTokens) => {
-      const merged = { ...savedToken, ...newTokens };
-      fs.writeFileSync(TOKEN_PATH, JSON.stringify(merged));
+      fs.writeFileSync(TOKEN_PATH, JSON.stringify({ ...savedToken, ...newTokens }));
     });
     return oAuth2Client;
   }
 
-  // 初回認証: ブラウザで開いてコードをペースト
-  const authUrl = oAuth2Client.generateAuthUrl({ access_type: "offline", scope: SCOPES });
-  console.log("\nGoogle Driveへのアクセスを許可するため、以下のURLをブラウザで開いてください:");
-  console.log(authUrl);
+  // 初回認証: ローカルHTTPサーバーでリダイレクトを自動キャプチャ
+  // ポート 0 → OS が空きポートを割り当て。registered redirect_uri が
+  // "http://localhost" であれば Google は任意ポートを許可する。
+  const { code, oAuth2Client } = await new Promise((resolve, reject) => {
+    const server = http.createServer();
 
-  const code = await new Promise((resolve) => {
-    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-    rl.question("\n表示された認証コードを貼り付けてください: ", (answer) => {
-      rl.close();
-      resolve(answer.trim());
+    server.listen(0, "127.0.0.1", () => {
+      const { port } = server.address();
+      const redirectUri = `http://localhost:${port}`;
+      const client = new google.auth.OAuth2(client_id, client_secret, redirectUri);
+      const authUrl = client.generateAuthUrl({ access_type: "offline", scope: SCOPES });
+
+      console.log("\nGoogle Driveへのアクセスを許可するため、以下のURLをブラウザで開いてください:\n");
+      console.log(authUrl);
+      console.log("\nブラウザで許可するとこのターミナルが自動で続行します...\n");
+
+      server.on("request", (req, res) => {
+        const reqUrl = new URL(req.url, redirectUri);
+        const code = reqUrl.searchParams.get("code");
+        const error = reqUrl.searchParams.get("error");
+
+        if (error) {
+          res.writeHead(400, { "Content-Type": "text/html; charset=utf-8" });
+          res.end(`<h2>認証エラー: ${error}</h2>`);
+          server.close(() => reject(new Error(`OAuth error: ${error}`)));
+          return;
+        }
+        if (code) {
+          res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+          res.end("<h2>認証完了！このタブを閉じてターミナルに戻ってください。</h2>");
+          server.close(() => resolve({ code, oAuth2Client: client }));
+        }
+      });
     });
+
+    server.on("error", reject);
   });
 
   const { tokens } = await oAuth2Client.getToken(code);

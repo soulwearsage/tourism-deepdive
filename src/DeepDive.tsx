@@ -84,6 +84,7 @@ type Props = {
   epilogueType?: "kagome-teaser"; // スポット固有のエピローグシーン種別
   episodeNumber: number; // シリーズの何本目か(左上の"NO. 00X"表示に使う)
   jaSubtitles?: JaSubtitles; // 日本語字幕(試験的。省略時は全シーン字幕なし)
+  showJaSubtitles?: boolean; // falseのとき日本語字幕を非表示にする(デフォルトtrue)
 };
 
 const FPS = 30;
@@ -431,6 +432,7 @@ const renderFact = (fact: FactInput, index: number, total: number, accentColor: 
 
 export const DeepDive: React.FC<Props> = (props) => {
   const { facts, accentColor, spotName, mapRegionLabel, prefectureId, municipalityId, mapType, sceneDurations, bgmSrc, bgmVolume = 0.12, outroBgmSrc } = props;
+  const effectiveSubtitles = props.showJaSubtitles !== false ? props.jaSubtitles : undefined;
 
   // ナレーションの実測秒数(sceneDurations)があればそれを優先し、無ければ既定値を使う
   // イントロ音がある場合、その音が鳴りきるまでの余裕を持たせてタイトルの尺を伸ばす
@@ -501,34 +503,34 @@ export const DeepDive: React.FC<Props> = (props) => {
         </Sequence>
       )}
       <Sequence from={hookFrom} durationInFrames={HOOK_DUR}>
-        <HookScene {...props} />
+        <HookScene {...props} jaSubtitles={effectiveSubtitles} />
       </Sequence>
       {props.catchCopy && (
         <Sequence from={catchFrom} durationInFrames={CATCH_DUR}>
-          <CatchCopyScene {...props} />
+          <CatchCopyScene {...props} jaSubtitles={effectiveSubtitles} />
         </Sequence>
       )}
       <Sequence from={titleFrom} durationInFrames={TITLE_DUR}>
-        <TitleScene {...props} />
+        <TitleScene {...props} jaSubtitles={effectiveSubtitles} />
       </Sequence>
       <Sequence from={mapFrom} durationInFrames={MAP_DUR}>
         <MapScene mapType={mapType} prefectureId={prefectureId} municipalityId={municipalityId} mapPinIndex={props.mapPinIndex} regionLabel={mapRegionLabel} spotLabel={spotName} accentColor={accentColor} narrationSrc={props.narration?.map} episodeNumber={props.episodeNumber} />
       </Sequence>
       {facts.map((fact, i) => (
         <Sequence key={i} from={factFroms[i]} durationInFrames={factDurs[i]}>
-          {renderFact(fact, i, facts.length, accentColor, props.jaSubtitles?.facts?.[i], factDurs[i])}
+          {renderFact(fact, i, facts.length, accentColor, effectiveSubtitles?.facts?.[i], factDurs[i])}
         </Sequence>
       ))}
       <Sequence from={twistFrom} durationInFrames={TWIST_DUR}>
-        <TwistScene {...props} twistDur={TWIST_DUR} />
+        <TwistScene {...props} jaSubtitles={effectiveSubtitles} twistDur={TWIST_DUR} />
       </Sequence>
       {props.epilogueType === "kagome-teaser" && (
         <Sequence from={kagomeFrom} durationInFrames={KAGOME_DUR}>
-          <KagomeTeaserScene {...props} />
+          <KagomeTeaserScene {...props} jaSubtitles={effectiveSubtitles} />
         </Sequence>
       )}
       <Sequence from={outroFrom} durationInFrames={OUTRO_DUR}>
-        <OutroScene {...props} />
+        <OutroScene {...props} jaSubtitles={effectiveSubtitles} />
       </Sequence>
     </AbsoluteFill>
   );

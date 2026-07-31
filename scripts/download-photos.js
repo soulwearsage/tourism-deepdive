@@ -15,7 +15,11 @@
  *   node scripts/download-photos.js <スラッグ>  例: node scripts/download-photos.js takaya
  *
  * オプション:
- *   --force  既存ファイルも上書き再ダウンロードする
+ *   --spot <slug>      スラッグを名前付き引数で指定(位置引数でも可)
+ *   --category <name>  Notionのカテゴリ列を使わずカテゴリを直接指定(Place/Culture/History/Myth)
+ *   --force            既存ファイルも上書き再ダウンロードする
+ *   --dry-run          Driveを走査して取得予定ファイルを表示するだけ(ダウンロードしない)
+ *   --auth-only        認証だけ行ってトークンを保存する(ダウンロードはしない)
  */
 
 const fs = require("fs");
@@ -41,11 +45,30 @@ function findSpot(shortId) {
 async function main() {
   const args = process.argv.slice(2);
   const force = args.includes("--force");
-  const slug = args.find((a) => !a.startsWith("--"));
+  const authOnly = args.includes("--auth-only");
+  const dryRun = args.includes("--dry-run");
+  // --spot <slug> または位置引数
+  const spotIdx = args.indexOf("--spot");
+  const slug = spotIdx !== -1 ? args[spotIdx + 1] : args.find((a) => !a.startsWith("--"));
+  const categoryIdx = args.indexOf("--category");
+  const categoryOverride = categoryIdx !== -1 ? args[categoryIdx + 1] : null;
+
+  // 認証のみモード
+  if (authOnly) {
+    console.log("Google Drive認証を実行します...");
+    const auth = await getAuthClient();
+    const drive = google.drive({ version: "v3", auth });
+    // about.get で接続確認
+    const about = await drive.about.get({ fields: "user" });
+    console.log(`✓ 認証成功: ${about.data.user.displayName} (${about.data.user.emailAddress})`);
+    console.log("  以降は ~/.tourism-deepdive/gdrive-token.json が自動使用されます。");
+    return;
+  }
 
   if (!slug) {
-    console.error("使い方: node scripts/download-photos.js <スラッグ> [--force]");
-    console.error("例: node scripts/download-photos.js takaya");
+    console.error("使い方: node scripts/download-photos.js <スラッグ> [--force] [--dry-run]");
+    console.error("       node scripts/download-photos.js --spot <スラッグ> [--force] [--dry-run]");
+    console.error("       node scripts/download-photos.js --auth-only");
     process.exit(1);
   }
 
@@ -59,48 +82,61 @@ async function main() {
   const photoDir = path.join(ROOT, "public", "photos", folderName);
   fs.mkdirSync(photoDir, { recursive: true });
 
-  // --- Notionからカテゴリを取得 ---
-  if (!process.env.NOTION_API_KEY) {
-    console.error("✗ NOTION_API_KEY が設定されていません。");
-    process.exit(1);
+  // --- カテゴリを取得(--category 指定 or Notionから) ---
+  let category;
+  if (categoryOverride) {
+    category = categoryOverride;
+    console.log(`カテゴリ: ${category} (--category で指定)`);
+  } else {
+    if (!process.env.NOTION_API_KEY) {
+      console.error("✗ NOTION_API_KEY が設定されていません。");
+      process.exit(1);
+    }
+    const notion = new NotionClient({ auth: process.env.NOTION_API_KEY });
+    process.stdout.write(`Notionからカテゴリを取得中(${slug})... `);
+    const notionRes = await notion.dataSources.query({
+      data_source_id: NOTION_DB_ID,
+      filter: { property: "スラッグ", rich_text: { equals: slug } },
+    });
+    const page = notionRes.results[0];
+    if (!page) {
+      console.error(`\n✗ Notionに slug="${slug}" のページが見つかりません。`);
+      process.exit(1);
+    }
+    const categoryCode = page.properties["カテゴリ"]?.select?.name || "";
+    category = CATEGORY_MAP[categoryCode];
+    if (!category) {
+      console.error(`\n✗ カテゴリ値 "${categoryCode}" を変換できません。Notionの「カテゴリ」列に PL/CU/HI/MY を設定するか、--category で直接指定してください。`);
+      process.exit(1);
+    }
+    console.log(`${categoryCode} → ${category}`);
   }
-  const notion = new NotionClient({ auth: process.env.NOTION_API_KEY });
-  process.stdout.write(`Notionからカテゴリを取得中(${slug})... `);
-  const notionRes = await notion.dataSources.query({
-    data_source_id: NOTION_DB_ID,
-    filter: { property: "スラッグ", rich_text: { equals: slug } },
-  });
-  const page = notionRes.results[0];
-  if (!page) {
-    console.error(`\n✗ Notionに slug="${slug}" のページが見つかりません。`);
-    process.exit(1);
-  }
-  const categoryCode = page.properties["カテゴリ"]?.select?.name || "";
-  const category = CATEGORY_MAP[categoryCode];
-  if (!category) {
-    console.error(`\n✗ カテゴリ値 "${categoryCode}" を変換できません。Notionの「カテゴリ」列に PL/CU/HI/MY を設定してください。`);
-    process.exit(1);
-  }
-  console.log(`${categoryCode} → ${category}`);
 
   // --- Google Drive認証 ---
   const auth = await getAuthClient();
   const drive = google.drive({ version: "v3", auth });
 
-  // --- スポットフォルダを探す ---
-  const drivePath = ["Image_picker", "image", category, folderName];
-  process.stdout.write(`Google Driveを走査中: ${drivePath.join("/")} ... `);
-  const spotFolderId = await findFolderByPath(drive, drivePath);
-  if (!spotFolderId) {
-    console.error(`\n✗ フォルダが見つかりません: ${drivePath.join("/")}`);
+  // --- スポットフォルダを探す(スラッグを含む名前で部分一致) ---
+  process.stdout.write(`Google Driveを走査中: Image_picker/image/${category}/*${slug}* ... `);
+  const categoryFolderId = await findFolderByPath(drive, ["Image_picker", "image", category]);
+  if (!categoryFolderId) {
+    console.error(`\n✗ カテゴリフォルダが見つかりません: Image_picker/image/${category}`);
     process.exit(1);
   }
-  console.log("✓");
+  const categorySubfolders = await listSubfolders(drive, categoryFolderId);
+  const spotFolder = categorySubfolders.find((f) => f.name.includes(slug));
+  if (!spotFolder) {
+    const names = categorySubfolders.map((f) => f.name).join(", ") || "(空)";
+    console.error(`\n✗ "${slug}" を含むフォルダが見つかりません。\n  存在するフォルダ: ${names}`);
+    process.exit(1);
+  }
+  const spotFolderId = spotFolder.id;
+  console.log(`✓ (${spotFolder.name})`);
 
   // --- カットフォルダ一覧(名前昇順) ---
   const cutFolders = await listSubfolders(drive, spotFolderId);
   if (cutFolders.length === 0) {
-    console.error(`✗ ${folderName}/ 配下にカットフォルダが見つかりません。`);
+    console.error(`✗ ${spotFolder.name}/ 配下にカットフォルダが見つかりません。`);
     process.exit(1);
   }
   console.log(`カットフォルダ ${cutFolders.length}件: ${cutFolders.map((f) => f.name).join(" / ")}`);
@@ -122,6 +158,18 @@ async function main() {
   }
 
   // --- ダウンロード (hero → fact-1 → fact-2 ...) ---
+  if (dryRun) {
+    console.log("\n[dry-run] 以下のファイルをダウンロードする予定です:");
+    for (let i = 0; i < slots.length; i++) {
+      const slotName = SLOT_NAMES[i] || `(スロット上限超過)`;
+      const destPath = path.join(photoDir, slotName);
+      const exists = fs.existsSync(destPath);
+      console.log(`  ${slots[i].cutName}/${slots[i].file.name} → ${slotName}${exists ? " (既存のためスキップ)" : ""}`);
+    }
+    console.log("\n[dry-run] 実際のダウンロードは行いませんでした。");
+    return;
+  }
+
   let downloaded = 0;
   let skipped = 0;
   for (let i = 0; i < slots.length; i++) {

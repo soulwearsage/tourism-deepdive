@@ -91,7 +91,7 @@ export const defaultProps = {
       kanji: "問",
       heading: "A question history hasn't answered yet.",
       body: "Yet history never disappears completely. In a few quiet corners of Japan, the old fusion survived — hidden deep in the mountains, or carved into cliffs where Buddhas and kami still seem to share the same sacred landscape. So why did building a modern nation require tearing one faith into two?",
-      photoSrc: "photos/000_shinto-vs-buddhism/hero.png",
+      photoSrc: "photos/000_shinto-vs-buddhism/fact-2.png",
       photoSfx: "bgm/camera.mp3",
       narrationSrc: `${AUDIO_DIR}/twist-2.mp3`,
       durationSeconds: 19.7, // 自動計算(ナレーション18.2秒 + 余白)

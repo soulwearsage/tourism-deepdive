@@ -149,7 +149,9 @@ async function main() {
   const mapRegionLabel = get("mapRegionLabel");
   const prefectureId = get("prefectureId");
   const municipalityId = get("municipalityId");
-  const twistHeading = get("どんでん返し見出し(英語・センテンスケース)") || get("twistHeading");
+  const twistHeading = get("twistHeading");
+  const twist2Heading = get("どんでん返し見出し(英語・センテンスケース)");
+  const twistKanji = get("どんでん漢字");
   const fact1Heading = get("Fact1見出し(英語・センテンスケース)");
   const fact2Heading = get("Fact2見出し(英語・センテンスケース)");
   const fact3Heading = get("Fact3見出し(英語・センテンスケース)");
@@ -229,6 +231,20 @@ async function main() {
     twist: ${tsLiteral(ja_twist)},
   },` : "";
 
+  const twistFactsTs = twist2Heading ? `
+  twistFacts: [
+    {
+      type: "photo-stat",
+      kanji: ${tsLiteral(twistKanji || "?")},
+      heading: ${tsLiteral(twist2Heading)},
+      body: ${tsLiteral(twist)}, // ※手動でtwistBodyと分割すること
+      photoSrc: "${PHOTO_DIR}/hero.png",
+      photoSfx: "bgm/camera.mp3",
+      narrationSrc: \`\${AUDIO_DIR}/twist-2.mp3\`,
+      durationSeconds: 11.0, // 仮値。measure-narration実行後に差し替え
+    },
+  ],` : "";
+
   const tsContent = `import { FactInput } from "../DeepDive";
 
 const HERO_PHOTO = "${PHOTO_DIR}/hero.png";
@@ -274,7 +290,7 @@ export const defaultProps = {
   introSfx: "bgm/light_intro.mp3",
   catchCopy: ${tsLiteral(catchCopy)},
   outroBgmSrc: "bgm/outro_bgm.mp3",
-  episodeNumber: ${number},${jaSubtitlesTs}
+  episodeNumber: ${number},${jaSubtitlesTs}${twistFactsTs}
 };
 `;
 
@@ -291,6 +307,7 @@ export const defaultProps = {
       text: f.type === "big-number" ? f.label : f.body,
     })),
     { file: "twist.mp3", text: twist },
+    ...(twist2Heading ? [{ file: "twist-2.mp3", text: twist }] : []),
     { file: "outro.mp3", text: "Worth the visit? Absolutely." },
   ];
 

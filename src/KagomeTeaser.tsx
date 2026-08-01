@@ -1,6 +1,6 @@
 import React from "react";
 import { useCurrentFrame, interpolate } from "remotion";
-import { KagomeVisual } from "./QuoteScene";
+import { KagomeVisual } from "./09-scene-fact23-svg";
 
 // TwistScene の直後に挿入される籠目紋専用シーン(DeepDive.tsx の KagomeTeaserScene から呼ばれる)。
 // "Follow for hidden Japan." は含まない — その後の標準 OutroScene で表示する。

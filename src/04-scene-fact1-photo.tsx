@@ -20,6 +20,8 @@ export type FactProps = {
   photoSfx?: string; // 写真が出る瞬間に鳴らすシャッター音(public/からの相対パス)
   narrationSrc?: string;
   accentColor?: string;
+  cornerLabel?: string;  // 省略時 → "FACT 01" 形式
+  footerRight?: string;  // 省略時 → "01 / 02" 形式
 };
 
 const AC_DEFAULT = "#c9a86a";
@@ -47,6 +49,8 @@ export const FactScene: React.FC<FactProps> = ({
   photoSfx,
   narrationSrc,
   accentColor = AC_DEFAULT,
+  cornerLabel,
+  footerRight,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -80,9 +84,9 @@ export const FactScene: React.FC<FactProps> = ({
     <SceneFrame
       accentColor={accentColor}
       narrationSrc={narrationSrc}
-      cornerLabel={`FACT ${String(factNumber).padStart(2, "0")}`}
+      cornerLabel={cornerLabel ?? `FACT ${String(factNumber).padStart(2, "0")}`}
       footerLeft="Japan Deep Dive"
-      footerRight={`${String(factNumber).padStart(2, "0")} / ${String(totalFacts).padStart(2, "0")}`}
+      footerRight={footerRight ?? `${String(factNumber).padStart(2, "0")} / ${String(totalFacts).padStart(2, "0")}`}
     >
       {photoSfx && <Audio src={staticFile(photoSfx)} volume={0.15} />}
       {/* 写真ブロック(3分割パネル+ケンバーンズのゆっくりズーム) */}

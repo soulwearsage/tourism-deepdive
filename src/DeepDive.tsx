@@ -8,12 +8,14 @@ import { specialGothicExpandedFont, gasoekOneFont } from "./fonts";
 import { FactScene, FactProps } from "./04-scene-fact1-photo";
 import { BigNumberScene, BigNumberProps } from "./05-scene-fact-number";
 import { QuoteScene, QuoteProps } from "./09-scene-fact23-svg";
+import { Fact23PhotoScene, Fact23PhotoProps } from "./06-scene-fact23-photo";
 import { MapScene } from "./MapScene";
 import { MapWorldToJapanScene } from "./03a-scene-map-world-to-japan";
 import { KagomeOutroContent } from "./KagomeTeaser";
 import { JaSubtitleBar } from "./JaSubtitle";
 
 type PhotoStatFact = { type: "photo-stat"; narrationSrc?: string; durationSeconds?: number } & Omit<FactProps, "factNumber" | "totalFacts" | "accentColor" | "narrationSrc">;
+type PhotoStatRightFact = { type: "photo-stat-right"; narrationSrc?: string; durationSeconds?: number } & Omit<Fact23PhotoProps, "factNumber" | "totalFacts" | "accentColor" | "narrationSrc">;
 type BigNumberFact = { type: "big-number"; narrationSrc?: string; durationSeconds?: number } & Omit<BigNumberProps, "factNumber" | "totalFacts" | "accentColor" | "narrationSrc">;
 type QuoteFact = { type: "quote"; narrationSrc?: string; durationSeconds?: number } & Omit<QuoteProps, "factNumber" | "totalFacts" | "accentColor" | "narrationSrc">;
 type TextHeroFact = {
@@ -27,7 +29,7 @@ type TextHeroFact = {
   durationSeconds?: number;
 };
 
-export type FactInput = PhotoStatFact | BigNumberFact | QuoteFact | TextHeroFact;
+export type FactInput = PhotoStatFact | PhotoStatRightFact | BigNumberFact | QuoteFact | TextHeroFact;
 
 type NarrationMap = {
   title?: string;
@@ -394,6 +396,10 @@ const renderFact = (fact: FactInput, index: number, total: number, accentColor: 
         const { type, ...rest } = fact;
         return <FactScene {...rest} factNumber={factNumber} totalFacts={total} accentColor={accentColor} />;
       }
+      case "photo-stat-right": {
+        const { type, ...rest } = fact;
+        return <Fact23PhotoScene {...rest} factNumber={factNumber} totalFacts={total} accentColor={accentColor} />;
+      }
       case "big-number": {
         const { type, ...rest } = fact;
         return <BigNumberScene {...rest} factNumber={factNumber} totalFacts={total} accentColor={accentColor} />;
@@ -435,9 +441,9 @@ const renderFact = (fact: FactInput, index: number, total: number, accentColor: 
   })();
 
   if (!jaSubtitle || fact.type === "text-hero") return node;
-  // photo-stat の見出しは frame 15 から表示されるので字幕も合わせる。
+  // photo-stat/photo-stat-right の見出しは frame 15 から表示されるので字幕も合わせる。
   // big-number / quote はコンテンツが frame 0 から始まるのでデフォルト(0)のまま。
-  const subtitleStartFrame = fact.type === "photo-stat" ? 15 : 0;
+  const subtitleStartFrame = (fact.type === "photo-stat" || fact.type === "photo-stat-right") ? 15 : 0;
   return (
     <AbsoluteFill>
       {node}
@@ -471,6 +477,7 @@ export const DeepDive: React.FC<Props> = (props) => {
     if (fact.durationSeconds) return Math.round(fact.durationSeconds * FPS);
     switch (fact.type) {
       case "photo-stat":
+      case "photo-stat-right":
         return 11 * FPS;
       case "big-number":
         return 7 * FPS;
@@ -577,7 +584,9 @@ export const getTotalDuration = (
   const calcFact = (fact: FactInput) => {
     if (fact.durationSeconds) return Math.round(fact.durationSeconds * FPS);
     switch (fact.type) {
-      case "photo-stat": return 11 * FPS;
+      case "photo-stat":
+      case "photo-stat-right":
+        return 11 * FPS;
       case "big-number": return 7 * FPS;
       case "quote": return 6 * FPS;
       case "text-hero": return 8 * FPS;

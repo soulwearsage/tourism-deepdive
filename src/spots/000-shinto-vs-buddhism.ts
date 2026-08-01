@@ -34,11 +34,11 @@ const HERO_PHOTO = "photos/000_shinto-vs-buddhism/hero.png";
 const AUDIO_DIR = "audio/000_shinto-vs-buddhism";
 
 export const sceneDurations = {
-  title: 3.1, // 自動計算(ナレーション1.6秒 + 余白) // 自動計算(ナレーション1.6秒 + 余白)
-  map: 6.0, // world-to-japan アニメーション(165f≒5.5s) + 余白
-  hook: 6.7, // 自動計算(ナレーション5.2秒 + 余白)
+  title: 3.1, // 自動計算(ナレーション1.6秒 + 余白)
+  map: 6.0,   // world-to-japan アニメーション(165f≒5.5s) + 余白
+  hook: 6.7,  // 自動計算(ナレーション5.2秒 + 余白)
   twist: 11.1, // 自動計算(ナレーション9.6秒 + 余白)
-  outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白) // 自動計算(ナレーション1.8秒 + 余白)
+  outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白)
 };
 
 export const facts: FactInput[] = [
@@ -53,22 +53,21 @@ export const facts: FactInput[] = [
     durationSeconds: 16.6, // 自動計算(ナレーション15.1秒 + 余白)
   },
   {
-    type: "text-hero",
+    type: "big-number",
     kanji: "合",
-    heading: "Shinbutsu-shugo",
-    body: "In the 6th century, Buddhism arrived from the Asian mainland. But the old gods weren't pushed aside — instead, kami and Buddhas came to be understood as different expressions of the same sacred truth, and this blended tradition became known as Shinbutsu-shugo.",
+    value: "6th",
+    label: "century — Buddhism arrived from the mainland, and the two faiths slowly became one",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
     durationSeconds: 17.7, // 自動計算(ナレーション16.2秒 + 余白)
   },
   {
-    type: "photo-stat",
+    type: "quote",
     kanji: "離",
-    heading: "A line drawn by law",
-    body: "That fusion endured for more than a thousand years. Then in 1868, the Meiji government issued a decree — Shinbutsu Bunri — ordering the separation of Shinto and Buddhism. Centuries of shared tradition were dismantled almost overnight.",
-    photoSrc: "photos/000_shinto-vs-buddhism/fact-2.png",
-    photoSfx: "bgm/camera.mp3",
+    quote: "Merged for a thousand years.\nSeparated by a single decree.",
+    caption: "SHINBUTSU BUNRI — 1868",
+    visual: "circle-split" as const,
     narrationSrc: `${AUDIO_DIR}/fact-3.mp3`,
-    durationSeconds: 16.7, // 自動計算(ナレーション15.2秒 + 余白)
+    durationSeconds: 16.7,
   },
 ];
 

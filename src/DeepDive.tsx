@@ -9,6 +9,7 @@ import { FactScene, FactProps } from "./04-scene-fact1-photo";
 import { BigNumberScene, BigNumberProps } from "./05-scene-fact-number";
 import { QuoteScene, QuoteProps } from "./09-scene-fact23-svg";
 import { MapScene } from "./MapScene";
+import { MapWorldToJapanScene } from "./03a-scene-map-world-to-japan";
 import { KagomeOutroContent } from "./KagomeTeaser";
 import { JaSubtitleBar } from "./JaSubtitle";
 
@@ -64,7 +65,7 @@ type Props = {
   heroPhotoSrc: string;
   kanjiMotif: string;
   mapRegionLabel: string;
-  mapType?: "pinpoint" | "national-watermark";
+  mapType?: "pinpoint" | "national-watermark" | "world-to-japan";
   prefectureId?: string;
   municipalityId?: string; // 5桁の市区町村コード(地図のピンポイントズーム先)
   mapPinIndex?: number;    // 同一municipalityIdに複数ポリゴンある場合、ピンに使うindex(省略時=0)
@@ -537,7 +538,11 @@ export const DeepDive: React.FC<Props> = (props) => {
         <TitleScene {...props} jaSubtitles={effectiveSubtitles} />
       </Sequence>
       <Sequence from={mapFrom} durationInFrames={MAP_DUR}>
-        <MapScene mapType={mapType} prefectureId={prefectureId} municipalityId={municipalityId} mapPinIndex={props.mapPinIndex} regionLabel={mapRegionLabel} spotLabel={spotName} accentColor={accentColor} narrationSrc={props.narration?.map} episodeNumber={props.episodeNumber} />
+        {mapType === "world-to-japan" ? (
+          <MapWorldToJapanScene regionLabel={mapRegionLabel} spotLabel={spotName} accentColor={accentColor} narrationSrc={props.narration?.map} episodeNumber={props.episodeNumber ?? 0} />
+        ) : (
+          <MapScene mapType={mapType} prefectureId={prefectureId} municipalityId={municipalityId} mapPinIndex={props.mapPinIndex} regionLabel={mapRegionLabel} spotLabel={spotName} accentColor={accentColor} narrationSrc={props.narration?.map} episodeNumber={props.episodeNumber} />
+        )}
       </Sequence>
       {facts.map((fact, i) => (
         <Sequence key={i} from={factFroms[i]} durationInFrames={factDurs[i]}>

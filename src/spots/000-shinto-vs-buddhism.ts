@@ -35,7 +35,7 @@ const AUDIO_DIR = "audio/000_shinto-vs-buddhism";
 
 export const sceneDurations = {
   title: 3.1, // 自動計算(ナレーション1.6秒 + 余白) // 自動計算(ナレーション1.6秒 + 余白)
-  map: 4.2, // 自動計算(ナレーション1.2秒 + 余白) // 自動計算(ナレーション1.2秒 + 余白)
+  map: 6.0, // world-to-japan アニメーション(165f≒5.5s) + 余白
   hook: 6.7, // 自動計算(ナレーション5.2秒 + 余白)
   twist: 11.1, // 自動計算(ナレーション9.6秒 + 余白)
   outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白) // 自動計算(ナレーション1.8秒 + 余白)
@@ -80,7 +80,7 @@ export const defaultProps = {
   heroPhotoSrc: HERO_PHOTO,
   kanjiMotif: "道",
   mapRegionLabel: "JAPAN",
-  mapType: "national-watermark" as const,
+  mapType: "world-to-japan" as const,
   hookText: "Think Japanese shrines and temples are the same?\nThey were.\nUntil 1868.",
   facts,
   twistHeading: "Two Faiths, Still Apart",

@@ -124,7 +124,7 @@ export const KagomeVisual: React.FC<{ frame: number; accentColor: string; size?:
 // 1つの円がフェードインして中央に現れ、左右2つの円に分かれていくアニメーション
 const CircleSplitVisual: React.FC<{ frame: number; accentColor: string }> = ({ frame, accentColor }) => {
   const r = 38;
-  const cx = 90, cy = 75;
+  const cx = 140, cy = 75;
 
   const singleOpacity = interpolate(frame, [0, 20, 40, 60], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
@@ -145,7 +145,7 @@ const CircleSplitVisual: React.FC<{ frame: number; accentColor: string }> = ({ f
   const glow = interpolate(frame % 90, [0, 45, 90], [0.12, 0.28, 0.12]);
 
   return (
-    <svg width="240" height="150" viewBox="0 0 240 150" style={{ overflow: "visible" }}>
+    <svg width="280" height="150" viewBox="0 0 280 150" style={{ overflow: "visible" }}>
       <circle cx={cx} cy={cy} r={r} fill="none" stroke={accentColor} strokeWidth={8} opacity={singleOpacity * glow} />
       <circle cx={cx} cy={cy} r={r} fill="none" stroke={accentColor} strokeWidth={1.5} opacity={singleOpacity} />
       <circle cx={cx - splitOffset} cy={cy} r={r} fill="none" stroke={accentColor} strokeWidth={8} opacity={splitOpacity * glow} />

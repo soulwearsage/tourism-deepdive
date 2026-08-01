@@ -15,6 +15,7 @@ import * as hosenin from "./spots/010-hosenin";
 import * as katsuoji from "./spots/011-katsuoji";
 import * as ine from "./spots/012-ine";
 import * as shirakawago from "./spots/013-shirakawago";
+import * as yamabushiShugendo from "./spots/014-yamabushi-shugendo";
 
 export const Root: React.FC = () => {
   return (
@@ -143,6 +144,14 @@ export const Root: React.FC = () => {
         width={1080}
         height={1920}
         defaultProps={shirakawago.defaultProps}
+      />      <Composition
+        id="DeepDive-Yamabushi-shugendo"
+        component={DeepDive}
+        durationInFrames={getTotalDuration(yamabushiShugendo.facts, yamabushiShugendo.sceneDurations, yamabushiShugendo.defaultProps)}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={yamabushiShugendo.defaultProps}
       />
     </>
   );

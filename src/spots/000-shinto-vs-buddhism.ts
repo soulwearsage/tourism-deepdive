@@ -86,7 +86,7 @@ export const defaultProps = {
   twistBody: "More than 150 years later, Japan's shrines and temples are still living out that forced divorce — standing side by side, but never again as one.",
   twistFacts: [
     {
-      type: "photo-stat",
+      type: "photo-stat" as const,
       kanji: "別",
       heading: "A question history hasn't answered yet.",
       body: "Yet history never disappears completely. In a few quiet corners of Japan, the old fusion survived — hidden deep in the mountains, or carved into cliffs where Buddhas and kami still seem to share the same sacred landscape. So why did building a modern nation require tearing one faith into two?",

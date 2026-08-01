@@ -1,16 +1,15 @@
 import React, { useMemo } from "react";
 import { useCurrentFrame, interpolate, Easing } from "remotion";
 import * as d3geo from "d3-geo";
-import * as topojson from "topojson-client";
 // @ts-ignore
-import worldAtlas from "world-atlas/countries-110m.json";
+import getWorldData from "@geo-maps/countries-land-10km";
 import { SceneFrame } from "./SceneFrame";
 import { specialGothicExpandedFont } from "./fonts";
 
 const WORLD_W = 1080;
 const WORLD_H = 540;
 const WORLD_ROTATE: [number, number, number] = [-137, 0, 0]; // 日本経度を中心に
-const JAPAN_ISO = "392"; // ISO 3166-1 numeric
+const JAPAN_A3 = "JPN";
 const BASE_TOP = (1920 - WORLD_H) / 2; // 690 — 縦中央に配置
 
 export type MapWorldToJapanProps = {
@@ -31,10 +30,7 @@ export const MapWorldToJapanScene: React.FC<MapWorldToJapanProps> = ({
   const frame = useCurrentFrame();
 
   const { countryPaths, japanPaths, japanCentroid, graticule } = useMemo(() => {
-    const countries = topojson.feature(
-      worldAtlas as any,
-      (worldAtlas as any).objects.countries
-    ) as any;
+    const countries = (getWorldData as any)();
     const projection = d3geo
       .geoNaturalEarth1()
       .rotate(WORLD_ROTATE)
@@ -45,7 +41,7 @@ export const MapWorldToJapanScene: React.FC<MapWorldToJapanProps> = ({
     const japanPaths: string[] = [];
     for (const f of countries.features) {
       const d = path(f) ?? "";
-      if (String(f.id) === JAPAN_ISO) {
+      if (f.properties?.A3 === JAPAN_A3) {
         japanPaths.push(d);
       } else {
         countryPaths.push(d);
@@ -53,7 +49,7 @@ export const MapWorldToJapanScene: React.FC<MapWorldToJapanProps> = ({
     }
 
     const japanFeature = countries.features.find(
-      (f: any) => String(f.id) === JAPAN_ISO
+      (f: any) => f.properties?.A3 === JAPAN_A3
     );
     const japanCentroid: [number, number] = japanFeature
       ? (path.centroid(japanFeature) as [number, number])
@@ -118,19 +114,19 @@ export const MapWorldToJapanScene: React.FC<MapWorldToJapanProps> = ({
         <path
           d={graticule}
           fill="none"
-          stroke="#2e2b27"
-          strokeWidth={sw(0.5)}
+          stroke="#8a8478"
+          strokeWidth={sw(0.4)}
           opacity={graticuleOpacity}
         />
 
-        {/* 全国境(日本以外) */}
+        {/* 全国境(日本以外) — MapScene.tsx pinpointモードと同スタイル */}
         {countryPaths.map((d, i) => (
-          <path key={i} d={d} fill="#2e2b27" stroke="#141210" strokeWidth={sw(0.4)} />
+          <path key={i} d={d} fill="none" stroke="#8a8478" strokeWidth={sw(0.6)} />
         ))}
 
-        {/* 日本: ベース(暗色) */}
+        {/* 日本: アウトライン */}
         {japanPaths.map((d, i) => (
-          <path key={`jb-${i}`} d={d} fill="#2e2b27" stroke="#141210" strokeWidth={sw(0.4)} />
+          <path key={`jb-${i}`} d={d} fill="none" stroke="#8a8478" strokeWidth={sw(0.6)} />
         ))}
 
         {/* 日本: アクセントカラーのグロー層 */}

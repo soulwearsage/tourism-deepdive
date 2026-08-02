@@ -271,6 +271,7 @@ export const QuoteScene: React.FC<QuoteProps> = ({
               fontSize: 42,
               color: "#f5f2eb",
               lineHeight: 1.4,
+              whiteSpace: "pre-line",
             }}
           >
             {quote}

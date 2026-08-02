@@ -37,7 +37,7 @@ export const sceneDurations = {
   title: 3.1, // 自動計算(ナレーション1.6秒 + 余白)
   map: 6.0,   // world-to-japan アニメーション(165f≒5.5s) + 余白
   hook: 6.7,  // 自動計算(ナレーション5.2秒 + 余白)
-  twist: 11.1, // 自動計算(ナレーション9.6秒 + 余白)
+  twist: 9.0, // 合計105秒に合わせて調整
   outro: 4.5, // 自動計算(ナレーション1.8秒 + 余白)
 };
 
@@ -59,6 +59,16 @@ export const facts: FactInput[] = [
     label: "century — Buddhism arrived from the mainland, and the two faiths slowly became one",
     narrationSrc: `${AUDIO_DIR}/fact-2.mp3`,
     durationSeconds: 17.7, // 自動計算(ナレーション16.2秒 + 余白)
+  },
+  {
+    type: "photo-stat-right",
+    kanji: "別",
+    heading: "A question history hasn't answered yet.",
+    body: "Yet history never disappears completely. In a few quiet corners of Japan, the old fusion survived — hidden deep in the mountains, or carved into cliffs where Buddhas and kami still seem to share the same sacred landscape. So why did building a modern nation require tearing one faith into two?",
+    photoSrc: "photos/000_shinto-vs-buddhism/fact-2.png",
+    photoSfx: "bgm/camera.mp3",
+    narrationSrc: `${AUDIO_DIR}/twist-2.mp3`,
+    durationSeconds: 19.7, // 自動計算(ナレーション18.2秒 + 余白)
   },
   {
     type: "quote",
@@ -84,18 +94,6 @@ export const defaultProps = {
   facts,
   twistHeading: "Two Faiths, Still Apart",
   twistBody: "More than 150 years later, Japan's shrines and temples are still living out that forced divorce — standing side by side, but never again as one.",
-  twistFacts: [
-    {
-      type: "photo-stat" as const,
-      kanji: "別",
-      heading: "A question history hasn't answered yet.",
-      body: "Yet history never disappears completely. In a few quiet corners of Japan, the old fusion survived — hidden deep in the mountains, or carved into cliffs where Buddhas and kami still seem to share the same sacred landscape. So why did building a modern nation require tearing one faith into two?",
-      photoSrc: "photos/000_shinto-vs-buddhism/fact-2.png",
-      photoSfx: "bgm/camera.mp3",
-      narrationSrc: `${AUDIO_DIR}/twist-2.mp3`,
-      durationSeconds: 19.7, // 自動計算(ナレーション18.2秒 + 余白)
-    },
-  ],
   narration: {
     title: `${AUDIO_DIR}/title.mp3`,
     map: `${AUDIO_DIR}/map.mp3`,
@@ -117,8 +115,9 @@ export const defaultProps = {
     facts: [
       "仏教が伝わるずっと前、古代の日本人は自然そのものを神として崇めていた。巨岩や山、川、そして老木には、神が宿ると信じられていたのである。その世界観は「古神道」と呼ばれた。",
       "6世紀、大陸から仏教が伝わった。だが古い神々は排除されなかった。神と仏は同じ真理を異なる姿で現した存在とされ、「神仏習合」という一つの信仰の形が育まれた。",
+      "しかし、歴史は完全には消え去らない。この国の静かな山奥には、神仏が共に息づいていた時代の姿が、崖に刻まれた仏や古い聖地として今も残されている。では、近代国家を築くために、なぜ一つだった信仰を引き裂く必要があったのだろうか。",
       "その融合は千年以上にわたり続いた。だが1868年、明治政府は「神仏分離」を命じる。何世紀もの信仰の姿は、わずかな期間で解体されていった。",
     ],
-    twist: "それから150年以上が過ぎた今も、日本の神社と寺は、その強制的な離別を生き続けている。隣り合って立ちながら、二度と一つには戻らないまま。しかし、歴史は完全には消え去らない。この国の静かな山奥には、神仏が共に息づいていた時代の姿が、崖に刻まれた仏や古い聖地として今も残されている。では、近代国家を築くために、なぜ一つだった信仰を引き裂く必要があったのだろうか。",
+    twist: "それから150年以上が過ぎた今も、日本の神社と寺は、その強制的な離別を生き続けている。隣り合って立ちながら、二度と一つには戻らないまま。",
   },
 };

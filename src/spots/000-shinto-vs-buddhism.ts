@@ -30,8 +30,8 @@
 
 import { FactInput } from "../DeepDive";
 
-const HERO_PHOTO = "photos/000_shinto-vs-buddhism/hero.png";
-const AUDIO_DIR = "audio/000_shinto-vs-buddhism";
+const HERO_PHOTO = "photos/C001_shinto-vs-buddhism/hero.png";
+const AUDIO_DIR = "audio/C001_shinto-vs-buddhism";
 
 export const sceneDurations = {
   title: 3.1, // 自動計算(ナレーション1.6秒 + 余白)
@@ -47,7 +47,7 @@ export const facts: FactInput[] = [
     kanji: "岩",
     heading: "When nature itself was god",
     body: "Long before Buddhism arrived, ancient Japanese worshipped nature itself — giant rocks, mountains, rivers, and ancient trees were believed to be the dwelling places of kami. This worldview became known as Ko-Shinto, the ancient way of the gods.",
-    photoSrc: "photos/000_shinto-vs-buddhism/fact-1.png",
+    photoSrc: "photos/C001_shinto-vs-buddhism/fact-1.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/fact-1.mp3`,
     durationSeconds: 16.6, // 自動計算(ナレーション15.1秒 + 余白)
@@ -65,7 +65,7 @@ export const facts: FactInput[] = [
     kanji: "別",
     heading: "A question history hasn't answered yet.",
     body: "Yet history never disappears completely. In a few quiet corners of Japan, the old fusion survived — hidden deep in the mountains, or carved into cliffs where Buddhas and kami still seem to share the same sacred landscape. So why did building a modern nation require tearing one faith into two?",
-    photoSrc: "photos/000_shinto-vs-buddhism/fact-2.png",
+    photoSrc: "photos/C001_shinto-vs-buddhism/fact-2.png",
     photoSfx: "bgm/camera.mp3",
     narrationSrc: `${AUDIO_DIR}/twist-2.mp3`,
     durationSeconds: 19.7, // 自動計算(ナレーション18.2秒 + 余白)
